@@ -1,101 +1,141 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exámenes - Índice</title>
+<title>Exámenes · Índice</title>
+<script>
+/* Tema: inicializa antes de pintar para evitar parpadeo */
+(function(){try{var t=localStorage.getItem('site-theme');
+if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-    background:#0F0F13;
-    color:#f0f0f5;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:2rem 1rem;
+  /* ===== Sistema común: design tokens + tema claro/oscuro ===== */
+  :root{
+    --site-accent:#7c83ff;            /* acento del hub (neutro) */
+    --site-radius:14px;
+    --site-sans:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
   }
+  :root[data-theme="light"]{
+    --site-bg:#eef1f0; --site-surface:#ffffff; --site-surface-2:#f3f6f6;
+    --site-ink:#10212b; --site-muted:#5e7079; --site-line:#d9e0df;
+    --site-topbar-bg:#10212b; --site-topbar-ink:#eef4f4; --site-topbar-line:rgba(255,255,255,.16);
+  }
+  :root[data-theme="dark"]{
+    --site-bg:#0f1417; --site-surface:#161d21; --site-surface-2:#1d262b;
+    --site-ink:#e7eef0; --site-muted:#9fb1b6; --site-line:#283238;
+    --site-topbar-bg:#0a0e10; --site-topbar-ink:#e7eef0; --site-topbar-line:rgba(255,255,255,.12);
+  }
+
+  /* ===== Topbar común (nav-a-root + toggle de tema) ===== */
+  .site-topbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:14px;
+    padding:10px 18px;background:var(--site-topbar-bg);color:var(--site-topbar-ink);
+    border-bottom:2px solid var(--site-accent);font-family:var(--site-sans)}
+  .site-topbar .site-home{color:inherit;text-decoration:none;font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;
+    border:1px solid var(--site-topbar-line);transition:background .15s}
+  .site-topbar .site-home:hover{background:rgba(255,255,255,.12)}
+  .site-topbar .site-brand{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .site-topbar .site-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--site-accent)}
+  .site-doc-title{font-size:13px;font-weight:600;opacity:.85;margin-right:auto}
+  .site-spacer{margin-right:auto}
+  .site-theme-toggle{cursor:pointer;background:transparent;color:inherit;border:1px solid var(--site-topbar-line);
+    border-radius:9px;width:40px;height:34px;font-size:15px;line-height:1;display:inline-flex;
+    align-items:center;justify-content:center;transition:background .15s}
+  .site-theme-toggle:hover{background:rgba(255,255,255,.12)}
+  :root[data-theme="light"] .site-ic-moon{display:none}
+  :root[data-theme="dark"]  .site-ic-sun{display:none}
+
+  /* ===== Página índice ===== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--site-sans);background:var(--site-bg);color:var(--site-ink);min-height:100vh}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1rem 3rem}
   .card{
-    background:#1A1A24;
-    border:1px solid #2a2a38;
+    background:var(--site-surface);
+    border:1px solid var(--site-line);
     border-radius:16px;
     padding:2.5rem;
     max-width:480px;
     width:100%;
+    box-shadow:0 1px 2px rgba(16,33,43,.05),0 10px 30px rgba(16,33,43,.06);
   }
-  h1{
-    font-size:1.4rem;
-    margin-bottom:1.75rem;
-    font-weight:700;
-  }
-  .group{ margin-bottom:1.5rem; }
-  .group:last-child{ margin-bottom:0; }
+  h1{font-size:1.4rem;margin-bottom:1.75rem;font-weight:700}
+  .group{margin-bottom:1.5rem}
+  .group:last-child{margin-bottom:0}
   .group-title{
-    font-size:0.75rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-    color:#6f6f82;
-    margin-bottom:0.6rem;
-    padding-left:0.1rem;
+    font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--site-muted);margin-bottom:0.6rem;padding-left:0.1rem;
   }
-  ul{ list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
-  a{
-    display:block;
-    padding:0.85rem 1.1rem;
-    background:#21212f;
-    border-radius:10px;
-    color:#f0f0f5;
-    text-decoration:none;
-    font-weight:600;
-    transition: background .15s;
+  ul{list-style:none;display:flex;flex-direction:column;gap:0.6rem}
+  .card a{
+    display:block;padding:0.85rem 1.1rem;background:var(--site-surface-2);
+    border:1px solid var(--site-line);border-radius:10px;color:var(--site-ink);
+    text-decoration:none;font-weight:600;transition:border-color .15s,background .15s;
   }
-  a:hover{ background:#2c2c3d; }
-  .desc{ display:block; font-weight:400; font-size:0.85rem; color:#9a9aab; margin-top:0.2rem; }
+  .card a:hover{border-color:var(--site-accent)}
+  .desc{display:block;font-weight:400;font-size:0.85rem;color:var(--site-muted);margin-top:0.2rem}
 </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Documentos disponibles</h1>
-
-    <div class="group">
-      <div class="group-title">DAR</div>
-      <ul>
-        <li><a href="dar.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-      </ul>
-    </div>
-
-    <div class="group">
-      <div class="group-title">Sistemas Operativos Avanzados</div>
-      <ul>
-        <li><a href="soa.html">Guía de estudio<span class="desc">Teoría</span></a></li>
-      </ul>
-    </div>
-
-    <div class="group">
-      <div class="group-title">Sistemas Inteligentes</div>
-      <ul>
-        <li><a href="si.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-        <li><a href="si-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
-      </ul>
-    </div>
-
-    <div class="group">
-      <div class="group-title">Comunicación y Liderazgo</div>
-      <ul>
-        <li><a href="cl.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-        <li><a href="cl-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
-      </ul>
-    </div>
-
-    <div class="group">
-      <div class="group-title">MongoDB</div>
-      <ul>
-        <li><a href="mongodb.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-      </ul>
-    </div>
-
+  <div class="site-topbar">
+    <span class="site-brand"><span class="dot"></span>Exámenes UNIR</span>
+    <span class="site-spacer"></span>
+    <button class="site-theme-toggle" type="button" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">
+      <span class="site-ic-sun" aria-hidden="true">☀</span><span class="site-ic-moon" aria-hidden="true">☾</span>
+    </button>
   </div>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Documentos disponibles</h1>
+
+      <div class="group">
+        <div class="group-title">DAR</div>
+        <ul>
+          <li><a href="dar.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Sistemas Operativos Avanzados</div>
+        <ul>
+          <li><a href="soa.html">Guía de estudio<span class="desc">Teoría</span></a></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Sistemas Inteligentes</div>
+        <ul>
+          <li><a href="si.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+          <li><a href="si-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Comunicación y Liderazgo</div>
+        <ul>
+          <li><a href="cl.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+          <li><a href="cl-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <div class="group-title">MongoDB</div>
+        <ul>
+          <li><a href="mongodb.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  /* Toggle de tema (común) */
+  (function(){var b=document.querySelector('.site-theme-toggle');if(!b)return;
+  b.addEventListener('click',function(){var d=document.documentElement;
+  var n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+  d.setAttribute('data-theme',n);try{localStorage.setItem('site-theme',n);}catch(e){}});})();
+  </script>
 </body>
 </html>
