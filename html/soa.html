@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistemas Operativos Avanzados — Guía de Examen | McGraw Hill Style</title>
+<script>
+/* Tema: inicializa antes de pintar para evitar parpadeo */
+(function(){try{var t=localStorage.getItem('site-theme');
+if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
@@ -28,7 +34,49 @@
   --text-head:    #1A1A1A;
   --sidebar-w:    280px;
   --content-max:  920px;
+  /* tokens del quiz (tematizables) */
+  --soa-card-bg:#ffffff; --soa-card-bd:#dce3ed; --soa-opt-bg:#FAFAFA; --soa-opt-tx:#2D2D2D;
+  --soa-divider:#eeeeee; --soa-ok-bg:#E8F5EE; --soa-ok-tx:#1B6637; --soa-bad-bg:#FEE8EB; --soa-bad-tx:#C41230;
+  --site-accent:#C41230;
 }
+/* ===== Tema oscuro (overrides) ===== */
+:root[data-theme="dark"]{
+  --mcg-gray-light:#1d2430; --mcg-border:#33404f;
+  --mcg-blue-light:#16243c; --mcg-gold-bg:#2a2310; --mcg-red-light:#2c1418; --mcg-green-bg:#13271b;
+  --text-body:#dfe3e8; --text-head:#f2f4f7; --mcg-gray:#b8c2cc;
+  --soa-card-bg:#161d21; --soa-card-bd:#2a3744; --soa-opt-bg:#1d262b; --soa-opt-tx:#dfe3e8;
+  --soa-divider:#2a3744; --soa-ok-bg:#13271b; --soa-ok-tx:#5cc08a; --soa-bad-bg:#2c1418; --soa-bad-tx:#e06a5e;
+}
+:root[data-theme="dark"] body{background:#0f1417}
+:root[data-theme="dark"] .topbar{background:#161d21}
+:root[data-theme="dark"] .topbar-breadcrumb{color:#b8c2cc}
+:root[data-theme="dark"] .btn-action{background:#1d262b;color:var(--text-body)}
+:root[data-theme="dark"] .btn-action:hover{background:#22303a;border-color:#3a4a5c;color:#7da6e0}
+:root[data-theme="dark"] .paso-card{background:#161d21;border-color:#2a3744}
+:root[data-theme="dark"] .paso-header{background:#1b232b;border-color:#2a3744}
+:root[data-theme="dark"] .paso-theory{color:#cdd5dd}
+:root[data-theme="dark"] .paso-subtitle{color:#9aa6b2}
+:root[data-theme="dark"] .paso-theory code,
+:root[data-theme="dark"] code{background:#22303a;color:#ff9db1}
+:root[data-theme="dark"] .chapter-nav{background:#161d21}
+:root[data-theme="dark"] .ch-nav-btn{background:#1d262b;color:#7da6e0}
+:root[data-theme="dark"] .exam-real-card{background:#161d21}
+:root[data-theme="dark"] .exam-real-section .section-heading{background:#2c1418}
+:root[data-theme="dark"] .erc-enunciado{color:#cdd5dd}
+:root[data-theme="dark"] .subsection-heading{color:#7da6e0}
+:root[data-theme="dark"] .def-box .box-term{color:#7da6e0}
+:root[data-theme="dark"] .ejercicio{background:#2a2310}
+:root[data-theme="dark"] .ejercicio p{color:#cdd5dd}
+
+/* ===== nav-a-root + toggle de tema en la topbar ===== */
+a.btn-action{text-decoration:none;color:var(--mcg-gray);display:inline-flex;align-items:center;gap:5px}
+.site-theme-toggle{background:transparent;border:1px solid var(--mcg-border);border-radius:4px;
+  width:36px;height:32px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--mcg-gray);transition:all 0.2s}
+.site-theme-toggle:hover{background:var(--mcg-blue-light);border-color:var(--mcg-blue-mid)}
+:root[data-theme="light"] .site-ic-moon{display:none}
+:root[data-theme="dark"]  .site-ic-sun{display:none}
+
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Open Sans',Arial,sans-serif; font-size:15px; line-height:1.75; color:var(--text-body); background:#F0F0F0; display:flex; }
 
@@ -315,8 +363,12 @@ strong { font-weight:700; }
       SOA &rsaquo; <span id="breadcrumbChapter">Estructura del Examen</span>
     </div>
     <div class="topbar-actions">
+      <a class="btn-action" href="index.html" aria-label="Volver al índice">&#8592; Índice</a>
       <button class="btn-action" onclick="prevChapter()">&#8592; Anterior</button>
       <button class="btn-action primary" onclick="nextChapter()">Siguiente &#8594;</button>
+      <button class="site-theme-toggle" type="button" onclick="toggleSiteTheme()" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">
+        <span class="site-ic-sun" aria-hidden="true">&#9728;</span><span class="site-ic-moon" aria-hidden="true">&#9790;</span>
+      </button>
     </div>
   </div>
   <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -3108,10 +3160,10 @@ strong { font-weight:700; }
     <div class="content-area">
 
       <!-- SCORE BAR -->
-      <div id="quiz-scorebar" style="display:flex;align-items:center;gap:16px;background:white;border:1px solid var(--mcg-border);border-radius:8px;padding:14px 20px;margin:28px 0 0;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div id="quiz-scorebar" style="display:flex;align-items:center;gap:16px;background:var(--soa-card-bg);border:1px solid var(--mcg-border);border-radius:8px;padding:14px 20px;margin:28px 0 0;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <div style="flex:1;">
           <div style="font-size:11px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Progreso del test</div>
-          <div style="background:#eee;border-radius:4px;height:8px;overflow:hidden;">
+          <div style="background:var(--soa-divider);border-radius:4px;height:8px;overflow:hidden;">
             <div id="quiz-prog-bar" style="background:var(--mcg-green);height:100%;width:0%;transition:width 0.4s;border-radius:4px;"></div>
           </div>
         </div>
@@ -3233,7 +3285,7 @@ function buildQuiz() {
   QUIZ_DATA.forEach((item, qi) => {
     const card = document.createElement('div');
     card.id = 'qcard-' + qi;
-    card.style.cssText = 'background:white;border:1px solid #dce3ed;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:20px;overflow:hidden;';
+    card.style.cssText = 'background:var(--soa-card-bg);border:1px solid var(--soa-card-bd);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:20px;overflow:hidden;';
 
     // Badge color by appearances
     const ap = item.appearances;
@@ -3241,23 +3293,23 @@ function buildQuiz() {
     const badgeLabel = ap >= 4 ? '🔴 ' + ap + 'x — MUY FRECUENTE' : ap === 3 ? '🟠 ' + ap + 'x — Frecuente' : ap === 2 ? '🔵 ' + ap + 'x — Repetida' : '⚪ 1x';
 
     card.innerHTML = `
-      <div style="padding:16px 20px 12px;border-bottom:1px solid #eee;display:flex;align-items:flex-start;gap:12px;">
+      <div style="padding:16px 20px 12px;border-bottom:1px solid var(--soa-divider);display:flex;align-items:flex-start;gap:12px;">
         <div style="background:var(--mcg-blue);color:white;min-width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:'Merriweather',serif;flex-shrink:0;margin-top:2px;">${qi+1}</div>
         <div style="flex:1;">
-          <div style="font-weight:700;font-size:15px;color:#1A1A1A;line-height:1.55;">${item.q}</div>
+          <div style="font-weight:700;font-size:15px;color:var(--text-head);line-height:1.55;">${item.q}</div>
           <div style="margin-top:5px;display:inline-block;padding:2px 8px;background:${badgeColor}20;color:${badgeColor};border-radius:20px;font-size:11px;font-weight:700;">${badgeLabel}</div>
         </div>
       </div>
       <div id="opts-${qi}" style="padding:12px 20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         ${item.opts.map((o, oi) => `
           <button id="opt-${qi}-${oi}" onclick="answerQ(${qi}, ${oi})"
-            style="text-align:left;padding:10px 14px;border:1.5px solid #dce3ed;border-radius:6px;background:#FAFAFA;cursor:pointer;font-size:14px;font-family:'Open Sans',sans-serif;color:#2D2D2D;line-height:1.4;transition:all 0.15s;display:flex;gap:8px;align-items:flex-start;">
+            style="text-align:left;padding:10px 14px;border:1.5px solid var(--soa-card-bd);border-radius:6px;background:var(--soa-opt-bg);cursor:pointer;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--soa-opt-tx);line-height:1.4;transition:all 0.15s;display:flex;gap:8px;align-items:flex-start;">
             <span style="font-weight:700;color:var(--mcg-blue);min-width:18px;">${['A','B','C','D'][oi]}.</span>
             <span>${o.text}</span>
           </button>
         `).join('')}
       </div>
-      <div id="feedback-${qi}" style="display:none;padding:10px 20px 14px;font-size:13px;font-weight:600;border-top:1px solid #eee;"></div>
+      <div id="feedback-${qi}" style="display:none;padding:10px 20px 14px;font-size:13px;font-weight:600;border-top:1px solid var(--soa-divider);"></div>
     `;
     container.appendChild(card);
   });
@@ -3276,13 +3328,13 @@ function answerQ(qi, chosen) {
     btn.style.cursor = 'default';
     btn.style.pointerEvents = 'none';
     if (oi === correctIdx) {
-      btn.style.background = '#E8F5EE';
+      btn.style.background = 'var(--soa-ok-bg)';
       btn.style.borderColor = '#1B6637';
-      btn.style.color = '#1B6637';
+      btn.style.color = 'var(--soa-ok-tx)';
     } else if (oi === chosen && oi !== correctIdx) {
-      btn.style.background = '#FEE8EB';
+      btn.style.background = 'var(--soa-bad-bg)';
       btn.style.borderColor = '#C41230';
-      btn.style.color = '#C41230';
+      btn.style.color = 'var(--soa-bad-tx)';
     } else {
       btn.style.opacity = '0.5';
     }
@@ -3292,8 +3344,8 @@ function answerQ(qi, chosen) {
   const fb = document.getElementById('feedback-' + qi);
   const isCorrect = chosen === correctIdx;
   fb.style.display = 'block';
-  fb.style.background = isCorrect ? '#E8F5EE' : '#FEE8EB';
-  fb.style.color = isCorrect ? '#1B6637' : '#C41230';
+  fb.style.background = isCorrect ? 'var(--soa-ok-bg)' : 'var(--soa-bad-bg)';
+  fb.style.color = isCorrect ? 'var(--soa-ok-tx)' : 'var(--soa-bad-tx)';
   fb.innerHTML = isCorrect
     ? '✅ ¡Correcto! — ' + item.opts[correctIdx].text
     : '❌ Incorrecto — La respuesta correcta es: <strong>' + item.opts[correctIdx].text + '</strong>';
@@ -3375,6 +3427,14 @@ function prevChapter() {
 function toggleSol(el) {
   const sol = el.parentElement;
   sol.classList.toggle('open');
+}
+
+/* Toggle de tema (común) */
+function toggleSiteTheme() {
+  var d = document.documentElement;
+  var n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', n);
+  try { localStorage.setItem('site-theme', n); } catch (e) {}
 }
 </script>
 </body>
