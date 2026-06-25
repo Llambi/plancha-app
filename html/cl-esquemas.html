@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Esquemas de estudio · Comunicación y Liderazgo</title>
+<script>
+/* Tema: inicializa antes de pintar para evitar parpadeo */
+(function(){try{var t=localStorage.getItem('site-theme');
+if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <style>
   :root{
     --ink:#10212b; --ink-soft:#1c3340; --paper:#eef1f0; --panel:#ffffff;
@@ -12,7 +18,38 @@
     --shadow:0 1px 2px rgba(16,33,43,.06),0 8px 24px rgba(16,33,43,.07);
     --mono:'SFMono-Regular',ui-monospace,'Cascadia Mono','Menlo',monospace;
     --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --site-accent:#0f6e7e;
   }
+  /* ===== Tema oscuro (overrides) ===== */
+  :root[data-theme="dark"]{
+    --ink:#e7eef0; --ink-soft:#c6d2d6; --paper:#0f1417; --panel:#161d21;
+    --line:#283238; --petrol:#3fa9bb; --petrol-dk:#7fd0de; --amber:#e0a23a;
+    --amber-soft:#33291a; --muted:#94a6ab;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+  }
+  :root[data-theme="dark"] header{background:#0b1216}
+  :root[data-theme="dark"] .tools button:hover{background:#222c31}
+  :root[data-theme="dark"] .n1>.n1-head:hover{background:#1d262b}
+  :root[data-theme="dark"] .clave{border-color:#5a4a2a;color:#e6c98a}
+  :root[data-theme="dark"] .clave b{color:#f0d9a0}
+  :root[data-theme="dark"] .pill{background:#143036;color:var(--petrol-dk)}
+
+  /* ===== Topbar común (nav-a-root + toggle de tema) ===== */
+  .site-topbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:14px;
+    padding:10px 18px;background:#0b1216;color:#eef4f4;
+    border-bottom:2px solid var(--site-accent);font-family:var(--sans)}
+  .site-topbar .site-home{color:inherit;text-decoration:none;font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;
+    border:1px solid rgba(255,255,255,.16);transition:background .15s}
+  .site-topbar .site-home:hover{background:rgba(255,255,255,.12)}
+  .site-doc-title{font-size:13px;font-weight:600;opacity:.82;margin-right:auto}
+  .site-theme-toggle{cursor:pointer;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;width:40px;height:34px;font-size:15px;line-height:1;display:inline-flex;
+    align-items:center;justify-content:center;transition:background .15s}
+  .site-theme-toggle:hover{background:rgba(255,255,255,.12)}
+  :root[data-theme="light"] .site-ic-moon{display:none}
+  :root[data-theme="dark"]  .site-ic-sun{display:none}
+
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -100,7 +137,7 @@
   @media print{
     header{background:#fff;color:#000;border-color:#000}
     .eyebrow,header p{color:#444}
-    aside,.tools{display:none}
+    aside,.tools,.site-topbar{display:none}
     .layout{display:block;max-width:100%;padding:0}
     .n1.collapsed .n1-body{display:block!important}
     .n1.collapsed>.n1-head .chev{display:none}
@@ -111,6 +148,14 @@
 </style>
 </head>
 <body>
+
+<div class="site-topbar">
+  <a class="site-home" href="index.html"><span aria-hidden="true">←</span> Índice</a>
+  <span class="site-doc-title">Comunicación y Liderazgo · Esquemas</span>
+  <button class="site-theme-toggle" type="button" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">
+    <span class="site-ic-sun" aria-hidden="true">☀</span><span class="site-ic-moon" aria-hidden="true">☾</span>
+  </button>
+</div>
 
 <header>
   <div class="inner">
@@ -353,6 +398,12 @@ secs.forEach(s=>obs.observe(s));
 links.forEach(l=>l.addEventListener('click',()=>setTimeout(()=>{
   links.forEach(x=>x.classList.remove('active'));l.classList.add('active');
 },10)));
+
+/* ---- Toggle de tema (común) ---- */
+(function(){var b=document.querySelector('.site-theme-toggle');if(!b)return;
+b.addEventListener('click',function(){var d=document.documentElement;
+var n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+d.setAttribute('data-theme',n);try{localStorage.setItem('site-theme',n);}catch(e){}});})();
 </script>
 </body>
 </html>
