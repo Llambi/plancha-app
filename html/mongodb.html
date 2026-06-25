@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Práctica de examen · MongoDB</title>
+<script>
+/* Tema: inicializa antes de pintar para evitar parpadeo */
+(function(){try{var t=localStorage.getItem('site-theme');
+if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -24,7 +30,43 @@
     --console-line:#1d2c25;
     --radius:14px;
     --shadow:0 1px 2px rgba(20,32,27,.06),0 8px 24px rgba(20,32,27,.06);
+    --site-accent:#00855f;
   }
+  /* ===== Tema oscuro (overrides) ===== */
+  :root[data-theme="dark"]{
+    --bg:#0f1417; --surface:#161d21; --surface-2:#1d262b;
+    --ink:#e7eef0; --ink-soft:#9fb1ad; --line:#283238;
+    --green:#1aa06e; --green-2:#28b07c; --amber:#e0992f; --red:#e06a5e;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+  }
+  :root[data-theme="dark"] header{background:rgba(15,20,23,.85)}
+  :root[data-theme="dark"] .block-tag .n{background:#0b1216}
+  :root[data-theme="dark"] .coll h3 .count{background:#0f1417}
+  :root[data-theme="dark"] .chk.ok,
+  :root[data-theme="dark"] .feedback.good{background:#16291f;border-color:#235e43;color:#7fe3b8}
+  :root[data-theme="dark"] .chk.bad,
+  :root[data-theme="dark"] .feedback.bad{background:#33191d;border-color:#6e2a2a;color:#f0a39a}
+  :root[data-theme="dark"] .verdict.pass{background:#16291f;color:#7fe3b8}
+  :root[data-theme="dark"] .verdict.fail{background:#33191d;color:#f0a39a}
+
+  /* ===== Topbar común (nav-a-root + toggle de tema) ===== */
+  .site-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+    padding:10px 18px;background:#0b1216;color:#eaf2ee;
+    border-bottom:2px solid var(--site-accent);font-family:"Inter",system-ui,sans-serif}
+  .site-topbar .site-home{color:inherit;text-decoration:none;font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;
+    border:1px solid rgba(255,255,255,.16);transition:background .15s}
+  .site-topbar .site-home:hover{background:rgba(255,255,255,.12)}
+  .site-doc-title{font-size:13px;font-weight:600;opacity:.82;margin-right:auto}
+  .site-theme-toggle{cursor:pointer;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;width:40px;height:34px;font-size:15px;line-height:1;display:inline-flex;
+    align-items:center;justify-content:center;transition:background .15s}
+  .site-theme-toggle:hover{background:rgba(255,255,255,.12)}
+  :root[data-theme="light"] .site-ic-moon{display:none}
+  :root[data-theme="dark"]  .site-ic-sun{display:none}
+  /* el header sticky propio se coloca bajo el topbar */
+  body>header{top:54px}
+
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
@@ -172,6 +214,13 @@
 </style>
 </head>
 <body>
+<div class="site-topbar">
+  <a class="site-home" href="index.html"><span aria-hidden="true">←</span> Índice</a>
+  <span class="site-doc-title">MongoDB · Práctica de examen</span>
+  <button class="site-theme-toggle" type="button" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">
+    <span class="site-ic-sun" aria-hidden="true">☀</span><span class="site-ic-moon" aria-hidden="true">☾</span>
+  </button>
+</div>
 <header>
   <div class="bar">
     <div class="mark">
@@ -823,6 +872,12 @@ window.loadExample=function(ci){
 };
 
 render();
+
+/* ----- Toggle de tema (común) ----- */
+(function(){var b=document.querySelector('.site-theme-toggle');if(!b)return;
+b.addEventListener('click',function(){var d=document.documentElement;
+var n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+d.setAttribute('data-theme',n);try{localStorage.setItem('site-theme',n);}catch(e){}});})();
 </script>
 </body>
 </html>
