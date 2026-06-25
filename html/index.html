@@ -70,27 +70,30 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
   .filter-btn.on{color:#fff;background:var(--site-accent);border-color:var(--site-accent)}
   .filter-btn:focus-visible{outline:2px solid var(--site-accent);outline-offset:2px}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1rem;list-style:none}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(282px,1fr));gap:1rem;list-style:none}
 
-  .doc-card{position:relative;display:flex;flex-direction:column;gap:.55rem;height:100%;
-    background:var(--site-surface);border:1px solid var(--site-line);border-left:4px solid var(--c,var(--site-accent));
-    border-radius:var(--site-radius);padding:1.15rem 1.25rem 1.2rem;text-decoration:none;color:inherit;
+  .doc-card{display:flex;flex-direction:column;gap:.7rem;height:100%;
+    background:var(--site-surface);border:1px solid var(--site-line);
+    border-radius:18px;padding:1.2rem 1.25rem 1.1rem;text-decoration:none;color:inherit;
     box-shadow:var(--site-shadow);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
-  .doc-card:hover{transform:translateY(-3px);box-shadow:var(--site-shadow-lg);border-color:var(--c,var(--site-accent))}
+  .doc-card:hover{transform:translateY(-2px);box-shadow:var(--site-shadow-lg);border-color:var(--c,var(--site-accent))}
   .doc-card:focus-visible{outline:3px solid var(--c,var(--site-accent));outline-offset:2px}
 
-  .doc-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
-  .doc-eyebrow{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
-    color:var(--c,var(--site-accent));color:color-mix(in srgb,var(--c,var(--site-accent)) 74%,var(--site-ink))}
-  .doc-pill{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-    padding:.2rem .55rem;border-radius:999px;border:1px solid var(--site-line);color:var(--site-muted);white-space:nowrap}
-  .doc-pill.practica{color:var(--c);
-    color:color-mix(in srgb,var(--c) 72%,var(--site-ink));
-    border-color:color-mix(in srgb,var(--c) 34%,var(--site-line));
-    background:color-mix(in srgb,var(--c) 12%,transparent)}
-  .doc-title{font-size:1.06rem;font-weight:700;line-height:1.25}
-  .doc-desc{font-size:.85rem;color:var(--site-muted);line-height:1.5;flex:1}
-  .doc-go{font-size:.82rem;font-weight:600;margin-top:.15rem;
+  .doc-head{display:flex;align-items:center;gap:13px}
+  .doc-badge{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+    background:var(--c,var(--site-accent));color:#fff;font-weight:800;font-size:.78rem;letter-spacing:.01em;
+    box-shadow:0 4px 12px color-mix(in srgb,var(--c,var(--site-accent)) 36%,transparent)}
+  .doc-headtext{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .doc-subject{font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--site-muted)}
+  .doc-title{font-size:1.05rem;font-weight:700;line-height:1.22}
+  .doc-desc{font-size:.85rem;color:var(--site-muted);line-height:1.5;flex:1;margin:0}
+  .doc-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+    padding-top:.55rem;border-top:1px solid var(--site-line)}
+  .doc-type{display:inline-flex;align-items:center;gap:7px;font-size:.71rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:.04em;color:var(--site-muted)}
+  .doc-type .tdot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--site-accent))}
+  .doc-type.teoria .tdot{background:var(--site-muted)}
+  .doc-go{font-size:.82rem;font-weight:600;
     color:var(--c,var(--site-accent));color:color-mix(in srgb,var(--c,var(--site-accent)) 74%,var(--site-ink))}
   .doc-card:hover .doc-go{text-decoration:underline}
   .doc-card[hidden]{display:none}
@@ -130,52 +133,66 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <section id="docs" class="grid" aria-label="Documentos disponibles">
 
       <a class="doc-card" href="dar.html" data-tipo="practica" style="--c:#6C63FF">
-        <div class="doc-top"><span class="doc-eyebrow">DAR</span><span class="doc-pill practica">Práctica</span></div>
-        <h2 class="doc-title">Simulador de examen</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">DAR</span>
+          <span class="doc-headtext"><span class="doc-subject">DAR</span><h2 class="doc-title">Simulador de examen</h2></span>
+        </div>
         <p class="doc-desc">Test tipo examen con corrección automática y explicación de cada respuesta.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type practica"><i class="tdot" aria-hidden="true"></i>Práctica</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="soa.html" data-tipo="teoria" style="--c:#C41230">
-        <div class="doc-top"><span class="doc-eyebrow">Sistemas Operativos Avanzados</span><span class="doc-pill">Teoría</span></div>
-        <h2 class="doc-title">Guía de estudio</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">SOA</span>
+          <span class="doc-headtext"><span class="doc-subject">Sistemas Operativos Avanzados</span><h2 class="doc-title">Guía de estudio</h2></span>
+        </div>
         <p class="doc-desc">Guía por capítulos con esquemas, ejemplos y un test de repaso integrado.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type teoria"><i class="tdot" aria-hidden="true"></i>Teoría</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="si.html" data-tipo="practica" style="--c:#2D5BD7">
-        <div class="doc-top"><span class="doc-eyebrow">Sistemas Inteligentes</span><span class="doc-pill practica">Práctica</span></div>
-        <h2 class="doc-title">Simulador de examen</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">SI</span>
+          <span class="doc-headtext"><span class="doc-subject">Sistemas Inteligentes</span><h2 class="doc-title">Simulador de examen</h2></span>
+        </div>
         <p class="doc-desc">Test, preguntas de desarrollo corto y ejercicio práctico configurables.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type practica"><i class="tdot" aria-hidden="true"></i>Práctica</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="si-esquemas.html" data-tipo="teoria" style="--c:#2D5BD7">
-        <div class="doc-top"><span class="doc-eyebrow">Sistemas Inteligentes</span><span class="doc-pill">Teoría</span></div>
-        <h2 class="doc-title">Esquemas de estudio</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">SI</span>
+          <span class="doc-headtext"><span class="doc-subject">Sistemas Inteligentes</span><h2 class="doc-title">Esquemas de estudio</h2></span>
+        </div>
         <p class="doc-desc">Mapas y esquemas de estudio tema a tema, con las claves de examen.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type teoria"><i class="tdot" aria-hidden="true"></i>Teoría</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="cl.html" data-tipo="practica" style="--c:#0f6e7e">
-        <div class="doc-top"><span class="doc-eyebrow">Comunicación y Liderazgo</span><span class="doc-pill practica">Práctica</span></div>
-        <h2 class="doc-title">Simulador de examen</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">CL</span>
+          <span class="doc-headtext"><span class="doc-subject">Comunicación y Liderazgo</span><h2 class="doc-title">Simulador de examen</h2></span>
+        </div>
         <p class="doc-desc">Preguntas cortas y de desarrollo con respuesta modelo y cronómetro.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type practica"><i class="tdot" aria-hidden="true"></i>Práctica</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="cl-esquemas.html" data-tipo="teoria" style="--c:#0f6e7e">
-        <div class="doc-top"><span class="doc-eyebrow">Comunicación y Liderazgo</span><span class="doc-pill">Teoría</span></div>
-        <h2 class="doc-title">Esquemas de estudio</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">CL</span>
+          <span class="doc-headtext"><span class="doc-subject">Comunicación y Liderazgo</span><h2 class="doc-title">Esquemas de estudio</h2></span>
+        </div>
         <p class="doc-desc">Esquemas jerárquicos de los temas 1–7, listos para imprimir.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type teoria"><i class="tdot" aria-hidden="true"></i>Teoría</span><span class="doc-go">Abrir →</span></div>
       </a>
 
       <a class="doc-card" href="mongodb.html" data-tipo="practica" style="--c:#00855f">
-        <div class="doc-top"><span class="doc-eyebrow">MongoDB</span><span class="doc-pill practica">Práctica</span></div>
-        <h2 class="doc-title">Práctica de examen</h2>
+        <div class="doc-head">
+          <span class="doc-badge" aria-hidden="true">DB</span>
+          <span class="doc-headtext"><span class="doc-subject">MongoDB</span><h2 class="doc-title">Práctica de examen</h2></span>
+        </div>
         <p class="doc-desc">Ejercicios de consultas tipo examen con validador en el navegador.</p>
-        <span class="doc-go">Abrir →</span>
+        <div class="doc-foot"><span class="doc-type practica"><i class="tdot" aria-hidden="true"></i>Práctica</span><span class="doc-go">Abrir →</span></div>
       </a>
 
     </section>
