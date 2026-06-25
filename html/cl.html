@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparación de examen · Comunicación y Liderazgo</title>
+<style>
+  :root{
+    --ink:#10212b;
+    --ink-soft:#1c3340;
+    --paper:#eef1f0;
+    --panel:#ffffff;
+    --line:#d4dbda;
+    --petrol:#0f6e7e;
+    --petrol-dk:#0a4e5a;
+    --amber:#c8821a;
+    --amber-soft:#fbf2e2;
+    --muted:#5e7079;
+    --ok:#1f7a4d;
+    --shadow:0 1px 2px rgba(16,33,43,.06),0 8px 24px rgba(16,33,43,.07);
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Mono','Menlo',monospace;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+
+  /* Header */
+  header{
+    background:var(--ink);
+    color:#eef4f4;
+    padding:30px 0 26px;
+    border-bottom:3px solid var(--petrol);
+  }
+  header .wrap{padding-bottom:0}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:#7fb6bf;margin:0 0 8px;
+  }
+  header h1{font-size:26px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em}
+  header p{margin:10px 0 0;color:#a9c2c7;font-size:14px;max-width:620px}
+
+  /* Tabs */
+  nav.tabs{
+    display:flex;gap:4px;flex-wrap:wrap;
+    margin-top:22px;
+  }
+  nav.tabs button{
+    font-family:var(--sans);font-size:14px;font-weight:600;
+    border:none;cursor:pointer;
+    background:transparent;color:#9fbcc1;
+    padding:10px 16px 12px;border-radius:8px 8px 0 0;
+    border-bottom:3px solid transparent;
+    transition:color .15s,border-color .15s;
+  }
+  nav.tabs button:hover{color:#dff0f2}
+  nav.tabs button.active{color:#fff;border-bottom-color:var(--amber)}
+
+  /* Toolbar */
+  .toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+    margin:24px 0 6px;
+  }
+  .timer{
+    display:flex;align-items:center;gap:12px;
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 16px;box-shadow:var(--shadow);
+  }
+  .timer .clock{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+  .timer .clock.run{color:var(--petrol)}
+  .timer .clock.over{color:#b03636}
+  .timer button{
+    font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;
+    border:1px solid var(--line);background:#f6f8f8;color:var(--ink-soft);
+    padding:7px 12px;border-radius:8px;transition:background .15s;
+  }
+  .timer button:hover{background:#e9eeee}
+  .timer .label{font-size:12px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em}
+
+  .actions-row{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-ghost{
+    font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);
+    padding:9px 14px;border-radius:9px;box-shadow:var(--shadow);transition:background .15s;
+  }
+  .btn-ghost:hover{background:#f3f6f6}
+
+  /* Section intro */
+  .section-note{
+    font-size:13px;color:var(--muted);margin:0 0 18px;
+  }
+  .block-title{
+    font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--petrol-dk);margin:26px 0 12px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .block-title::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* Question card */
+  .q{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);
+  }
+  .q-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+  .q-num{
+    font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;
+    background:var(--petrol);border-radius:7px;padding:3px 9px;white-space:nowrap;
+  }
+  .q-pts{font-family:var(--mono);font-size:12px;color:var(--amber);font-weight:600}
+  .q-text{font-size:15.5px;color:var(--ink);margin:2px 0 14px}
+  .q textarea{
+    width:100%;min-height:90px;resize:vertical;
+    font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    background:#fbfcfc;outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .q textarea:focus{border-color:var(--petrol);box-shadow:0 0 0 3px rgba(15,110,126,.12)}
+  .q .reveal-btn{
+    margin-top:12px;font-family:var(--sans);font-size:13.5px;font-weight:600;cursor:pointer;
+    border:1px solid var(--amber);background:var(--amber-soft);color:#8a5a10;
+    padding:9px 16px;border-radius:9px;transition:background .15s;
+  }
+  .q .reveal-btn:hover{background:#f6e6c8}
+
+  .model{
+    display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;
+  }
+  .model.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .model h4{
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ok);margin:0 0 8px;
+  }
+  .model p{font-size:14px;margin:0 0 10px;color:var(--ink-soft)}
+  .model ul{margin:0 0 10px;padding-left:20px}
+  .model li{font-size:14px;margin-bottom:6px;color:var(--ink-soft)}
+  .model strong{color:var(--ink)}
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+    color:var(--petrol-dk);background:#e3eeef;border-radius:5px;padding:2px 7px;
+    margin:0 4px 6px 0;
+  }
+  .model .src{font-size:12px;color:var(--muted);margin-top:4px}
+
+  /* Flashcards */
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .card{
+    perspective:1100px;height:172px;cursor:pointer;
+  }
+  .card-inner{
+    position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.0,.2,1);
+    transform-style:preserve-3d;
+  }
+  .card.flip .card-inner{transform:rotateY(180deg)}
+  .card-face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;
+    padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow);
+  }
+  .card-front{background:var(--ink);color:#eef4f4;justify-content:space-between}
+  .card-front .c-cat{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .card-front .c-term{font-size:19px;font-weight:700;line-height:1.2}
+  .card-front .c-hint{font-size:11px;color:#80a4ab;font-family:var(--mono)}
+  .card-back{
+    background:var(--panel);color:var(--ink-soft);transform:rotateY(180deg);
+    font-size:13px;line-height:1.45;overflow:auto;border:1px solid var(--line);
+  }
+  .card-back strong{color:var(--ink)}
+
+  /* Map / table */
+  .map-table{
+    width:100%;border-collapse:collapse;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);
+    font-size:13.5px;
+  }
+  .map-table th{
+    background:var(--ink);color:#dff0f2;text-align:left;padding:12px 14px;font-size:12px;
+    font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  }
+  .map-table td{padding:13px 14px;border-top:1px solid var(--line);vertical-align:top}
+  .map-table tr td:first-child{font-weight:700;color:var(--petrol-dk)}
+  .map-table .m-ext{background:#fff}
+  .map-table .m-int{background:#f7faf9}
+  .map-table .m-tra{background:#fff}
+  .legend{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.6}
+
+  .panel{display:none}
+  .panel.active{display:block}
+
+  footer{margin-top:40px;font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+
+  @media (max-width:560px){
+    header h1{font-size:21px}
+    .q-text{font-size:14.5px}
+    nav.tabs button{padding:9px 11px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">UNIR · Comunicación y Liderazgo · Temas 1–7</p>
+    <h1>Preparación de examen</h1>
+    <p>Simulacro con el estilo habitual de la asignatura: cuatro preguntas cortas y una de desarrollo. Escribe tu respuesta, contrasta con el modelo y repasa los conceptos clave.</p>
+    <nav class="tabs">
+      <button class="active" data-tab="examen">Simulacro</button>
+      <button data-tab="fichas">Conceptos clave</button>
+      <button data-tab="mapa">Mapa motivos–dimensiones</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ EXAMEN ============ -->
+  <section class="panel active" id="examen">
+    <div class="toolbar">
+      <div class="timer">
+        <span class="label">Tiempo</span>
+        <span class="clock" id="clock">00:00</span>
+        <button id="startBtn">Iniciar</button>
+        <button id="resetBtn">Reiniciar</button>
+      </div>
+      <div class="actions-row">
+        <button class="btn-ghost" id="revealAll">Mostrar todas las soluciones</button>
+        <button class="btn-ghost" id="hideAll">Ocultar todas</button>
+      </div>
+    </div>
+    <p class="section-note">Sugerencia: responde primero de memoria con el cronómetro en marcha (las cortas, unos 5–7 min cada una; el desarrollo, 25–30 min) y solo después abre la solución.</p>
+
+    <div class="block-title">Preguntas cortas · 1,25 puntos cada una</div>
+
+    <!-- Q1 -->
+    <article class="q">
+      <div class="q-head"><span class="q-num">1 / 4</span><span class="q-pts">1,25 puntos</span></div>
+      <p class="q-text">La principal herramienta para crear entornos laborales emocionalmente propicios es la comunicación, entendida como la interacción entre el líder y el equipo. Explica brevemente, pero con detalle, las razones de por qué hay que emplear la inteligencia emocional en la dirección de personas.</p>
+      <textarea placeholder="Escribe aquí tu respuesta…"></textarea>
+      <button class="reveal-btn">Ver respuesta modelo</button>
+      <div class="model">
+        <h4>Respuesta modelo</h4>
+        <p>La idea central es que dirigir personas exige <strong>combinar el uso de la razón con el de la emoción</strong>, porque el colaborador no es solo un ser racional, sino también emotivo, y ambas dimensiones son indisolubles y complementarias. Las razones que justifican emplear la inteligencia emocional son:</p>
+        <ul>
+          <li><strong>Las emociones configuran el clima laboral.</strong> Se produce un contagio emocional dentro del equipo: el estado de ánimo no es una isla individual, se imita y se propaga socialmente.</li>
+          <li><strong>Tienen un impacto directo y medible en los resultados.</strong> Ese contagio afecta al rendimiento, a la creatividad e innovación, a la rotación laboral y a los procesos de toma de decisiones y negociación. Las competencias emocionales constituyen, por tanto, una ventaja competitiva.</li>
+          <li><strong>No se pueden separar las emociones de las acciones,</strong> ni la vida laboral de la personal: los sentimientos acompañan siempre a la persona, así que gestionarlos en el trabajo es prioritario.</li>
+          <li><strong>Es un cambio de época.</strong> Siguiendo a Damasio, se ha pasado del siglo del racionalismo (XX) al tiempo de las emociones (XXI); la madurez profesional exige conocer las emociones asociadas a los comportamientos.</li>
+          <li><strong>Son competencias que se aprenden,</strong> no aptitudes innatas. El directivo debe dominar dos: el <em>juicio</em> (comprensión) de las emociones y el <em>gobierno</em> (manejo) de las mismas.</li>
+        </ul>
+        <p class="src"><span class="tag">Tema 7</span><span class="tag">Tema 5</span><span class="tag">Tema 2</span></p>
+      </div>
+    </article>
+
+    <!-- Q2 -->
+    <article class="q">
+      <div class="q-head"><span class="q-num">2 / 4</span><span class="q-pts">1,25 puntos</span></div>
+      <p class="q-text">Hay tres motivaciones que intervienen en la acción del individuo. Circunscritas al entorno de empresa, estos tres tipos de motivos componen y totalizan el ciclo motivacional de la conducta humana en la organización. ¿Podrías explicar brevemente, pero detalladamente, cuáles son estos motivos y a qué responden?</p>
+      <textarea placeholder="Escribe aquí tu respuesta…"></textarea>
+      <button class="reveal-btn">Ver respuesta modelo</button>
+      <div class="model">
+        <h4>Respuesta modelo</h4>
+        <ul>
+          <li><strong>Motivo extrínseco.</strong> La acción está inducida por lo que se espera conseguir a cambio de ella: los motivos son ajenos a la acción misma y los determinan contingencias externas. Responden a <strong>necesidades materiales</strong> (por ejemplo, el salario).</li>
+          <li><strong>Motivo intrínseco.</strong> El aliciente es la realización de la conducta en sí misma; mueve lo que se espera asimilar, aprender o disfrutar al hacerla. Son inherentes a la persona y los determinan contingencias internas. Responden a <strong>necesidades cognoscitivas</strong>.</li>
+          <li><strong>Motivo trascendente.</strong> La acción satisface por la recompensa de sentir que <strong>terceras personas se beneficiarán</strong> de ella; el motivo trasciende la causa propia, porque la satisfacción está en servir a otros a través del trabajo. Responden a <strong>necesidades espirituales</strong>.</li>
+        </ul>
+        <p>Cierre clave: <strong>la preeminencia de un motivo sobre los otros determina la calidad motivacional</strong>, y hacer coincidir la oferta de motivos con la demanda del trabajador es labor propia de la dirección.</p>
+        <p class="src"><span class="tag">Tema 2 · El ciclo de la motivación</span></p>
+      </div>
+    </article>
+
+    <!-- Q3 -->
+    <article class="q">
+      <div class="q-head"><span class="q-num">3 / 4</span><span class="q-pts">1,25 puntos</span></div>
+      <p class="q-text">La atractividad es una de las tres dimensiones de una organización. Razona y justifica: ¿qué significa para un directivo enfocarse en esta dimensión?</p>
+      <textarea placeholder="Escribe aquí tu respuesta…"></textarea>
+      <button class="reveal-btn">Ver respuesta modelo</button>
+      <div class="model">
+        <h4>Respuesta modelo</h4>
+        <p>Conviene situarla primero entre las <strong>tres dimensiones de la organización: eficacia, atractividad y unidad</strong>, cada una ligada a un tipo de motivo. La atractividad es la intermedia.</p>
+        <ul>
+          <li><strong>Qué es.</strong> Representa el grado de cooperación voluntaria y espontánea que las personas aportan a la organización. Se genera en el <strong>sistema espontáneo o informal</strong> y mide la capacidad competitiva de la empresa.</li>
+          <li><strong>De qué depende.</strong> Se consigue satisfaciendo los <strong>motivos internos (intrínsecos)</strong> de las personas: aquello que aprenden, logran y disfrutan realizando su trabajo.</li>
+          <li><strong>Qué significa para el directivo enfocarse en ella.</strong> Corresponde a la <strong>actividad ejecutiva</strong>: lograr que la organización sea atractiva, es decir, que la gente alcance motivaciones intrínsecas a través de lo que consigue en la empresa. Implica trabajar la <strong>formación</strong> (interdisciplinariedad, empleabilidad, desarrollo de talento) más que la mera capacitación.</li>
+          <li><strong>Matiz de examen.</strong> La atractividad está vinculada a <strong>la persona</strong> (no al puesto, que es lo propio de la eficacia); su comunicación gira en torno a la persona y a sus motivos intrínsecos. Cuanta más atractividad, mayor calidad motivacional.</li>
+        </ul>
+        <p class="src"><span class="tag">Tema 5 · Las tres dimensiones</span><span class="tag">Tema 2 · Actividades de la dirección</span></p>
+      </div>
+    </article>
+
+    <!-- Q4 -->
+    <article class="q">
+      <div class="q-head"><span class="q-num">4 / 4</span><span class="q-pts">1,25 puntos</span></div>
+      <p class="q-text">La actividad de liderazgo es la última función del directivo y, por ello, la más elevada. Consiste en implicar a las personas, a través de su trabajo, con la organización, haciéndoles sentir parte de un todo. En esta fase, el directivo debe procurar que las personas actúen "inducidas". ¿Por qué tipos de motivos, principalmente? Explica y describe justificadamente esta motivación.</p>
+      <textarea placeholder="Escribe aquí tu respuesta…"></textarea>
+      <button class="reveal-btn">Ver respuesta modelo</button>
+      <div class="model">
+        <h4>Respuesta modelo</h4>
+        <p>Principalmente, por <strong>motivos trascendentes</strong>. La actividad de liderazgo es la tercera y más elevada de las funciones directivas (tras la estratégica, ligada a lo extrínseco, y la ejecutiva, ligada a lo intrínseco).</p>
+        <ul>
+          <li><strong>Qué es el motivo trascendente.</strong> La acción satisface por el beneficio que produce en terceras personas; supera la causa propia y se orienta al servicio a los demás a través del trabajo. Responde a necesidades espirituales.</li>
+          <li><strong>Por qué encaja con el liderazgo.</strong> Liderar es implicar a las personas y hacerlas sentir parte de un todo; eso solo se logra cuando reconocen el valor de lo que la organización aporta a otros. Por eso el liderazgo se asocia a la dimensión de la <strong>unidad</strong>, que se consigue justamente satisfaciendo los motivos trascendentes.</li>
+          <li><strong>Cómo lo procura el directivo.</strong> Con el <strong>ejemplo</strong> (predicar con la conducta), <strong>gestionando valores</strong> compartidos, transmitiendo una <strong>visión de futuro</strong> con lenguaje positivo y <strong>otorgando confianza</strong> mediante la delegación. La unidad mide la confianza mutua y potencia a su vez la atractividad y la eficacia.</li>
+        </ul>
+        <p class="src"><span class="tag">Tema 2 · Actividades de la dirección</span><span class="tag">Tema 5 · Unidad</span><span class="tag">Tema 7</span></p>
+      </div>
+    </article>
+
+    <div class="block-title">Pregunta de desarrollo · 5 puntos</div>
+
+    <!-- Desarrollo -->
+    <article class="q">
+      <div class="q-head"><span class="q-num">1 / 1</span><span class="q-pts">5 puntos</span></div>
+      <p class="q-text">El liderazgo de un jefe de equipo de la empresa "DATILIN" está dado por su ejemplaridad como trabajador, por la toma de buenas decisiones, por el cuidado de sus recursos humanos y materiales, por la organización y la disciplina, por la satisfacción de sus trabajadores, por lograr un trabajo eficaz y eficiente, por la aplicación de protocolos, por una comunicación de excelencia y por la ausencia de quejas. Centrado en el contexto de una empresa, desarrolla: <strong>a)</strong> un breve cuestionario con seis preguntas y seis respuestas, clasificadas por temáticas del liderazgo, que harías a un candidato sin experiencia que opta al puesto de jefe de equipo; <strong>b)</strong> diez funciones que, a tu juicio, debería desempeñar un jefe/a de equipo en el ejercicio de su función directiva.</p>
+      <textarea placeholder="Desarrolla aquí los apartados a) y b)…" style="min-height:160px"></textarea>
+      <button class="reveal-btn">Ver guion modelo</button>
+      <div class="model">
+        <h4>Guion modelo — a) Cuestionario por temáticas</h4>
+        <ul>
+          <li><strong>Comunicación.</strong> «¿Cómo te asegurarías de que cada miembro entiende los objetivos del equipo y se siente escuchado?» — <em>Respuesta esperada:</em> abrir canales en doble sentido, usar lenguaje positivo y coherencia entre lo oral y lo gestual; comprobar la comprensión, no solo emitir.</li>
+          <li><strong>Motivación.</strong> «Un colaborador cumple pero está desenganchado: ¿qué harías?» — <em>Respuesta esperada:</em> identificar qué motivo prima (extrínseco, intrínseco o trascendente) y ajustar la oferta de motivos a su demanda para elevar la calidad motivacional.</li>
+          <li><strong>Toma de decisiones.</strong> «Describe cómo decidirías ante información incompleta y presión de tiempo.» — <em>Respuesta esperada:</em> decisiones que cuiden a la vez recursos humanos y materiales, basadas en datos y en la misión de la unidad.</li>
+          <li><strong>Trabajo en equipo y delegación.</strong> «¿Cómo repartirías tareas en un equipo nuevo?» — <em>Respuesta esperada:</em> analizar tareas y perfiles, asignar roles complementarios que generen cohesión, delegar generando autonomía y confianza (delegar no es controlar).</li>
+          <li><strong>Gestión emocional / de conflictos.</strong> «¿Cómo actuarías ante un conflicto que enrarece el clima?» — <em>Respuesta esperada:</em> empatizar, canalizar las emociones del grupo y reconducir el contagio emocional hacia un clima sano.</li>
+          <li><strong>Valores y ejemplaridad.</strong> «¿Qué papel das al ejemplo personal en el liderazgo?» — <em>Respuesta esperada:</em> los valores se comparten, no se imponen; el líder es el referente y predica con su conducta diaria.</li>
+        </ul>
+        <h4 style="margin-top:14px">Guion modelo — b) Diez funciones del jefe de equipo</h4>
+        <ul>
+          <li><strong>1. Fijar objetivos y dirección</strong> (actividad estratégica): planificar metas claras alineadas con la misión.</li>
+          <li><strong>2. Organizar y asignar tareas</strong> según perfiles y competencias de cada miembro.</li>
+          <li><strong>3. Comunicar con excelencia</strong>, en lenguaje positivo y en doble sentido, en el sistema formal e informal.</li>
+          <li><strong>4. Motivar e implicar</strong>, ajustando los tres tipos de motivos a cada persona.</li>
+          <li><strong>5. Tomar decisiones</strong> eficaces y eficientes, cuidando recursos humanos y materiales.</li>
+          <li><strong>6. Velar por la disciplina y los protocolos</strong>, garantizando el cumplimiento del sistema formal.</li>
+          <li><strong>7. Formar y desarrollar al equipo</strong> (capacitación, formación y desarrollo) para elevar la atractividad.</li>
+          <li><strong>8. Delegar y otorgar confianza</strong>, generando autonomía y corresponsabilidad.</li>
+          <li><strong>9. Gestionar emociones y clima</strong>, empatizando y cohesionando al grupo.</li>
+          <li><strong>10. Liderar con el ejemplo y los valores</strong>, transmitiendo una visión de futuro y sentido de unidad.</li>
+        </ul>
+        <p class="src"><span class="tag">Temas 2, 5, 6 y 7</span> · Estructura sugerida; adáptala con tus propias palabras y ejemplos del caso DATILIN.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ FICHAS ============ -->
+  <section class="panel" id="fichas">
+    <p class="section-note">Pulsa cada ficha para girarla. Pensadas para los conceptos que más suelen entrar.</p>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </section>
+
+  <!-- ============ MAPA ============ -->
+  <section class="panel" id="mapa">
+    <p class="section-note">La columna vertebral de la asignatura: cada motivo conecta con una dimensión, una actividad directiva y un sistema. Memorizar este eje resuelve buena parte de las preguntas cortas.</p>
+    <table class="map-table">
+      <thead>
+        <tr><th>Motivo</th><th>Responde a</th><th>Dimensión</th><th>Actividad directiva</th><th>Sistema</th></tr>
+      </thead>
+      <tbody>
+        <tr class="m-ext"><td>Extrínseco</td><td>Necesidades materiales (salario)</td><td>Eficacia</td><td>Estratégica</td><td>Formal</td></tr>
+        <tr class="m-int"><td>Intrínseco</td><td>Necesidades cognoscitivas (aprender, lograr)</td><td>Atractividad</td><td>Ejecutiva</td><td>Espontáneo / informal</td></tr>
+        <tr class="m-tra"><td>Trascendente</td><td>Necesidades espirituales (servir a otros)</td><td>Unidad</td><td>Liderazgo</td><td>Identificación / valores</td></tr>
+      </tbody>
+    </table>
+    <p class="legend">
+      <strong>Atractividad vs. eficacia (muy preguntado):</strong> la <em>atractividad</em> va ligada a la <strong>persona</strong> y a sus motivos intrínsecos; la <em>eficacia</em>, al <strong>puesto de trabajo</strong> y a los motivos extrínsecos.<br>
+      <strong>Unidad:</strong> mide la confianza mutua; al aumentarla, potencia también la atractividad y la eficacia. Es el objetivo del líder.<br>
+      <strong>Herramientas para dirigir equipos (Tema 7):</strong> pensamiento positivo · visión de futuro · gestión de valores · otorgar confianza (delegar).
+    </p>
+  </section>
+
+  <footer>
+    Material de repaso elaborado a partir de los apuntes de la asignatura (Temas 1–7). Las respuestas modelo son guiones orientativos: en el examen, redáctalos con tus propias palabras.
+  </footer>
+</div>
+
+<script>
+  /* ---- Tabs ---- */
+  const tabBtns=document.querySelectorAll('nav.tabs button');
+  const panels=document.querySelectorAll('.panel');
+  tabBtns.forEach(b=>b.addEventListener('click',()=>{
+    tabBtns.forEach(x=>x.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+
+  /* ---- Reveal individual ---- */
+  document.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const m=btn.nextElementSibling;
+      const open=m.classList.toggle('show');
+      btn.textContent=open?'Ocultar respuesta':(btn.dataset.label||btn.textContent.replace('Ocultar respuesta',''));
+      if(!btn.dataset.label){btn.dataset.label=open?'Ver respuesta modelo':btn.textContent;}
+    });
+    btn.dataset.label=btn.textContent;
+  });
+  document.getElementById('revealAll').addEventListener('click',()=>{
+    document.querySelectorAll('#examen .model').forEach(m=>m.classList.add('show'));
+    document.querySelectorAll('#examen .reveal-btn').forEach(b=>b.textContent='Ocultar respuesta');
+  });
+  document.getElementById('hideAll').addEventListener('click',()=>{
+    document.querySelectorAll('#examen .model').forEach(m=>m.classList.remove('show'));
+    document.querySelectorAll('#examen .reveal-btn').forEach(b=>b.textContent=b.dataset.label||'Ver respuesta modelo');
+  });
+
+  /* ---- Timer ---- */
+  let secs=0,tid=null;
+  const clock=document.getElementById('clock');
+  const startBtn=document.getElementById('startBtn');
+  function fmt(s){const m=String(Math.floor(s/60)).padStart(2,'0');const ss=String(s%60).padStart(2,'0');return m+':'+ss;}
+  function tick(){secs++;clock.textContent=fmt(secs);clock.classList.toggle('over',secs>=2700);}
+  startBtn.addEventListener('click',()=>{
+    if(tid){clearInterval(tid);tid=null;startBtn.textContent='Reanudar';clock.classList.remove('run');}
+    else{tid=setInterval(tick,1000);startBtn.textContent='Pausar';clock.classList.add('run');}
+  });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    clearInterval(tid);tid=null;secs=0;clock.textContent='00:00';
+    clock.classList.remove('run','over');startBtn.textContent='Iniciar';
+  });
+
+  /* ---- Flashcards ---- */
+  const cards=[
+    {cat:'Tema 2 · Motivación',term:'Motivo extrínseco',back:'La acción se induce por lo que se espera <strong>conseguir a cambio</strong>. Motivos ajenos a la acción, contingencias externas. Responde a <strong>necesidades materiales</strong> (salario).'},
+    {cat:'Tema 2 · Motivación',term:'Motivo intrínseco',back:'El aliciente es <strong>realizar la conducta en sí</strong>: aprender, asimilar, disfrutar. Contingencias internas. Responde a <strong>necesidades cognoscitivas</strong>.'},
+    {cat:'Tema 2 · Motivación',term:'Motivo trascendente',back:'Satisface por el <strong>beneficio a terceras personas</strong>; servir a otros mediante el trabajo. Responde a <strong>necesidades espirituales</strong>.'},
+    {cat:'Tema 5 · Dimensiones',term:'Eficacia',back:'Recursos mínimos para sobrevivir y cumplir la misión. Se logra en el <strong>sistema formal</strong> satisfaciendo <strong>motivos extrínsecos</strong>. Ligada al <strong>puesto</strong>.'},
+    {cat:'Tema 5 · Dimensiones',term:'Atractividad',back:'Cooperación voluntaria y espontánea; mide la capacidad competitiva. Sistema <strong>informal</strong>, <strong>motivos intrínsecos</strong>. Ligada a la <strong>persona</strong>.'},
+    {cat:'Tema 5 · Dimensiones',term:'Unidad',back:'Entrega y esfuerzo por compensar necesidades de otros. <strong>Motivos trascendentes</strong>. Mide la <strong>confianza mutua</strong>; potencia atractividad y eficacia.'},
+    {cat:'Tema 2 · Dirección',term:'Actividad estratégica',back:'1ª función: organización <strong>eficaz</strong>. Planificar objetivos y metas. Incentivo: motivos <strong>extrínsecos</strong>.'},
+    {cat:'Tema 2 · Dirección',term:'Actividad ejecutiva',back:'2ª función: organización <strong>atractiva</strong>. Trasladar tareas concretas; que la gente logre motivaciones <strong>intrínsecas</strong>.'},
+    {cat:'Tema 2 · Dirección',term:'Actividad de liderazgo',back:'3ª y más elevada: implicar a las personas, sentirse parte de un todo. Motivos <strong>trascendentes</strong> → unidad.'},
+    {cat:'Tema 7 · Emoción',term:'Contagio emocional',back:'Las emociones no son islas: se imitan y propagan. Afectan a rendimiento, creatividad, rotación, decisiones y negociación.'},
+    {cat:'Tema 7 · Emoción',term:'Competencias emocionales',back:'Relacionar el <strong>juicio</strong> (comprensión) y el <strong>gobierno</strong> (manejo) de las emociones. Se <strong>aprenden</strong>, no son innatas.'},
+    {cat:'Tema 7 · Herramientas',term:'Dirigir equipos',back:'Cuatro herramientas: <strong>pensamiento positivo · visión de futuro · gestión de valores · otorgar confianza</strong> (delegar).'},
+    {cat:'Tema 3 · Poder',term:'Poder vs. autoridad',back:'<strong>Poder:</strong> del jefe, lo otorga la organización, asociado al puesto. <strong>Autoridad:</strong> del directivo, la otorgan los superiores, asociada a la persona.'},
+    {cat:'Tema 7 · Confianza',term:'Delegar',back:'No es repartir tareas y vigilar: es <strong>apoderar responsabilidades</strong>, generar autonomía y respeto. Enlaza con confiar.'}
+  ];
+  const grid=document.getElementById('cardsGrid');
+  cards.forEach(c=>{
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML='<div class="card-inner">'+
+      '<div class="card-face card-front"><span class="c-cat">'+c.cat+'</span>'+
+      '<span class="c-term">'+c.term+'</span><span class="c-hint">pulsa para girar ↻</span></div>'+
+      '<div class="card-face card-back">'+c.back+'</div></div>';
+    d.addEventListener('click',()=>d.classList.toggle('flip'));
+    grid.appendChild(d);
+  });
+</script>
+</body>
+</html>

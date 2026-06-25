@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exámenes - Índice</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family: -apple-system, "Segoe UI", Inter, sans-serif;
+    background:#0F0F13;
+    color:#f0f0f5;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:2rem 1rem;
+  }
+  .card{
+    background:#1A1A24;
+    border:1px solid #2a2a38;
+    border-radius:16px;
+    padding:2.5rem;
+    max-width:480px;
+    width:100%;
+  }
+  h1{
+    font-size:1.4rem;
+    margin-bottom:1.75rem;
+    font-weight:700;
+  }
+  .group{ margin-bottom:1.5rem; }
+  .group:last-child{ margin-bottom:0; }
+  .group-title{
+    font-size:0.75rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#6f6f82;
+    margin-bottom:0.6rem;
+    padding-left:0.1rem;
+  }
+  ul{ list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
+  a{
+    display:block;
+    padding:0.85rem 1.1rem;
+    background:#21212f;
+    border-radius:10px;
+    color:#f0f0f5;
+    text-decoration:none;
+    font-weight:600;
+    transition: background .15s;
+  }
+  a:hover{ background:#2c2c3d; }
+  .desc{ display:block; font-weight:400; font-size:0.85rem; color:#9a9aab; margin-top:0.2rem; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Documentos disponibles</h1>
+
+    <div class="group">
+      <div class="group-title">DAR</div>
+      <ul>
+        <li><a href="dar.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Sistemas Operativos Avanzados</div>
+      <ul>
+        <li><a href="soa.html">Guía de estudio<span class="desc">Teoría</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Sistemas Inteligentes</div>
+      <ul>
+        <li><a href="si.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+        <li><a href="si-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Comunicación y Liderazgo</div>
+      <ul>
+        <li><a href="cl.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+        <li><a href="cl-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-title">MongoDB</div>
+      <ul>
+        <li><a href="mongodb.html">Simulador de examen<span class="desc">Práctica</span></a></li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>
