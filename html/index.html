@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exámenes · Índice</title>
+<title>Exámenes UNIR · Índice</title>
+<meta name="description" content="Material de estudio por asignatura: simuladores de examen, esquemas y guías.">
 <script>
 /* Tema: inicializa antes de pintar para evitar parpadeo */
 (function(){try{var t=localStorage.getItem('site-theme');
@@ -13,7 +14,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 <style>
   /* ===== Sistema común: design tokens + tema claro/oscuro ===== */
   :root{
-    --site-accent:#7c83ff;            /* acento del hub (neutro) */
+    --site-accent:#5a5fd6;            /* acento del hub (neutro, contraste AA) */
     --site-radius:14px;
     --site-sans:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
   }
@@ -21,63 +22,90 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     --site-bg:#eef1f0; --site-surface:#ffffff; --site-surface-2:#f3f6f6;
     --site-ink:#10212b; --site-muted:#5e7079; --site-line:#d9e0df;
     --site-topbar-bg:#10212b; --site-topbar-ink:#eef4f4; --site-topbar-line:rgba(255,255,255,.16);
+    --site-shadow:0 1px 2px rgba(16,33,43,.05); --site-shadow-lg:0 10px 30px rgba(16,33,43,.10);
   }
   :root[data-theme="dark"]{
     --site-bg:#0f1417; --site-surface:#161d21; --site-surface-2:#1d262b;
     --site-ink:#e7eef0; --site-muted:#9fb1b6; --site-line:#283238;
     --site-topbar-bg:#0a0e10; --site-topbar-ink:#e7eef0; --site-topbar-line:rgba(255,255,255,.12);
+    --site-shadow:0 1px 2px rgba(0,0,0,.4); --site-shadow-lg:0 12px 32px rgba(0,0,0,.5);
   }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--site-sans);background:var(--site-bg);color:var(--site-ink);min-height:100vh}
+
+  /* ===== Skip link (accesibilidad) ===== */
+  .skip{position:absolute;left:-9999px;top:0;z-index:2000;background:var(--site-surface);
+    color:var(--site-ink);border:1px solid var(--site-line);border-radius:9px;padding:10px 14px;font-weight:600}
+  .skip:focus{left:12px;top:10px}
 
   /* ===== Topbar común (nav-a-root + toggle de tema) ===== */
   .site-topbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:14px;
     padding:10px 18px;background:var(--site-topbar-bg);color:var(--site-topbar-ink);
     border-bottom:2px solid var(--site-accent);font-family:var(--site-sans)}
-  .site-topbar .site-home{color:inherit;text-decoration:none;font-weight:600;font-size:14px;
-    display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;
-    border:1px solid var(--site-topbar-line);transition:background .15s}
-  .site-topbar .site-home:hover{background:rgba(255,255,255,.12)}
   .site-topbar .site-brand{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   .site-topbar .site-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--site-accent)}
-  .site-doc-title{font-size:13px;font-weight:600;opacity:.85;margin-right:auto}
   .site-spacer{margin-right:auto}
   .site-theme-toggle{cursor:pointer;background:transparent;color:inherit;border:1px solid var(--site-topbar-line);
     border-radius:9px;width:40px;height:34px;font-size:15px;line-height:1;display:inline-flex;
     align-items:center;justify-content:center;transition:background .15s}
   .site-theme-toggle:hover{background:rgba(255,255,255,.12)}
+  .site-theme-toggle:focus-visible{outline:2px solid #fff;outline-offset:2px}
   :root[data-theme="light"] .site-ic-moon{display:none}
   :root[data-theme="dark"]  .site-ic-sun{display:none}
 
   /* ===== Página índice ===== */
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--site-sans);background:var(--site-bg);color:var(--site-ink);min-height:100vh}
-  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1rem 3rem}
-  .card{
-    background:var(--site-surface);
-    border:1px solid var(--site-line);
-    border-radius:16px;
-    padding:2.5rem;
-    max-width:480px;
-    width:100%;
-    box-shadow:0 1px 2px rgba(16,33,43,.05),0 10px 30px rgba(16,33,43,.06);
+  main{max-width:1000px;margin:0 auto;padding:2.75rem 1.25rem 4rem}
+
+  .hero h1{font-size:clamp(1.55rem,3.5vw,2.1rem);font-weight:800;letter-spacing:-.025em;line-height:1.1}
+  .hero p{margin-top:.55rem;color:var(--site-muted);font-size:.97rem;max-width:54ch;line-height:1.55}
+  .hero .count{margin-top:1rem;display:inline-flex;gap:.45rem;align-items:center;font-size:.8rem;color:var(--site-muted)}
+  .hero .count b{color:var(--site-ink);font-weight:700}
+
+  .filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.4rem 0 1.6rem}
+  .filter-btn{font:inherit;font-size:.83rem;font-weight:600;cursor:pointer;color:var(--site-muted);
+    background:var(--site-surface);border:1px solid var(--site-line);border-radius:999px;padding:.5rem .95rem;
+    transition:color .15s,border-color .15s,background .15s}
+  .filter-btn:hover{color:var(--site-ink);border-color:var(--site-accent)}
+  .filter-btn.on{color:#fff;background:var(--site-accent);border-color:var(--site-accent)}
+  .filter-btn:focus-visible{outline:2px solid var(--site-accent);outline-offset:2px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1rem;list-style:none}
+
+  .doc-card{position:relative;display:flex;flex-direction:column;gap:.55rem;height:100%;
+    background:var(--site-surface);border:1px solid var(--site-line);border-left:4px solid var(--c,var(--site-accent));
+    border-radius:var(--site-radius);padding:1.15rem 1.25rem 1.2rem;text-decoration:none;color:inherit;
+    box-shadow:var(--site-shadow);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+  .doc-card:hover{transform:translateY(-3px);box-shadow:var(--site-shadow-lg);border-color:var(--c,var(--site-accent))}
+  .doc-card:focus-visible{outline:3px solid var(--c,var(--site-accent));outline-offset:2px}
+
+  .doc-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+  .doc-eyebrow{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--c,var(--site-accent));color:color-mix(in srgb,var(--c,var(--site-accent)) 74%,var(--site-ink))}
+  .doc-pill{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:.2rem .55rem;border-radius:999px;border:1px solid var(--site-line);color:var(--site-muted);white-space:nowrap}
+  .doc-pill.practica{color:var(--c);
+    color:color-mix(in srgb,var(--c) 72%,var(--site-ink));
+    border-color:color-mix(in srgb,var(--c) 34%,var(--site-line));
+    background:color-mix(in srgb,var(--c) 12%,transparent)}
+  .doc-title{font-size:1.06rem;font-weight:700;line-height:1.25}
+  .doc-desc{font-size:.85rem;color:var(--site-muted);line-height:1.5;flex:1}
+  .doc-go{font-size:.82rem;font-weight:600;margin-top:.15rem;
+    color:var(--c,var(--site-accent));color:color-mix(in srgb,var(--c,var(--site-accent)) 74%,var(--site-ink))}
+  .doc-card:hover .doc-go{text-decoration:underline}
+  .doc-card[hidden]{display:none}
+
+  .empty{margin-top:1.5rem;color:var(--site-muted);font-size:.9rem}
+
+  @media (prefers-reduced-motion: reduce){
+    .doc-card{transition:none}
+    .doc-card:hover{transform:none}
   }
-  h1{font-size:1.4rem;margin-bottom:1.75rem;font-weight:700}
-  .group{margin-bottom:1.5rem}
-  .group:last-child{margin-bottom:0}
-  .group-title{
-    font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
-    color:var(--site-muted);margin-bottom:0.6rem;padding-left:0.1rem;
-  }
-  ul{list-style:none;display:flex;flex-direction:column;gap:0.6rem}
-  .card a{
-    display:block;padding:0.85rem 1.1rem;background:var(--site-surface-2);
-    border:1px solid var(--site-line);border-radius:10px;color:var(--site-ink);
-    text-decoration:none;font-weight:600;transition:border-color .15s,background .15s;
-  }
-  .card a:hover{border-color:var(--site-accent)}
-  .desc{display:block;font-weight:400;font-size:0.85rem;color:var(--site-muted);margin-top:0.2rem}
 </style>
 </head>
 <body>
+  <a class="skip" href="#docs">Saltar a los documentos</a>
+
   <div class="site-topbar">
     <span class="site-brand"><span class="dot"></span>Exámenes UNIR</span>
     <span class="site-spacer"></span>
@@ -86,49 +114,74 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     </button>
   </div>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>Documentos disponibles</h1>
+  <main>
+    <header class="hero">
+      <h1>Material de estudio</h1>
+      <p>Simuladores tipo examen, esquemas y guías por asignatura. Elige un documento para empezar a practicar.</p>
+      <span class="count"><b>5</b>&nbsp;asignaturas&nbsp;·&nbsp;<b>7</b>&nbsp;documentos</span>
+    </header>
 
-      <div class="group">
-        <div class="group-title">DAR</div>
-        <ul>
-          <li><a href="dar.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-        </ul>
-      </div>
-
-      <div class="group">
-        <div class="group-title">Sistemas Operativos Avanzados</div>
-        <ul>
-          <li><a href="soa.html">Guía de estudio<span class="desc">Teoría</span></a></li>
-        </ul>
-      </div>
-
-      <div class="group">
-        <div class="group-title">Sistemas Inteligentes</div>
-        <ul>
-          <li><a href="si.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-          <li><a href="si-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
-        </ul>
-      </div>
-
-      <div class="group">
-        <div class="group-title">Comunicación y Liderazgo</div>
-        <ul>
-          <li><a href="cl.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-          <li><a href="cl-esquemas.html">Esquemas de estudio<span class="desc">Teoría</span></a></li>
-        </ul>
-      </div>
-
-      <div class="group">
-        <div class="group-title">MongoDB</div>
-        <ul>
-          <li><a href="mongodb.html">Simulador de examen<span class="desc">Práctica</span></a></li>
-        </ul>
-      </div>
-
+    <div class="filters" role="group" aria-label="Filtrar documentos por tipo">
+      <button class="filter-btn on" type="button" data-filter="all" aria-pressed="true">Todos</button>
+      <button class="filter-btn" type="button" data-filter="practica" aria-pressed="false">Práctica</button>
+      <button class="filter-btn" type="button" data-filter="teoria" aria-pressed="false">Teoría</button>
     </div>
-  </div>
+
+    <section id="docs" class="grid" aria-label="Documentos disponibles">
+
+      <a class="doc-card" href="dar.html" data-tipo="practica" style="--c:#6C63FF">
+        <div class="doc-top"><span class="doc-eyebrow">DAR</span><span class="doc-pill practica">Práctica</span></div>
+        <h2 class="doc-title">Simulador de examen</h2>
+        <p class="doc-desc">Test tipo examen con corrección automática y explicación de cada respuesta.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="soa.html" data-tipo="teoria" style="--c:#C41230">
+        <div class="doc-top"><span class="doc-eyebrow">Sistemas Operativos Avanzados</span><span class="doc-pill">Teoría</span></div>
+        <h2 class="doc-title">Guía de estudio</h2>
+        <p class="doc-desc">Guía por capítulos con esquemas, ejemplos y un test de repaso integrado.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="si.html" data-tipo="practica" style="--c:#2D5BD7">
+        <div class="doc-top"><span class="doc-eyebrow">Sistemas Inteligentes</span><span class="doc-pill practica">Práctica</span></div>
+        <h2 class="doc-title">Simulador de examen</h2>
+        <p class="doc-desc">Test, preguntas de desarrollo corto y ejercicio práctico configurables.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="si-esquemas.html" data-tipo="teoria" style="--c:#2D5BD7">
+        <div class="doc-top"><span class="doc-eyebrow">Sistemas Inteligentes</span><span class="doc-pill">Teoría</span></div>
+        <h2 class="doc-title">Esquemas de estudio</h2>
+        <p class="doc-desc">Mapas y esquemas de estudio tema a tema, con las claves de examen.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="cl.html" data-tipo="practica" style="--c:#0f6e7e">
+        <div class="doc-top"><span class="doc-eyebrow">Comunicación y Liderazgo</span><span class="doc-pill practica">Práctica</span></div>
+        <h2 class="doc-title">Simulador de examen</h2>
+        <p class="doc-desc">Preguntas cortas y de desarrollo con respuesta modelo y cronómetro.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="cl-esquemas.html" data-tipo="teoria" style="--c:#0f6e7e">
+        <div class="doc-top"><span class="doc-eyebrow">Comunicación y Liderazgo</span><span class="doc-pill">Teoría</span></div>
+        <h2 class="doc-title">Esquemas de estudio</h2>
+        <p class="doc-desc">Esquemas jerárquicos de los temas 1–7, listos para imprimir.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+      <a class="doc-card" href="mongodb.html" data-tipo="practica" style="--c:#00855f">
+        <div class="doc-top"><span class="doc-eyebrow">MongoDB</span><span class="doc-pill practica">Práctica</span></div>
+        <h2 class="doc-title">Práctica de examen</h2>
+        <p class="doc-desc">Ejercicios de consultas tipo examen con validador en el navegador.</p>
+        <span class="doc-go">Abrir →</span>
+      </a>
+
+    </section>
+
+    <p class="empty" hidden role="status">No hay documentos de este tipo.</p>
+  </main>
 
   <script>
   /* Toggle de tema (común) */
@@ -136,6 +189,25 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
   b.addEventListener('click',function(){var d=document.documentElement;
   var n=d.getAttribute('data-theme')==='dark'?'light':'dark';
   d.setAttribute('data-theme',n);try{localStorage.setItem('site-theme',n);}catch(e){}});})();
+
+  /* Filtro por tipo */
+  (function(){
+    var btns=[].slice.call(document.querySelectorAll('.filter-btn'));
+    var cards=[].slice.call(document.querySelectorAll('.doc-card'));
+    var empty=document.querySelector('.empty');
+    btns.forEach(function(b){
+      b.addEventListener('click',function(){
+        btns.forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+        b.classList.add('on');b.setAttribute('aria-pressed','true');
+        var f=b.dataset.filter,shown=0;
+        cards.forEach(function(c){
+          var match=(f==='all'||c.dataset.tipo===f);
+          c.hidden=!match; if(match)shown++;
+        });
+        if(empty)empty.hidden=shown>0;
+      });
+    });
+  })();
   </script>
 </body>
 </html>
