@@ -1,0 +1,144 @@
+---
+/**
+ * EsquemaTree — un esquema de tema: cabecera (num, bloque, titulo), bloque de
+ * "idea fuerza" (clave, VERBATIM con set:html) y el árbol de nodos (slot por
+ * defecto, que la página rellena con el <Content /> de la colección: listas
+ * Markdown anidadas con HTML inline preservado).
+ */
+interface Props {
+  num: string;
+  titulo: string;
+  clave: string;
+  bloque?: string;
+  tema?: string;
+}
+const { num, titulo, clave, bloque, tema } = Astro.props;
+---
+
+<section class="esq" id={tema ?? `t${num}`}>
+  <header class="esq-head">
+    <span class="esq-num">{num}</span>
+    <div class="esq-headtext">
+      {bloque && <span class="esq-bloque">{bloque}</span>}
+      <h2 class="esq-titulo">{titulo}</h2>
+    </div>
+  </header>
+
+  <p class="esq-clave">
+    <strong>Idea fuerza.</strong> <span set:html={clave} />
+  </p>
+
+  <div class="esq-tree">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .esq {
+    border: 1px solid var(--site-line);
+    border-radius: var(--site-radius);
+    background: var(--site-surface);
+    box-shadow: var(--site-shadow);
+    padding: 1.3rem 1.4rem 1.4rem;
+    margin: 0 0 1.4rem;
+    scroll-margin-top: 70px;
+  }
+  .esq-head {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    margin-bottom: 0.9rem;
+  }
+  .esq-num {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    background: var(--site-accent);
+    color: #fff;
+  }
+  .esq-bloque {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--site-muted);
+  }
+  .esq-titulo {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .esq-clave {
+    background: color-mix(in srgb, var(--site-accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--site-accent) 25%, transparent);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+  .esq-clave strong {
+    color: var(--site-accent);
+  }
+
+  /* Árbol (listas anidadas Markdown). Estilo por profundidad. */
+  .esq-tree :global(ul) {
+    list-style: none;
+    margin: 0;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--site-line);
+  }
+  .esq-tree > :global(ul) {
+    padding-left: 0;
+    border-left: none;
+  }
+  .esq-tree :global(li) {
+    position: relative;
+    margin: 0.35rem 0;
+    line-height: 1.5;
+    padding-left: 0.9rem;
+  }
+  .esq-tree :global(li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 0.5rem;
+    height: 2px;
+    background: var(--site-line);
+  }
+  .esq-tree > :global(ul) > :global(li) {
+    padding-left: 0;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 0.8rem;
+  }
+  .esq-tree > :global(ul) > :global(li)::before {
+    display: none;
+  }
+  .esq-tree > :global(ul) > :global(li) > :global(ul) {
+    margin-top: 0.4rem;
+    font-weight: 400;
+    font-size: 0.92rem;
+  }
+  .esq-tree :global(b),
+  .esq-tree :global(strong) {
+    color: var(--site-accent);
+    font-weight: 600;
+  }
+  .esq-tree :global(.mono),
+  .esq-tree :global(code) {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 0.85em;
+    background: color-mix(in srgb, var(--site-accent) 12%, transparent);
+    border-radius: 5px;
+    padding: 0.05em 0.35em;
+  }
+</style>

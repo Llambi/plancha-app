@@ -1,0 +1,335 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { meta } from '../data/asignaturas';
+
+const base = '';
+
+const test = await getCollection('test');
+const desarrollo = await getCollection('desarrollo');
+const esquemas = await getCollection('esquemas');
+const guia = await getCollection('guia');
+
+interface Card {
+  href: string;
+  sigla: string;
+  subject: string;
+  title: string;
+  desc: string;
+  tipo: 'practica' | 'teoria';
+  accent: string;
+}
+
+const cards: Card[] = [];
+
+// Asignaturas con guía: su test es el quiz de la guía (no se listan como práctica).
+const guiaCodes = new Set<string>(guia.map((g) => g.data.asignatura));
+
+// --- Práctica (test + desarrollo) por asignatura ---
+const practicaCodes = new Set<string>([
+  ...test.map((t) => t.data.asignatura),
+  ...desarrollo.map((d) => d.data.asignatura),
+]);
+for (const code of practicaCodes) {
+  if (guiaCodes.has(code)) continue;
+  const m = meta(code);
+  const nTest = test.filter((t) => t.data.asignatura === code).length;
+  const nDev = desarrollo.filter((d) => d.data.asignatura === code).length;
+  const parts = [];
+  if (nTest) parts.push(`${nTest} preguntas tipo test`);
+  if (nDev) parts.push(`${nDev} de desarrollo`);
+  cards.push({
+    href: `${base}/practica/${code}`,
+    sigla: m.sigla,
+    subject: m.nombre,
+    title: 'Práctica de examen',
+    desc: `${parts.join(' y ')}, con corrección y respuestas modelo.`,
+    tipo: 'practica',
+    accent: m.accent,
+  });
+}
+
+// --- Esquemas por asignatura ---
+const esqCodes = new Set<string>(esquemas.map((e) => e.data.asignatura));
+for (const code of esqCodes) {
+  const m = meta(code);
+  const n = esquemas.filter((e) => e.data.asignatura === code).length;
+  cards.push({
+    href: `${base}/esquemas/${code}`,
+    sigla: m.sigla,
+    subject: m.nombre,
+    title: 'Esquemas de estudio',
+    desc: `${n} temas en esquemas jerárquicos con la idea fuerza de cada uno.`,
+    tipo: 'teoria',
+    accent: m.accent,
+  });
+}
+
+// --- Guías paginadas por asignatura ---
+for (const code of guiaCodes) {
+  const m = meta(code);
+  const nCh = guia.filter((g) => g.data.asignatura === code).length;
+  const nQ = test.filter((t) => t.data.asignatura === code).length;
+  cards.push({
+    href: `${base}/guia/${code}`,
+    sigla: m.sigla,
+    subject: m.nombre,
+    title: 'Guía de estudio',
+    desc: `${nCh} capítulos paginados${nQ ? ` + test de ${nQ} preguntas` : ''}.`,
+    tipo: 'teoria',
+    accent: m.accent,
+  });
+}
+
+// --- MongoDB: práctica interactiva a medida (validador), no proviene de colección ---
+{
+  const m = meta('mongodb');
+  cards.push({
+    href: `${base}/practica/mongodb`,
+    sigla: m.sigla,
+    subject: m.nombre,
+    title: 'Práctica de examen',
+    desc: 'Ejercicios de consultas tipo examen con validador en el navegador.',
+    tipo: 'practica',
+    accent: m.accent,
+  });
+}
+
+cards.sort((a, b) => a.subject.localeCompare(b.subject, 'es') || a.tipo.localeCompare(b.tipo));
+
+const nSubjects = new Set(cards.map((c) => c.subject)).size;
+---
+
+<BaseLayout title="Exámenes UNIR · Índice">
+  <header class="hero">
+    <h1>Material de estudio</h1>
+    <p>
+      Práctica tipo examen y esquemas por asignatura. Elige un documento para
+      empezar.
+    </p>
+    <span class="count">
+      <b>{nSubjects}</b> asignaturas · <b>{cards.length}</b> documentos
+    </span>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filtrar por tipo">
+    <button class="filter-btn on" type="button" data-filter="all" aria-pressed="true">Todos</button>
+    <button class="filter-btn" type="button" data-filter="practica" aria-pressed="false">Práctica</button>
+    <button class="filter-btn" type="button" data-filter="teoria" aria-pressed="false">Esquemas</button>
+  </div>
+
+  <section class="grid" aria-label="Documentos disponibles">
+    {
+      cards.map((c) => (
+        <a class="doc-card" href={c.href} data-tipo={c.tipo} style={`--c:${c.accent}`}>
+          <div class="doc-head">
+            <span class="doc-badge" aria-hidden="true">{c.sigla}</span>
+            <span class="doc-headtext">
+              <span class="doc-subject">{c.subject}</span>
+              <span class="doc-title">{c.title}</span>
+            </span>
+          </div>
+          <p class="doc-desc">{c.desc}</p>
+          <div class="doc-foot">
+            <span class={`doc-type ${c.tipo}`}>
+              <i class="tdot" aria-hidden="true" />
+              {c.tipo === 'practica' ? 'Práctica' : 'Esquemas'}
+            </span>
+            <span class="doc-go">Abrir →</span>
+          </div>
+        </a>
+      ))
+    }
+  </section>
+
+  <p class="empty" hidden role="status">No hay documentos de este tipo.</p>
+</BaseLayout>
+
+<script>
+  const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.doc-card'));
+  const empty = document.querySelector<HTMLElement>('.empty');
+  btns.forEach((b) => {
+    b.addEventListener('click', () => {
+      btns.forEach((x) => {
+        x.classList.remove('on');
+        x.setAttribute('aria-pressed', 'false');
+      });
+      b.classList.add('on');
+      b.setAttribute('aria-pressed', 'true');
+      const f = b.dataset.filter;
+      let shown = 0;
+      cards.forEach((c) => {
+        const match = f === 'all' || c.dataset.tipo === f;
+        c.hidden = !match;
+        if (match) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+  });
+</script>
+
+<style>
+  .hero h1 {
+    font-size: clamp(1.55rem, 3.5vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .hero p {
+    margin-top: 0.55rem;
+    color: var(--site-muted);
+    font-size: 0.97rem;
+    max-width: 54ch;
+    line-height: 1.55;
+  }
+  .count {
+    margin-top: 1rem;
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--site-muted);
+  }
+  .count b {
+    color: var(--site-ink);
+    font-weight: 700;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.4rem 0 1.6rem;
+  }
+  .filter-btn {
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .filter-btn:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .filter-btn.on {
+    color: #fff;
+    background: var(--site-accent);
+    border-color: var(--site-accent);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
+    gap: 1rem;
+    list-style: none;
+  }
+  .doc-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    height: 100%;
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 18px;
+    padding: 1.2rem 1.25rem 1.1rem;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--site-shadow);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  }
+  .doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--site-shadow-lg);
+    border-color: var(--c, var(--site-accent));
+  }
+  .doc-head {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .doc-badge {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--c, var(--site-accent));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+  }
+  .doc-headtext {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .doc-subject {
+    font-size: 0.69rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--site-muted);
+  }
+  .doc-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.22;
+  }
+  .doc-desc {
+    font-size: 0.85rem;
+    color: var(--site-muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .doc-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--site-line);
+  }
+  .doc-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.71rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--site-muted);
+  }
+  .doc-type .tdot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--c, var(--site-accent));
+  }
+  .doc-type.teoria .tdot {
+    background: var(--site-muted);
+  }
+  .doc-go {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--c, var(--site-accent)) 74%, var(--site-ink));
+  }
+  .doc-card:hover .doc-go {
+    text-decoration: underline;
+  }
+  .doc-card[hidden] {
+    display: none;
+  }
+  .empty {
+    margin-top: 1.5rem;
+    color: var(--site-muted);
+    font-size: 0.9rem;
+  }
+</style>

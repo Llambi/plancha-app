@@ -1,0 +1,21 @@
+{
+  "name": "exam-unir",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Material de estudio de exámenes UNIR (esquemas y práctica), generado con Astro.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^5.6.1",
+    "js-yaml": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "node-html-parser": "^8.0.3"
+  }
+}

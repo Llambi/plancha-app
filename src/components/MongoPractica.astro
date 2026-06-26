@@ -1,0 +1,821 @@
+---
+/**
+ * MongoPractica — validador de consultas MongoDB portado de legacy/mongodb.html.
+ * GENERADO por scripts/migrate-mongo.mjs. No editar a mano: regenerar.
+ * El script de la app va is:inline VERBATIM (contiene la lógica de validación).
+ * El CSS original va reescalado bajo .mongo-practica.
+ */
+---
+
+<div class="mongo-practica">
+  <div class="mongo-header">
+    <div class="bar">
+      <div class="mark">
+        <div class="leaf">{ }</div>
+        <div>
+          <b>Práctica de examen · MongoDB</b>
+          <span>Bases de Datos Avanzadas · estilo examen final</span>
+        </div>
+      </div>
+      <nav class="picker" id="picker"></nav>
+    </div>
+  </div>
+  <div id="app" class="mongo-main"></div>
+  <footer class="mongo-footer">
+    Herramienta de práctica basada en el repositorio <code>jarturomora/bases-datos-avanzadas-gii</code>. Los ejercicios 1–4 reproducen los del repositorio; los ejercicios 5–6 son originales en el mismo formato para practicar más. El validador comprueba las condiciones en tu navegador; no sustituye a probar las consultas en MongoDB.
+  </footer>
+</div>
+
+<script is:inline>
+/* ============ Helpers de justificación ============ */
+const J = {
+  okEq:(c)=>`Correcto. Filtra por igualdad con la forma <code>{ campo: valor }</code> sobre la colección <code>${c}</code>, con el nombre en plural y el tipo de dato correcto.`,
+  assign:()=>`Usa <code>=</code> (asignación) en vez de <code>:</code> dentro del objeto. El filtro de <code>find()</code> es un documento: <code>{ campo: valor }</code>.`,
+  strBool:()=>`Compara contra la cadena <code>"true"</code> en lugar del booleano <code>true</code>; no coincidiría con un campo de tipo boolean.`,
+  strFilter:()=>`Pasa una cadena de texto como filtro. <code>find()</code> espera un documento <code>{ }</code> como criterio, no un string.`,
+  wrongColl:(c)=>`El nombre de la colección es incorrecto (debe ser <code>${c}</code>, en plural).`,
+  badChain:()=>`Invierte el orden: lo correcto es <code>db.coleccion.find(...)</code>, no <code>db.find.coleccion(...)</code>.`,
+  okGt:(n)=>`Correcto. La comparación se escribe como objeto anidado en el campo: <code>{ campo: { $gt: ${n} } }</code>.`,
+  bareGt:()=>`<code>></code> no es un operador válido dentro del documento de consulta; hay que usar el operador <code>$gt</code>.`,
+  gtEq:()=>`<code>$gt = ...</code> mezcla operador con <code>=</code>. La forma válida es <code>$gt: valor</code> y, además, la colección está mal escrita.`,
+  opOutside:()=>`Coloca el operador fuera del campo. Debe ir dentro: <code>{ campo: { $gt: n } }</code>.`,
+  strNum:()=>`Compara contra una cadena (<code>"n"</code>) en vez de un número, y no usa operador de comparación.`,
+  okProj:()=>`Correcto. La proyección <code>{ campo: 1, _id: 0 }</code> muestra solo esos campos y oculta <code>_id</code>.`,
+  projShort:()=>`<code>{ campo, otro }</code> no es sintaxis válida de proyección; hay que indicar <code>campo: 1</code>.`,
+  projSelect:()=>`<code>.select()</code> no existe en MongoDB; la proyección va como segundo argumento de <code>find()</code>.`,
+  projTrue:()=>`<code>{ campo: 1 }</code> proyecta el campo pero NO oculta <code>_id</code>, así que devuelve un campo de más respecto a lo pedido.`,
+  okSortDesc:()=>`Correcto. Se ordena sobre el cursor: <code>.find().sort({ campo: -1 })</code> (descendente).`,
+  okSortAsc:()=>`Correcto. Se ordena sobre el cursor: <code>.find().sort({ campo: 1 })</code> (ascendente).`,
+  sortNoFind:()=>`<code>.sort()</code> se aplica al cursor que devuelve <code>find()</code>. <code>db.coleccion.sort(...)</code> no es válido.`,
+  orderBy:()=>`<code>.orderBy()</code> no es un método de MongoDB; la ordenación se hace con <code>.sort()</code>.`,
+  sortNoBraces:()=>`<code>sort(campo: -1)</code> no es válido: el argumento debe ser un objeto <code>{ campo: -1 }</code>.`,
+  okLte:()=>`Correcto. "Menor o igual" es <code>$lte</code> (la <em>e</em> es de <em>equal</em>).`,
+  ltForLte:()=>`<code>$lt</code> es "estrictamente menor". Para "menor o igual" se necesita <code>$lte</code>.`,
+  lteOutside:()=>`El operador va dentro del campo: <code>{ edad: { $lte: 30 } }</code>, no <code>{ $lte: { edad: 30 } }</code>.`,
+};
+
+/* ============ Validadores de tipo ============ */
+const isStr=v=>typeof v==='string';
+const isNum=v=>typeof v==='number'&&!Number.isNaN(v);
+const isBool=v=>typeof v==='boolean';
+const isDate=v=>(v&&typeof v==='object'&&'$date'in v)||(typeof v==='string'&&/\d{4}-\d{2}-\d{2}/.test(v));
+const typeName={string:'string',number:'number',boolean:'boolean',date:'date'};
+const typeCheck={string:isStr,number:isNum,boolean:isBool,date:isDate};
+
+/* ============ Datos de los ejercicios ============ */
+const exercises = [
+{
+  short:"Ej. 1", title:"Ejercicio 1 — Video Club", db:"videoclub",
+  source:"Repositorio oficial · resuelto ✅",
+  intro:"Un video club necesita registrar información básica sobre sus <b>películas</b> y sus <b>clientes</b>. Crea la base de datos <b>videoclub</b> con exactamente dos colecciones e inserta los datos cumpliendo todas las condiciones.",
+  colls:[
+    {name:"peliculas",exact:6,
+     fields:[["titulo","string"],["genero","string"],["anio","number"],["precio_alquiler","number"]],
+     rules:[
+       {t:"<code>anio</code> entre 2000 y 2022",ok:d=>d.every(x=>x.anio>=2000&&x.anio<=2022)},
+       {t:"<code>precio_alquiler</code> entre 2 y 6 (incl.)",ok:d=>d.every(x=>x.precio_alquiler>=2&&x.precio_alquiler<=6)},
+       {t:"Al menos 2 películas de género \"Acción\"",ok:d=>d.filter(x=>x.genero==="Acción").length>=2},
+     ]},
+    {name:"clientes",exact:4,
+     fields:[["nombre","string"],["edad","number"],["socio_activo","boolean"]],
+     rules:[
+       {t:"<code>edad</code> entre 18 y 65",ok:d=>d.every(x=>x.edad>=18&&x.edad<=65)},
+       {t:"Al menos 2 clientes con <code>socio_activo: true</code>",ok:d=>d.filter(x=>x.socio_activo===true).length>=2},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todas las películas del género <code>"Acción"</code>.',correct:2,
+     opts:[
+      {c:'db.peliculas.find("genero: Acción")',j:J.strFilter()},
+      {c:'db.peliculas.find({ genero = "Acción" })',j:J.assign()},
+      {c:'db.peliculas.find({ genero: "Acción" })',j:J.okEq("peliculas")},
+      {c:'db.find.peliculas({ genero: "Acción" })',j:J.badChain()},
+     ]},
+    {q:'Mostrar las películas cuyo <code>precio_alquiler</code> sea mayor a 4.',correct:1,
+     opts:[
+      {c:'db.peliculas.find({ precio_alquiler: > 4 })',j:J.bareGt()},
+      {c:'db.peliculas.find({ precio_alquiler: { $gt: 4 } })',j:J.okGt(4)},
+      {c:'db.peliculas.find({ $gt: { precio_alquiler: 4 } })',j:J.opOutside()},
+      {c:'db.peliculas.find(precio_alquiler > 4)',j:J.bareGt()},
+     ]},
+    {q:'Obtener los clientes que tengan <code>socio_activo</code> en true.',correct:2,
+     opts:[
+      {c:'db.clientes.find({ socio_activo = true })',j:J.assign()},
+      {c:'db.clientes.find("socio_activo: true")',j:J.strFilter()},
+      {c:'db.clientes.find({ socio_activo: true })',j:J.okEq("clientes")},
+      {c:'db.find({ socio_activo: true })',j:J.wrongColl("clientes")},
+     ]},
+    {q:'Mostrar los clientes cuya <code>edad</code> sea menor o igual a 30.',correct:2,
+     opts:[
+      {c:'db.clientes.find({ edad: { $lt: 30 } })',j:J.ltForLte()},
+      {c:'db.clientes.find({ edad <= 30 })',j:J.bareGt()},
+      {c:'db.clientes.find({ edad: { $lte: 30 } })',j:J.okLte()},
+      {c:'db.clientes.find({ $lte: { edad: 30 } })',j:J.lteOutside()},
+     ]},
+  ]
+},
+{
+  short:"Ej. 2", title:"Ejercicio 2 — Reservas de hotel", db:"turismo_hotel",
+  source:"Repositorio oficial · sin resolver 🤔",
+  intro:"Crea la base de datos <b>turismo_hotel</b> con exactamente dos colecciones: <b>habitaciones</b> y <b>reservas</b>, respetando todas las condiciones.",
+  colls:[
+    {name:"habitaciones",exact:5,
+     fields:[["numero","number"],["tipo","string"],["precioNoche","number"],["disponible","boolean"]],
+     rules:[
+       {t:"<code>precioNoche</code> entre 50 y 300",ok:d=>d.every(x=>x.precioNoche>=50&&x.precioNoche<=300)},
+       {t:"Al menos 3 habitaciones con <code>disponible: true</code>",ok:d=>d.filter(x=>x.disponible===true).length>=3},
+       {t:'Al menos una habitación de tipo "Suite"',ok:d=>d.some(x=>x.tipo==="Suite")},
+     ]},
+    {name:"reservas",exact:4,
+     fields:[["cliente","string"],["noches","number"],["personas","number"],["confirmada","boolean"]],
+     rules:[
+       {t:"<code>noches</code> entre 1 y 14",ok:d=>d.every(x=>x.noches>=1&&x.noches<=14)},
+       {t:"<code>personas</code> entre 1 y 4",ok:d=>d.every(x=>x.personas>=1&&x.personas<=4)},
+       {t:"Al menos 2 reservas con <code>confirmada: true</code>",ok:d=>d.filter(x=>x.confirmada===true).length>=2},
+       {t:"Al menos una reserva de más de 2 noches",ok:d=>d.some(x=>x.noches>2)},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todas las habitaciones que están disponibles.',correct:3,
+     opts:[
+      {c:'db.habitaciones.find({ disponible = true })',j:J.assign()},
+      {c:'db.habitacion.find({ disponible: true })',j:J.wrongColl("habitaciones")},
+      {c:'db.habitaciones.find({ disponible: "true" })',j:J.strBool()},
+      {c:'db.habitaciones.find({ disponible: true })',j:J.okEq("habitaciones")},
+     ]},
+    {q:'Mostrar solo el número y el precio por noche de todas las habitaciones.',correct:0,
+     opts:[
+      {c:'db.habitaciones.find({}, { numero: 1, precioNoche: 1, _id: 0 })',j:J.okProj()},
+      {c:'db.habitaciones.find({ numero, precioNoche })',j:J.projShort()},
+      {c:'db.habitaciones.select({ numero: 1, precioNoche: 1 })',j:J.projSelect()},
+      {c:'db.habitaciones.find({}, { numero: true, precioNoche: true })',j:J.projTrue()},
+     ]},
+    {q:'Obtener las reservas con más de 3 noches.',correct:2,
+     opts:[
+      {c:'db.reservas.find({ noches > 3 })',j:J.bareGt()},
+      {c:'db.reserva.find({ noches: { $gt = 3 } })',j:J.gtEq()},
+      {c:'db.reservas.find({ noches: { $gt: 3 } })',j:J.okGt(3)},
+      {c:'db.reservas.find({ noches: "3" })',j:J.strNum()},
+     ]},
+    {q:'Listar las reservas ordenadas por número de noches de mayor a menor.',correct:3,
+     opts:[
+      {c:'db.reservas.sort({ noches: -1 })',j:J.sortNoFind()},
+      {c:'db.reservas.find().orderBy({ noches: "desc" })',j:J.orderBy()},
+      {c:'db.reservas.find().sort(noches: -1)',j:J.sortNoBraces()},
+      {c:'db.reservas.find().sort({ noches: -1 })',j:J.okSortDesc()},
+     ]},
+  ]
+},
+{
+  short:"Ej. 3", title:"Ejercicio 3 — Gestión de medicamentos", db:"farmacia_central",
+  source:"Repositorio oficial · sin resolver 🤔",
+  intro:"Crea la base de datos <b>farmacia_central</b> con exactamente dos colecciones: <b>medicamentos</b> y <b>dispensaciones</b>.",
+  colls:[
+    {name:"medicamentos",exact:6,
+     fields:[["nombre","string"],["categoria","string"],["stock","number"],["requiereReceta","boolean"]],
+     rules:[
+       {t:"<code>stock</code> entre 0 y 500",ok:d=>d.every(x=>x.stock>=0&&x.stock<=500)},
+       {t:"Al menos 2 medicamentos con <code>stock</code> menor a 20",ok:d=>d.filter(x=>x.stock<20).length>=2},
+       {t:'Al menos un medicamento de categoría "Antibiótico"',ok:d=>d.some(x=>x.categoria==="Antibiótico")},
+       {t:"Al menos 3 medicamentos con <code>requiereReceta: true</code>",ok:d=>d.filter(x=>x.requiereReceta===true).length>=3},
+     ]},
+    {name:"dispensaciones",exact:5,
+     fields:[["paciente","string"],["medicamento","string"],["unidades","number"],["fecha","date"],["validada","boolean"]],
+     rules:[
+       {t:"<code>unidades</code> entre 1 y 30",ok:d=>d.every(x=>x.unidades>=1&&x.unidades<=30)},
+       {t:"Al menos 3 dispensaciones con <code>validada: true</code>",ok:d=>d.filter(x=>x.validada===true).length>=3},
+       {t:"Al menos una dispensación de más de 10 unidades",ok:d=>d.some(x=>x.unidades>10)},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todos los medicamentos que requieren receta.',correct:3,
+     opts:[
+      {c:'db.medicamentos.find({ requiereReceta = true })',j:J.assign()},
+      {c:'db.medicamento.find({ requiereReceta: true })',j:J.wrongColl("medicamentos")},
+      {c:'db.medicamentos.find({ requiereReceta: "true" })',j:J.strBool()},
+      {c:'db.medicamentos.find({ requiereReceta: true })',j:J.okEq("medicamentos")},
+     ]},
+    {q:'Mostrar solo el nombre y el stock de todos los medicamentos.',correct:0,
+     opts:[
+      {c:'db.medicamentos.find({}, { nombre: 1, stock: 1, _id: 0 })',j:J.okProj()},
+      {c:'db.medicamentos.find({ nombre, stock })',j:J.projShort()},
+      {c:'db.medicamentos.select({ nombre: 1, stock: 1 })',j:J.projSelect()},
+      {c:'db.medicamentos.find({}, { nombre: true, stock: true })',j:J.projTrue()},
+     ]},
+    {q:'Obtener las dispensaciones con más de 10 unidades.',correct:2,
+     opts:[
+      {c:'db.dispensaciones.find({ unidades > 10 })',j:J.bareGt()},
+      {c:'db.dispensacion.find({ unidades: { $gt = 10 } })',j:J.gtEq()},
+      {c:'db.dispensaciones.find({ unidades: { $gt: 10 } })',j:J.okGt(10)},
+      {c:'db.dispensaciones.find({ unidades: "10" })',j:J.strNum()},
+     ]},
+    {q:'Listar las dispensaciones ordenadas por unidades de mayor a menor.',correct:3,
+     opts:[
+      {c:'db.dispensaciones.sort({ unidades: -1 })',j:J.sortNoFind()},
+      {c:'db.dispensaciones.find().orderBy({ unidades: "desc" })',j:J.orderBy()},
+      {c:'db.dispensaciones.find().sort(unidades: -1)',j:J.sortNoBraces()},
+      {c:'db.dispensaciones.find().sort({ unidades: -1 })',j:J.okSortDesc()},
+     ]},
+  ]
+},
+{
+  short:"Ej. 4", title:"Ejercicio 4 — Gestión de pagos", db:"ecommerce_pagos",
+  source:"Repositorio oficial · sin resolver 🤔",
+  intro:"Crea la base de datos <b>ecommerce_pagos</b> con exactamente dos colecciones: <b>pagos</b> y <b>metodosPago</b>.",
+  colls:[
+    {name:"pagos",exact:6,
+     fields:[["pedido","string"],["importe","number"],["pagado","boolean"],["metodo","string"]],
+     rules:[
+       {t:"<code>importe</code> entre 10 y 2000",ok:d=>d.every(x=>x.importe>=10&&x.importe<=2000)},
+       {t:"Al menos 3 pagos con <code>pagado: true</code>",ok:d=>d.filter(x=>x.pagado===true).length>=3},
+       {t:"Al menos un pago con <code>importe</code> mayor que 500",ok:d=>d.some(x=>x.importe>500)},
+     ]},
+    {name:"metodosPago",exact:4,
+     fields:[["nombre","string"],["tipo","string"],["comision","number"],["activo","boolean"]],
+     rules:[
+       {t:"<code>comision</code> entre 0 y 5",ok:d=>d.every(x=>x.comision>=0&&x.comision<=5)},
+       {t:'Al menos un método de tipo "Tarjeta"',ok:d=>d.some(x=>x.tipo==="Tarjeta")},
+       {t:"Al menos 3 métodos con <code>activo: true</code>",ok:d=>d.filter(x=>x.activo===true).length>=3},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todos los pagos que ya están pagados.',correct:3,
+     opts:[
+      {c:'db.pagos.find({ pagado = true })',j:J.assign()},
+      {c:'db.pago.find({ pagado: true })',j:J.wrongColl("pagos")},
+      {c:'db.pagos.find({ pagado: "true" })',j:J.strBool()},
+      {c:'db.pagos.find({ pagado: true })',j:J.okEq("pagos")},
+     ]},
+    {q:'Mostrar solo el pedido y el importe de todos los pagos.',correct:0,
+     opts:[
+      {c:'db.pagos.find({}, { pedido: 1, importe: 1, _id: 0 })',j:J.okProj()},
+      {c:'db.pagos.find({ pedido, importe })',j:J.projShort()},
+      {c:'db.pagos.select({ pedido: 1, importe: 1 })',j:J.projSelect()},
+      {c:'db.pagos.find({}, { pedido: true, importe: true })',j:J.projTrue()},
+     ]},
+    {q:'Obtener los pagos con importe mayor a 300.',correct:2,
+     opts:[
+      {c:'db.pagos.find({ importe > 300 })',j:J.bareGt()},
+      {c:'db.pago.find({ importe: { $gt: 300 } })',j:J.wrongColl("pagos")},
+      {c:'db.pagos.find({ importe: { $gt: 300 } })',j:J.okGt(300)},
+      {c:'db.pagos.find({ importe: "300" })',j:J.strNum()},
+     ]},
+    {q:'Listar los métodos de pago ordenados por comisión de menor a mayor.',correct:3,
+     opts:[
+      {c:'db.metodosPago.sort({ comision: 1 })',j:J.sortNoFind()},
+      {c:'db.metodosPago.find().orderBy({ comision: "asc" })',j:J.orderBy()},
+      {c:'db.metodosPago.find().sort(comision: 1)',j:J.sortNoBraces()},
+      {c:'db.metodosPago.find().sort({ comision: 1 })',j:J.okSortAsc()},
+     ]},
+  ]
+},
+{
+  short:"Ej. 5", title:"Ejercicio 5 — Biblioteca (extra)", db:"biblioteca_municipal",
+  source:"Original · mismo formato para practicar",
+  intro:"Crea la base de datos <b>biblioteca_municipal</b> con exactamente dos colecciones: <b>libros</b> y <b>socios</b>.",
+  colls:[
+    {name:"libros",exact:6,
+     fields:[["titulo","string"],["autor","string"],["ejemplares","number"],["prestable","boolean"]],
+     rules:[
+       {t:"<code>ejemplares</code> entre 0 y 50",ok:d=>d.every(x=>x.ejemplares>=0&&x.ejemplares<=50)},
+       {t:"Al menos 2 libros con <code>ejemplares</code> menor a 5",ok:d=>d.filter(x=>x.ejemplares<5).length>=2},
+       {t:"Al menos 3 libros con <code>prestable: true</code>",ok:d=>d.filter(x=>x.prestable===true).length>=3},
+     ]},
+    {name:"socios",exact:4,
+     fields:[["nombre","string"],["edad","number"],["multaPendiente","boolean"]],
+     rules:[
+       {t:"<code>edad</code> entre 12 y 90",ok:d=>d.every(x=>x.edad>=12&&x.edad<=90)},
+       {t:"Al menos un socio con <code>multaPendiente: true</code>",ok:d=>d.some(x=>x.multaPendiente===true)},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todos los libros que son prestables.',correct:1,
+     opts:[
+      {c:'db.libros.find({ prestable: "true" })',j:J.strBool()},
+      {c:'db.libros.find({ prestable: true })',j:J.okEq("libros")},
+      {c:'db.libro.find({ prestable: true })',j:J.wrongColl("libros")},
+      {c:'db.libros.find({ prestable = true })',j:J.assign()},
+     ]},
+    {q:'Mostrar solo el título y los ejemplares de todos los libros.',correct:2,
+     opts:[
+      {c:'db.libros.select({ titulo: 1, ejemplares: 1 })',j:J.projSelect()},
+      {c:'db.libros.find({}, { titulo: true, ejemplares: true })',j:J.projTrue()},
+      {c:'db.libros.find({}, { titulo: 1, ejemplares: 1, _id: 0 })',j:J.okProj()},
+      {c:'db.libros.find({ titulo, ejemplares })',j:J.projShort()},
+     ]},
+    {q:'Obtener los libros con más de 10 ejemplares.',correct:0,
+     opts:[
+      {c:'db.libros.find({ ejemplares: { $gt: 10 } })',j:J.okGt(10)},
+      {c:'db.libros.find({ ejemplares > 10 })',j:J.bareGt()},
+      {c:'db.libros.find({ ejemplares: "10" })',j:J.strNum()},
+      {c:'db.libros.find({ $gt: { ejemplares: 10 } })',j:J.opOutside()},
+     ]},
+    {q:'Listar los libros ordenados por ejemplares de mayor a menor.',correct:1,
+     opts:[
+      {c:'db.libros.find().orderBy({ ejemplares: "desc" })',j:J.orderBy()},
+      {c:'db.libros.find().sort({ ejemplares: -1 })',j:J.okSortDesc()},
+      {c:'db.libros.sort({ ejemplares: -1 })',j:J.sortNoFind()},
+      {c:'db.libros.find().sort(ejemplares: -1)',j:J.sortNoBraces()},
+     ]},
+  ]
+},
+{
+  short:"Ej. 6", title:"Ejercicio 6 — Gimnasio (extra)", db:"gimnasio_fit",
+  source:"Original · mismo formato para practicar",
+  intro:"Crea la base de datos <b>gimnasio_fit</b> con exactamente dos colecciones: <b>socios</b> y <b>clases</b>.",
+  colls:[
+    {name:"socios",exact:5,
+     fields:[["nombre","string"],["plan","string"],["cuota","number"],["activo","boolean"]],
+     rules:[
+       {t:"<code>cuota</code> entre 20 y 120",ok:d=>d.every(x=>x.cuota>=20&&x.cuota<=120)},
+       {t:"Al menos 3 socios con <code>activo: true</code>",ok:d=>d.filter(x=>x.activo===true).length>=3},
+       {t:'Al menos un socio con plan "Premium"',ok:d=>d.some(x=>x.plan==="Premium")},
+     ]},
+    {name:"clases",exact:4,
+     fields:[["nombre","string"],["duracion","number"],["plazas","number"],["online","boolean"]],
+     rules:[
+       {t:"<code>duracion</code> entre 30 y 120",ok:d=>d.every(x=>x.duracion>=30&&x.duracion<=120)},
+       {t:"<code>plazas</code> entre 5 y 40",ok:d=>d.every(x=>x.plazas>=5&&x.plazas<=40)},
+       {t:"Al menos 2 clases con <code>online: true</code>",ok:d=>d.filter(x=>x.online===true).length>=2},
+       {t:"Al menos una clase con más de 20 plazas",ok:d=>d.some(x=>x.plazas>20)},
+     ]},
+  ],
+  test:[
+    {q:'Obtener todos los socios que están activos.',correct:2,
+     opts:[
+      {c:'db.socio.find({ activo: true })',j:J.wrongColl("socios")},
+      {c:'db.socios.find({ activo = true })',j:J.assign()},
+      {c:'db.socios.find({ activo: true })',j:J.okEq("socios")},
+      {c:'db.socios.find({ activo: "true" })',j:J.strBool()},
+     ]},
+    {q:'Mostrar solo el nombre y la cuota de todos los socios.',correct:3,
+     opts:[
+      {c:'db.socios.find({ nombre, cuota })',j:J.projShort()},
+      {c:'db.socios.select({ nombre: 1, cuota: 1 })',j:J.projSelect()},
+      {c:'db.socios.find({}, { nombre: true, cuota: true })',j:J.projTrue()},
+      {c:'db.socios.find({}, { nombre: 1, cuota: 1, _id: 0 })',j:J.okProj()},
+     ]},
+    {q:'Obtener las clases con más de 20 plazas.',correct:1,
+     opts:[
+      {c:'db.clases.find({ plazas > 20 })',j:J.bareGt()},
+      {c:'db.clases.find({ plazas: { $gt: 20 } })',j:J.okGt(20)},
+      {c:'db.clase.find({ plazas: { $gt = 20 } })',j:J.gtEq()},
+      {c:'db.clases.find({ plazas: "20" })',j:J.strNum()},
+     ]},
+    {q:'Listar las clases ordenadas por duración de menor a mayor.',correct:0,
+     opts:[
+      {c:'db.clases.find().sort({ duracion: 1 })',j:J.okSortAsc()},
+      {c:'db.clases.sort({ duracion: 1 })',j:J.sortNoFind()},
+      {c:'db.clases.find().orderBy({ duracion: "asc" })',j:J.orderBy()},
+      {c:'db.clases.find().sort(duracion: 1)',j:J.sortNoBraces()},
+     ]},
+  ]
+},
+];
+
+/* ============ Resaltado de sintaxis tipo shell ============ */
+function highlight(code){
+  const strings=[];
+  let s=code.replace(/(["'])(?:\\.|(?!\1).)*\1/g,m=>{
+    strings.push(m); return '\u0000'+String.fromCharCode(97+strings.length-1)+'\u0000';
+  });
+  s=s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s=s.replace(/\$[a-zA-Z]+/g,m=>`<span class="t-op">${m}</span>`);
+  s=s.replace(/\b(true|false)\b/g,'<span class="t-bool">$1</span>');
+  s=s.replace(/\b(\d+)\b/g,'<span class="t-num">$1</span>');
+  s=s.replace(/\b(db|find|sort|select|orderBy)\b/g,'<span class="t-fn">$1</span>');
+  s=s.replace(/\u0000([a-z])\u0000/g,(_,ch)=>{
+    const i=ch.charCodeAt(0)-97;
+    const raw=strings[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<span class="t-str">${raw}</span>`;
+  });
+  return s;
+}
+
+/* ============ Validación del caso práctico ============ */
+function validateCollection(coll, raw){
+  const res=[];
+  let docs;
+  try{ docs=JSON.parse(raw); }
+  catch(e){ return {fatal:`JSON no válido: ${e.message}`}; }
+  if(!Array.isArray(docs)) return {fatal:"Pega un array de documentos, p. ej. [ {…}, {…} ]."};
+
+  res.push({ok:docs.length===coll.exact, t:`Número de documentos = ${coll.exact} <span style="opacity:.7">(tienes ${docs.length})</span>`});
+
+  for(const [f,type] of coll.fields){
+    const missing=docs.filter(d=>!(f in d)).length;
+    const badType=docs.filter(d=> (f in d) && !typeCheck[type](d[f])).length;
+    const ok=missing===0&&badType===0;
+    let detail="";
+    if(missing) detail=` <span style="opacity:.7">(falta en ${missing})</span>`;
+    else if(badType) detail=` <span style="opacity:.7">(tipo erróneo en ${badType})</span>`;
+    res.push({ok, t:`Campo <code>${f}</code> presente y de tipo <code>${typeName[type]}</code>${detail}`});
+  }
+  for(const r of coll.rules){
+    let ok=false; try{ ok=!!r.ok(docs); }catch(e){ ok=false; }
+    res.push({ok, t:r.t});
+  }
+  return {results:res};
+}
+
+/* ============ Render ============ */
+const app=document.getElementById('app');
+const picker=document.getElementById('picker');
+let current=0;
+const testState={}; // {exIdx:{selected:[], checked:bool}}
+
+function buildPicker(){
+  picker.innerHTML='';
+  exercises.forEach((ex,i)=>{
+    const b=document.createElement('button');
+    b.textContent=ex.short; b.title=ex.title;
+    if(i===current) b.classList.add('active');
+    b.onclick=()=>{current=i;render();window.scrollTo({top:0});};
+    picker.appendChild(b);
+  });
+}
+
+function render(){
+  buildPicker();
+  const ex=exercises[current];
+  if(!testState[current]) testState[current]={selected:Array(ex.test.length).fill(null),checked:false};
+
+  let html=`
+  <div class="ex-head">
+    <div class="eyebrow">Caso de examen</div>
+    <h1>${ex.title}</h1>
+    <div class="db">Base de datos: <b>${ex.db}</b></div>
+    <div class="source">${ex.source}</div>
+  </div>
+
+  <section class="block">
+    <div class="block-tag"><span class="n">B1</span> Caso práctico <span class="pct">50 %</span></div>
+    <p class="block-sub enunciado">${ex.intro}</p>
+    <div class="coll-grid">`;
+
+  ex.colls.forEach((coll,ci)=>{
+    html+=`
+      <div class="card coll">
+        <h3>db.${coll.name} <span class="count">${coll.exact} documentos</span></h3>
+        <div class="coll-body">
+          <ul class="fields">${coll.fields.map(([f,t])=>`<li>${f} <em>: ${typeName[t]}</em></li>`).join('')}</ul>
+          <ul class="rules">${coll.rules.map(r=>`<li>${r.t}</li>`).join('')}</ul>
+          <textarea id="ta-${current}-${ci}" spellcheck="false" placeholder='Pega aquí tu array de documentos JSON:&#10;[&#10;  { ... },&#10;  { ... }&#10;]'></textarea>
+          <div class="coll-actions">
+            <button class="btn btn-primary" onclick="runValidate(${ci})">Validar colección</button>
+            <button class="btn btn-ghost" onclick="loadExample(${ci})">Cargar ejemplo válido</button>
+          </div>
+          <div class="checkresults" id="cr-${current}-${ci}"></div>
+          <div class="verdict" id="vd-${current}-${ci}"></div>
+        </div>
+      </div>`;
+  });
+
+  html+=`</div>
+    <div class="entrega">📦 <div><b>Entrega:</b> exporta únicamente las colecciones creadas y entrégalas en formato ZIP. Usa <span class="kbd">mongoexport</span> o "Export Collection" en MongoDB Compass.</div></div>
+  </section>
+
+  <section class="block">
+    <div class="block-tag"><span class="n">B2</span> Test de consultas <span class="pct">50 %</span></div>
+    <p class="block-sub">Selecciona la consulta MongoDB correcta en cada caso. Pulsa <b>Corregir test</b> al terminar.</p>`;
+
+  ex.test.forEach((qq,qi)=>{
+    html+=`<div class="card pad q">
+      <div class="qhead"><div class="qnum">${qi+1}</div><div class="qtext">${qq.q}</div></div>
+      <div class="opts" id="opts-${current}-${qi}">`;
+    qq.opts.forEach((o,oi)=>{
+      const letter=String.fromCharCode(97+oi);
+      html+=`<div class="opt" id="opt-${current}-${qi}-${oi}" onclick="pick(${qi},${oi})">
+        <div class="letter">${letter}</div><pre>${highlight(o.c)}</pre></div>`;
+    });
+    html+=`</div><div class="feedback" id="fb-${current}-${qi}"></div></div>`;
+  });
+
+  html+=`<div class="test-actions">
+      <button class="btn btn-primary" onclick="correctTest()">Corregir test</button>
+      <button class="btn btn-ghost" onclick="resetTest()">Reiniciar</button>
+      <div class="scorebox" id="score"></div>
+    </div>
+    <p class="hint">Consejo: razona por qué cada distractor es incorrecto antes de mirar la corrección. Los errores se repiten (usar <code>=</code>, comillas en booleanos, falta de <code>$</code>, colección en singular…).</p>
+  </section>`;
+
+  app.innerHTML=html;
+  // restore test selections if any
+  const st=testState[current];
+  st.selected.forEach((sel,qi)=>{ if(sel!==null) markSelected(qi,sel); });
+  if(st.checked) applyCorrection(false);
+}
+
+function markSelected(qi,oi){
+  const ex=exercises[current];
+  ex.test[qi].opts.forEach((_,k)=>{
+    document.getElementById(`opt-${current}-${qi}-${k}`).classList.remove('sel');
+  });
+  document.getElementById(`opt-${current}-${qi}-${oi}`).classList.add('sel');
+}
+
+window.pick=function(qi,oi){
+  const st=testState[current];
+  if(st.checked) return;
+  st.selected[qi]=oi;
+  markSelected(qi,oi);
+};
+
+window.correctTest=function(){
+  const st=testState[current];
+  st.checked=true;
+  applyCorrection(true);
+};
+
+function applyCorrection(scroll){
+  const ex=exercises[current];
+  let correctCount=0;
+  ex.test.forEach((qq,qi)=>{
+    const sel=testState[current].selected[qi];
+    qq.opts.forEach((o,oi)=>{
+      const el=document.getElementById(`opt-${current}-${qi}-${oi}`);
+      el.classList.add('locked');el.classList.remove('sel');
+      if(oi===qq.correct) el.classList.add('correct');
+      else if(oi===sel) el.classList.add('wrong');
+    });
+    const fb=document.getElementById(`fb-${current}-${qi}`);
+    const ok=sel===qq.correct;
+    if(ok) correctCount++;
+    const chosen= sel===null ? '<i>sin responder</i>' : `opción <b>${String.fromCharCode(97+sel)}</b>`;
+    fb.className='feedback show '+(ok?'good':'bad');
+    fb.innerHTML = (ok?'✓ Correcto. ':`✗ Has elegido ${chosen}. La correcta es <b>${String.fromCharCode(97+qq.correct)}</b>. `) +
+      qq.opts[qq.correct].j +
+      (ok?'':`<br><span style="opacity:.85">Tu opción: ${sel===null?'—':qq.opts[sel].j}</span>`);
+  });
+  const total=ex.test.length;
+  const sb=document.getElementById('score');
+  const pass=correctCount>=Math.ceil(total/2);
+  sb.className='scorebox '+(correctCount===total?'pass':(pass?'':'fail'));
+  sb.innerHTML=`Aciertos: <b>${correctCount}/${total}</b> · Bloque 2: <b>${(correctCount/total*50).toFixed(1).replace('.0','')} / 50</b>`;
+}
+
+window.resetTest=function(){
+  testState[current]={selected:Array(exercises[current].test.length).fill(null),checked:false};
+  render();
+};
+
+window.runValidate=function(ci){
+  const coll=exercises[current].colls[ci];
+  const raw=document.getElementById(`ta-${current}-${ci}`).value.trim();
+  const cr=document.getElementById(`cr-${current}-${ci}`);
+  const vd=document.getElementById(`vd-${current}-${ci}`);
+  if(!raw){ cr.className='checkresults show'; cr.innerHTML=`<div class="chk bad"><span class="ic">!</span><span>Pega tus documentos JSON antes de validar.</span></div>`; vd.className='verdict';return; }
+  const out=validateCollection(coll,raw);
+  cr.className='checkresults show';
+  if(out.fatal){
+    cr.innerHTML=`<div class="chk bad"><span class="ic">✗</span><span>${out.fatal}</span></div>`;
+    vd.className='verdict';return;
+  }
+  cr.innerHTML=out.results.map(r=>
+    `<div class="chk ${r.ok?'ok':'bad'}"><span class="ic">${r.ok?'✓':'✗'}</span><span>${r.t}</span></div>`).join('');
+  const allOk=out.results.every(r=>r.ok);
+  vd.className='verdict show '+(allOk?'pass':'fail');
+  vd.textContent=allOk?`✓ La colección db.${coll.name} cumple todas las condiciones.`:`✗ Aún hay condiciones sin cumplir en db.${coll.name}.`;
+};
+
+/* Ejemplos válidos generados a partir de las reglas */
+const examples={
+  videoclub:{peliculas:[
+    {titulo:"Heat",genero:"Acción",anio:2001,precio_alquiler:4},
+    {titulo:"Mad Max",genero:"Acción",anio:2015,precio_alquiler:5},
+    {titulo:"Amelie",genero:"Comedia",anio:2001,precio_alquiler:3},
+    {titulo:"Origen",genero:"Ciencia ficción",anio:2010,precio_alquiler:6},
+    {titulo:"El Padrino",genero:"Drama",anio:2000,precio_alquiler:2},
+    {titulo:"Up",genero:"Animación",anio:2009,precio_alquiler:3}],
+   clientes:[
+    {nombre:"Ana",edad:24,socio_activo:true},
+    {nombre:"Luis",edad:40,socio_activo:true},
+    {nombre:"María",edad:19,socio_activo:false},
+    {nombre:"Jon",edad:55,socio_activo:false}]},
+  turismo_hotel:{habitaciones:[
+    {numero:101,tipo:"Doble",precioNoche:90,disponible:true},
+    {numero:102,tipo:"Individual",precioNoche:60,disponible:true},
+    {numero:201,tipo:"Suite",precioNoche:250,disponible:true},
+    {numero:202,tipo:"Doble",precioNoche:120,disponible:false},
+    {numero:301,tipo:"Suite",precioNoche:300,disponible:false}],
+   reservas:[
+    {cliente:"Ana López",noches:3,personas:2,confirmada:true},
+    {cliente:"Beto Ruiz",noches:1,personas:1,confirmada:true},
+    {cliente:"Carla Gil",noches:5,personas:4,confirmada:false},
+    {cliente:"Dimas Paz",noches:2,personas:3,confirmada:false}]},
+  farmacia_central:{medicamentos:[
+    {nombre:"Amoxicilina",categoria:"Antibiótico",stock:8,requiereReceta:true},
+    {nombre:"Ibuprofeno",categoria:"Analgésico",stock:150,requiereReceta:false},
+    {nombre:"Omeprazol",categoria:"Digestivo",stock:12,requiereReceta:true},
+    {nombre:"Paracetamol",categoria:"Analgésico",stock:300,requiereReceta:false},
+    {nombre:"Azitromicina",categoria:"Antibiótico",stock:45,requiereReceta:true},
+    {nombre:"Lorazepam",categoria:"Ansiolítico",stock:25,requiereReceta:true}],
+   dispensaciones:[
+    {paciente:"Sara",medicamento:"Ibuprofeno",unidades:2,fecha:"2025-01-10",validada:true},
+    {paciente:"Tomás",medicamento:"Amoxicilina",unidades:1,fecha:"2025-01-11",validada:true},
+    {paciente:"Uxía",medicamento:"Paracetamol",unidades:12,fecha:"2025-01-12",validada:true},
+    {paciente:"Víctor",medicamento:"Omeprazol",unidades:3,fecha:"2025-01-13",validada:false},
+    {paciente:"Wendy",medicamento:"Azitromicina",unidades:1,fecha:"2025-01-14",validada:false}]},
+  ecommerce_pagos:{pagos:[
+    {pedido:"P-001",importe:650,pagado:true,metodo:"Tarjeta"},
+    {pedido:"P-002",importe:120,pagado:true,metodo:"PayPal"},
+    {pedido:"P-003",importe:45,pagado:true,metodo:"Tarjeta"},
+    {pedido:"P-004",importe:1800,pagado:false,metodo:"Transferencia"},
+    {pedido:"P-005",importe:30,pagado:false,metodo:"PayPal"},
+    {pedido:"P-006",importe:210,pagado:false,metodo:"Tarjeta"}],
+   metodosPago:[
+    {nombre:"Visa",tipo:"Tarjeta",comision:1.5,activo:true},
+    {nombre:"PayPal",tipo:"Monedero",comision:2.9,activo:true},
+    {nombre:"Bizum",tipo:"Móvil",comision:0,activo:true},
+    {nombre:"Transferencia",tipo:"Banco",comision:0.5,activo:false}]},
+  biblioteca_municipal:{libros:[
+    {titulo:"El Quijote",autor:"Cervantes",ejemplares:3,prestable:true},
+    {titulo:"Rayuela",autor:"Cortázar",ejemplares:2,prestable:true},
+    {titulo:"1984",autor:"Orwell",ejemplares:12,prestable:true},
+    {titulo:"Sapiens",autor:"Harari",ejemplares:20,prestable:false},
+    {titulo:"Drácula",autor:"Stoker",ejemplares:7,prestable:true},
+    {titulo:"Ulises",autor:"Joyce",ejemplares:1,prestable:false}],
+   socios:[
+    {nombre:"Elena",edad:34,multaPendiente:true},
+    {nombre:"Fran",edad:16,multaPendiente:false},
+    {nombre:"Gala",edad:72,multaPendiente:false},
+    {nombre:"Hugo",edad:21,multaPendiente:false}]},
+  gimnasio_fit:{socios:[
+    {nombre:"Iris",plan:"Premium",cuota:80,activo:true},
+    {nombre:"Jaime",plan:"Básico",cuota:35,activo:true},
+    {nombre:"Kira",plan:"Básico",cuota:35,activo:true},
+    {nombre:"Leo",plan:"Plus",cuota:55,activo:false},
+    {nombre:"Mara",plan:"Premium",cuota:120,activo:false}],
+   clases:[
+    {nombre:"Spinning",duracion:45,plazas:25,online:false},
+    {nombre:"Yoga",duracion:60,plazas:15,online:true},
+    {nombre:"HIIT",duracion:30,plazas:30,online:true},
+    {nombre:"Pilates",duracion:50,plazas:12,online:false}]},
+};
+
+window.loadExample=function(ci){
+  const ex=exercises[current];
+  const coll=ex.colls[ci];
+  const data=examples[ex.db] && examples[ex.db][coll.name];
+  if(!data) return;
+  document.getElementById(`ta-${current}-${ci}`).value=JSON.stringify(data,null,2);
+  runValidate(ci);
+};
+
+render();
+
+/* ----- Toggle de tema (común) ----- */
+(function(){var b=document.querySelector('.site-theme-toggle');if(!b)return;
+b.addEventListener('click',function(){var d=document.documentElement;
+var n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+d.setAttribute('data-theme',n);try{localStorage.setItem('site-theme',n);}catch(e){}});})();
+</script>
+
+<style is:global>
+.mongo-practica{--bg:#eceee9;
+    --surface:#ffffff;
+    --surface-2:#f5f7f3;
+    --ink:#14201b;
+    --ink-soft:#586460;
+    --line:#d6dcd4;
+    --green:#00684A;
+    --green-2:#00855f;
+    --spring:#00b85c;
+    --amber:#b45309;
+    --red:#b42318;
+    --console:#0e1a15;
+    --console-line:#1d2c25;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(20,32,27,.06),0 8px 24px rgba(20,32,27,.06);
+    --site-accent:#00855f;}
+:root[data-theme="dark"] .mongo-practica{--bg:#0f1417; --surface:#161d21; --surface-2:#1d262b;
+    --ink:#e7eef0; --ink-soft:#9fb1ad; --line:#283238;
+    --green:#1aa06e; --green-2:#28b07c; --amber:#e0992f; --red:#e06a5e;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);}
+:root[data-theme="dark"] .mongo-practica header{background:rgba(15,20,23,.85)}
+:root[data-theme="dark"] .mongo-practica .block-tag .n{background:#0b1216}
+:root[data-theme="dark"] .mongo-practica .coll h3 .count{background:#0f1417}
+:root[data-theme="dark"] .mongo-practica .chk.ok, :root[data-theme="dark"] .mongo-practica .feedback.good{background:#16291f;border-color:#235e43;color:#7fe3b8}
+:root[data-theme="dark"] .mongo-practica .chk.bad, :root[data-theme="dark"] .mongo-practica .feedback.bad{background:#33191d;border-color:#6e2a2a;color:#f0a39a}
+:root[data-theme="dark"] .mongo-practica .verdict.pass{background:#16291f;color:#7fe3b8}
+:root[data-theme="dark"] .mongo-practica .verdict.fail{background:#33191d;color:#f0a39a}
+.mongo-practica *{box-sizing:border-box}
+.mongo-practica{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;}
+.mongo-practica a{color:var(--green)}
+.mongo-practica code{font-family:"JetBrains Mono",monospace}
+.mongo-practica .mongo-header{position:sticky;top:0;z-index:40;
+    background:rgba(236,238,233,.85);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);}
+.mongo-practica .bar{max-width:1080px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mongo-practica .mark{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk";font-weight:700;letter-spacing:-.02em}
+.mongo-practica .leaf{width:34px;height:34px;flex:none;display:grid;place-items:center;background:var(--green);border-radius:9px;color:#fff;font-size:18px;box-shadow:var(--shadow)}
+.mongo-practica .mark b{font-size:16px;line-height:1.05;display:block}
+.mongo-practica .mark span{font-size:11.5px;font-weight:500;color:var(--ink-soft);font-family:"Inter"}
+.mongo-practica .picker{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.mongo-practica .picker button{font:600 12.5px/1 "Inter";border:1px solid var(--line);background:var(--surface);
+    color:var(--ink-soft);padding:8px 12px;border-radius:99px;cursor:pointer;transition:.15s;}
+.mongo-practica .picker button:hover{border-color:var(--green);color:var(--green)}
+.mongo-practica .picker button.active{background:var(--green);border-color:var(--green);color:#fff}
+.mongo-practica #app{max-width:1080px;margin:0 auto;padding:30px 22px 80px}
+.mongo-practica .ex-head{margin:8px 0 30px}
+.mongo-practica .eyebrow{font:600 12px/1 "JetBrains Mono";letter-spacing:.14em;text-transform:uppercase;color:var(--green-2);display:flex;align-items:center;gap:9px}
+.mongo-practica .eyebrow::before{content:"";width:26px;height:2px;background:var(--green-2);display:inline-block}
+.mongo-practica .ex-head h1{font-family:"Space Grotesk";font-weight:700;font-size:34px;letter-spacing:-.025em;margin:13px 0 6px}
+.mongo-practica .ex-head .db{font-family:"JetBrains Mono";font-size:13px;color:var(--ink-soft)}
+.mongo-practica .ex-head .db b{color:var(--ink);background:var(--surface-2);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
+.mongo-practica .source{font-size:12px;color:var(--ink-soft);margin-top:6px}
+.mongo-practica .block{margin-top:34px}
+.mongo-practica .block-tag{display:inline-flex;align-items:baseline;gap:10px;font-family:"Space Grotesk";font-weight:600;
+    font-size:20px;letter-spacing:-.01em;margin-bottom:4px;}
+.mongo-practica .block-tag .n{font:700 13px/1 "JetBrains Mono";color:#fff;background:var(--ink);padding:6px 8px;border-radius:7px}
+.mongo-practica .block-tag .pct{font:600 12px/1 "Inter";color:var(--amber);border:1px solid currentColor;padding:4px 8px;border-radius:99px;align-self:center}
+.mongo-practica .block-sub{color:var(--ink-soft);font-size:14px;margin:2px 0 18px}
+.mongo-practica .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.mongo-practica .pad{padding:20px 22px}
+.mongo-practica .enunciado{font-size:14.5px}
+.mongo-practica .enunciado p{margin:0 0 10px}
+.mongo-practica .coll-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+@media(max-width:760px){
+.mongo-practica .coll-grid{grid-template-columns:1fr}
+.mongo-practica .bar{gap:10px}
+}
+.mongo-practica .coll{padding:0;overflow:hidden}
+.mongo-practica .coll h3{margin:0;font-family:"JetBrains Mono";font-size:14px;font-weight:700;color:var(--green);
+    padding:14px 18px;background:var(--surface-2);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:9px;}
+.mongo-practica .coll h3 .count{margin-left:auto;font:600 11px/1 "Inter";color:var(--ink-soft);background:#fff;border:1px solid var(--line);padding:4px 8px;border-radius:99px}
+.mongo-practica .coll-body{padding:16px 18px}
+.mongo-practica .fields{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.mongo-practica .fields li{font:500 11.5px/1 "JetBrains Mono";background:var(--surface-2);border:1px solid var(--line);padding:5px 8px;border-radius:6px}
+.mongo-practica .fields li em{color:var(--ink-soft);font-style:normal}
+.mongo-practica .rules{list-style:none;margin:0 0 14px;padding:0}
+.mongo-practica .rules li{position:relative;padding-left:22px;font-size:13px;color:var(--ink-soft);margin-bottom:6px}
+.mongo-practica .rules li::before{content:"•";position:absolute;left:6px;color:var(--green-2);font-weight:700}
+.mongo-practica textarea{width:100%;min-height:150px;resize:vertical;font:13px/1.5 "JetBrains Mono";
+    color:#dcefe6;background:var(--console);border:1px solid var(--console-line);border-radius:10px;
+    padding:13px 14px;outline:none;tab-size:2;}
+.mongo-practica textarea:focus{border-color:var(--spring);box-shadow:0 0 0 3px rgba(0,184,92,.18)}
+.mongo-practica textarea::placeholder{color:#5f7a6f}
+.mongo-practica .btn{font:600 13px/1 "Inter";border:none;cursor:pointer;border-radius:9px;padding:11px 16px;transition:.15s;}
+.mongo-practica .btn-primary{background:var(--green);color:#fff}
+.mongo-practica .btn-primary:hover{background:var(--green-2)}
+.mongo-practica .btn-ghost{background:var(--surface);color:var(--ink-soft);border:1px solid var(--line)}
+.mongo-practica .btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.mongo-practica .coll-actions{display:flex;gap:9px;margin-top:12px}
+.mongo-practica .checkresults{margin-top:14px;display:none;flex-direction:column;gap:6px}
+.mongo-practica .checkresults.show{display:flex}
+.mongo-practica .chk{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;padding:8px 11px;border-radius:8px;border:1px solid}
+.mongo-practica .chk .ic{font:700 12px/1.3 "JetBrains Mono";flex:none}
+.mongo-practica .chk.ok{background:#eafaf2;border-color:#bfe9d3;color:#0c5238}
+.mongo-practica .chk.ok .ic{color:var(--green)}
+.mongo-practica .chk.bad{background:#fdeeec;border-color:#f4cdc7;color:#7a160e}
+.mongo-practica .chk.bad .ic{color:var(--red)}
+.mongo-practica .verdict{font:600 13px/1 "Inter";margin-top:4px;padding:10px 12px;border-radius:8px;display:none}
+.mongo-practica .verdict.show{display:block}
+.mongo-practica .verdict.pass{background:#dff6ea;color:#0c5238}
+.mongo-practica .verdict.fail{background:#fbe3e0;color:#7a160e}
+.mongo-practica .entrega{margin-top:18px;font-size:13px;display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:13px 15px}
+.mongo-practica .entrega b{color:var(--ink)}
+.mongo-practica .q{margin-top:16px}
+.mongo-practica .q .qhead{display:flex;gap:12px;align-items:baseline;margin-bottom:13px}
+.mongo-practica .q .qnum{font:700 13px/1 "JetBrains Mono";color:#fff;background:var(--green);width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+.mongo-practica .q .qtext{font-size:15px;font-weight:500}
+.mongo-practica .q .qtext code{background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:13px;color:var(--green)}
+.mongo-practica .opts{display:grid;gap:10px}
+.mongo-practica .opt{display:grid;grid-template-columns:34px 1fr;align-items:stretch;
+    border:1.5px solid var(--console-line);border-radius:11px;overflow:hidden;cursor:pointer;
+    background:var(--console);transition:.13s;}
+.mongo-practica .opt:hover{border-color:var(--spring)}
+.mongo-practica .opt .letter{display:grid;place-items:center;font:700 14px/1 "JetBrains Mono";color:#8aa79c;
+    background:#0a1410;border-right:1px solid var(--console-line);}
+.mongo-practica .opt pre{margin:0;padding:13px 14px;font:13px/1.5 "JetBrains Mono";color:#cfe7dd;white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+.mongo-practica .opt.sel{border-color:var(--spring);box-shadow:0 0 0 3px rgba(0,184,92,.16)}
+.mongo-practica .opt.sel .letter{color:var(--spring)}
+.mongo-practica .opt.correct{border-color:#1fbd6e;box-shadow:0 0 0 3px rgba(31,189,110,.25)}
+.mongo-practica .opt.correct .letter{background:#0c3a28;color:#3ee08b}
+.mongo-practica .opt.wrong{border-color:#e0594b;box-shadow:0 0 0 3px rgba(224,89,75,.22)}
+.mongo-practica .opt.wrong .letter{background:#3a120e;color:#ff8d80}
+.mongo-practica .opt.locked{cursor:default}
+.mongo-practica .opt.locked:hover{border-color:inherit}
+.mongo-practica .t-fn{color:#7bd6ff}
+.mongo-practica .t-str{color:#ffd58a}
+.mongo-practica .t-num{color:#c4a6ff}
+.mongo-practica .t-bool{color:#ff9aa8}
+.mongo-practica .t-op{color:#5ee0a0;font-weight:500}
+.mongo-practica .feedback{display:none;margin-top:10px;font-size:13px;border-radius:9px;padding:11px 13px;border:1px solid}
+.mongo-practica .feedback.show{display:block}
+.mongo-practica .feedback.good{background:#eafaf2;border-color:#bfe9d3;color:#0c5238}
+.mongo-practica .feedback.bad{background:#fdeeec;border-color:#f4cdc7;color:#7a160e}
+.mongo-practica .feedback b{font-weight:600}
+.mongo-practica .feedback .ans{font-family:"JetBrains Mono";font-size:12px}
+.mongo-practica .test-actions{display:flex;align-items:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+.mongo-practica .scorebox{margin-left:auto;font:600 13px/1 "Inter";color:var(--ink-soft)}
+.mongo-practica .scorebox b{font-family:"Space Grotesk";font-size:18px;color:var(--ink)}
+.mongo-practica .scorebox.pass b{color:var(--green)}
+.mongo-practica .scorebox.fail b{color:var(--red)}
+.mongo-practica .hint{font-size:12.5px;color:var(--ink-soft);margin-top:7px}
+.mongo-practica .mongo-footer{max-width:1080px;margin:0 auto;padding:0 22px 50px;font-size:12px;color:var(--ink-soft)}
+.mongo-practica .kbd{font-family:"JetBrains Mono";background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:11px}
+</style>

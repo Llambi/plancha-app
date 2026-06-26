@@ -1,0 +1,3344 @@
+# Banco de preguntas DAR — generado por scripts/migrate-dar.mjs
+# REGLA: contenido transcrito VERBATIM desde legacy/dar.html. No editar a mano.
+# 257 preguntas · tipo single · nota: el barajado (opciones/preguntas)
+# es responsabilidad del componente de render, no de los datos.
+- id: q1
+  asignatura: dar
+  type: single
+  question: ¿De qué estándar surge el lenguaje HTML?
+  options:
+    - XML, como una versión simplificada para la web.
+    - SGML, como estándar general de marcado.
+    - Markdown, como lenguaje ligero de marcado.
+    - La especificación ECMAScript del W3C.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: El lenguaje HTML se deriva de las reglas del SGML (Standard Generalized Markup Language), que es el estándar padre de los lenguajes de marcado con intención declarativa [1, 2].
+- id: q2
+  asignatura: dar
+  type: single
+  question: "Un documento HTML:"
+  options:
+    - Se limita a etiquetas HTML y no admite integración con otros lenguajes.
+    - Solo puede incluir JavaScript, pero no CSS.
+    - Combina HTML con otros lenguajes.
+    - Es un documento de texto plano sin estructura.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Un documento web moderno es una combinación de etiquetas de marcado (HTML), lógica de programación (JavaScript) y hojas de estilo (CSS) para definir su apariencia [1, 12].
+- id: q3
+  asignatura: dar
+  type: single
+  question: "Mejoras de HTML5 respecto a HTML:"
+  options:
+    - Incorpora tag para definir diálogos y conversaciones.
+    - Elimina por completo los formularios, sustituyéndolos por JSON.
+    - Impide el uso de multimedia sin plugins externos.
+    - Sustituye CSS por atributos de estilo obligatorios.
+  correct:
+    - 0
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: HTML5 introduce nuevas etiquetas semánticas para mejorar la estructura del contenido, incluyendo aquellas para definir diálogos y conversaciones entre personas [13, 14].
+- id: q4
+  asignatura: dar
+  type: single
+  question: "La etiqueta <img> sirve para:"
+  options:
+    - Crear un contenedor para imágenes como si fuera un <div>.
+    - Insertar una imagen.
+    - Insertar un vídeo en formato MP4.
+    - Definir un mapa del sitio para buscadores.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La función básica y específica de la etiqueta <img> es permitir la inserción de recursos gráficos en el documento [14, 15].
+- id: q5
+  asignatura: dar
+  type: single
+  question: "En un formulario HTML, el campo action:"
+  options:
+    - Define el método de envío (GET o POST).
+    - Indica la página a la que se envían los datos.
+    - Indica el tipo MIME del formulario.
+    - Bloquea el envío hasta validar con CSS.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: El atributo 'action' especifica la URL del destino o script de servidor al que se remitirá la información recolectada para su procesamiento [16, 17].
+- id: q6
+  asignatura: dar
+  type: single
+  question: "La etiqueta <head> permite:"
+  options:
+    - Insertar el contenido visible principal de la página.
+    - Introducir metadatos sobre el documento.
+    - Incluir únicamente enlaces de navegación.
+    - Definir el pie de página del documento.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La sección <head> contiene información no visible directamente, como el título y los metadatos que ayudan a los navegadores y buscadores a interpretar la página [17, 18].
+- id: q7
+  asignatura: dar
+  type: single
+  question: "Las etiquetas semánticas de HTML5 buscan:"
+  options:
+    - Eliminar el uso de JavaScript en la web.
+    - Sustituir la necesidad de usar <div> para identificar cada bloque.
+    - Convertir HTML en un lenguaje de programación completo.
+    - Obligar a usar tablas para el diseño.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: HTML5 introduce etiquetas como <header>, <nav> o <article> para dar significado real a la estructura, evitando el abuso de etiquetas <div> carentes de semántica [19, 20].
+- id: q8
+  asignatura: dar
+  type: single
+  question: "Para representar contenido en un párrafo se usa:"
+  options:
+    - <p>.
+    - <span>.
+    - <br>.
+    - <h1>.
+  correct:
+    - 0
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La etiqueta <p> es el elemento estándar para delimitar un bloque de texto como párrafo, insertando un espacio vertical automático al finalizar [20, 21].
+- id: q9
+  asignatura: dar
+  type: single
+  question: ¿Qué etiqueta define una lista no ordenada?
+  options:
+    - <ol>.
+    - <ul>.
+    - <li>.
+    - <dl>.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Las siglas <ul> corresponden a 'Unordered List', utilizada para listados donde el orden no es relevante (viñetas), a diferencia de <ol> que es para listas numeradas [20, 22].
+- id: q10
+  asignatura: dar
+  type: single
+  question: "Los lenguajes de marcado se centran en:"
+  options:
+    - La compilación del código a binario.
+    - La estructuración del contenido.
+    - El acceso directo a memoria y punteros.
+    - El control de procesos del sistema operativo.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: A diferencia de los lenguajes de programación que ejecutan lógica, los de marcado tienen una intención declarativa enfocada en cómo se organiza la información [2, 23].
+- id: q11
+  asignatura: dar
+  type: single
+  question: "XHTML se diferencia de HTML en que:"
+  options:
+    - Permite omitir siempre el cierre de etiquetas.
+    - No sigue ninguna regla de sintaxis estricta.
+    - No posee un conjunto de etiquetas predefinido.
+    - Es un lenguaje de hojas de estilo.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: XHTML es una variante basada en XML que requiere una sintaxis mucho más estricta y no tiene un conjunto de etiquetas predefinido de la misma forma que el estándar HTML tradicional [2, 23].
+- id: q12
+  asignatura: dar
+  type: single
+  question: ¿Es obligatorio cerrar las etiquetas en HTML5?
+  options:
+    - No, nunca se cierran etiquetas en HTML5.
+    - Solo se cierran etiquetas si llevan atributos.
+    - Sí, para mantener la intención declarativa y el rigor estructural.
+    - Solo se cierran en documentos JSON-LD.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Aunque algunos navegadores son permisivos, el estándar HTML5 promueve el cierre de etiquetas para garantizar que la estructura del documento sea consistente y válida [24, 25].
+- id: q13
+  asignatura: dar
+  type: single
+  question: ¿Qué elemento de HTML5 se usa para dibujos y gráficos?
+  options:
+    - <svg>.
+    - <img>.
+    - <canvas>.
+    - <style>.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La etiqueta <canvas> proporciona un espacio en la web donde se pueden generar gráficos dinámicos y animaciones mediante scripts, generalmente JavaScript [25, 26].
+- id: q14
+  asignatura: dar
+  type: single
+  question: "El atributo method en formularios suele aceptar:"
+  options:
+    - PUT y DELETE.
+    - FTP y SMTP.
+    - GET y POST.
+    - TCP y UDP.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: En el protocolo HTTP, los métodos estándar para el envío de datos desde un formulario son GET (datos en la URL) y POST (datos en el cuerpo del mensaje) [25, 27].
+- id: q15
+  asignatura: dar
+  type: single
+  question: ¿Qué etiqueta de HTML5 define un bloque de contenido independiente (como un post)?
+  options:
+    - <section>.
+    - <div>.
+    - <article>.
+    - <aside>.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La etiqueta <article> está diseñada específicamente para agrupar contenido que tiene sentido por sí mismo y podría ser distribuido de forma independiente, como noticias o posts [28, 29].
+- id: q16
+  asignatura: dar
+  type: single
+  question: "HTML y CSS se centran respectivamente en:"
+  options:
+    - Presentación y lógica de negocio.
+    - Estructura y presentación.
+    - Acceso a datos y seguridad.
+    - Compilación y ejecución.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: "El objetivo fundamental del desarrollo web moderno es separar el código: HTML define qué elementos hay (estructura) y CSS define cómo se ven (presentación) [29, 30]."
+- id: q17
+  asignatura: dar
+  type: single
+  question: "CSS3 agrega funcionalidades como:"
+  options:
+    - Gestión de sesiones y cookies.
+    - Control de procesos en segundo plano.
+    - Rotación, múltiples fondos y redondeo de bordes.
+    - Compilación a bytecode.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: CSS3 mejora significativamente las capacidades visuales permitiendo aplicar sombras, redondeo de esquinas (border-radius) y transformaciones como rotaciones sin necesidad de imágenes externas [29, 31].
+- id: q18
+  asignatura: dar
+  type: single
+  question: ¿Qué código HTML5 enlaza una hoja de estilo externa?
+  options:
+    - <style src='estilo.css'>\/style>
+    - <css link='estilo.css'>
+    - <link rel='stylesheet' href='estilo.css'>
+    - <script rel='stylesheet' href='estilo.css'>\/script>
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Para vincular un archivo .css externo se utiliza la etiqueta <link> dentro del <head>, especificando que la relación es una hoja de estilos ('stylesheet') [32, 33].
+- id: q19
+  asignatura: dar
+  type: single
+  question: "Ventaja del enlace externo en CSS:"
+  options:
+    - Impide que el navegador use caché.
+    - Permite cambios globales afectando a todas las páginas vinculadas.
+    - Obliga a escribir los estilos dentro del HTML.
+    - Solo funciona en HTML5, no en HTML4.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Al tener los estilos en un archivo separado, cualquier cambio realizado en ese único fichero se refleja instantáneamente en todo el sitio web, optimizando el mantenimiento [30, 33].
+- id: q20
+  asignatura: dar
+  type: single
+  question: "Los selectores CSS universales usan el símbolo:"
+  options:
+    - "*."
+    - "#."
+    - .
+    - "@"
+  correct:
+    - 0
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: El asterisco '*' actúa como selector universal en CSS, lo que significa que las propiedades definidas bajo este selector afectarán a todas las etiquetas del documento [34, 35].
+- id: q21
+  asignatura: dar
+  type: single
+  question: "Un identificador (id) en CSS:"
+  options:
+    - Puede repetirse infinitas veces en la misma página.
+    - No puede repetirse en el mismo documento.
+    - Solo puede aplicarse a etiquetas <div>.
+    - Sustituye a las clases en CSS3.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: A diferencia de las clases, el atributo 'id' debe ser único dentro de cada página HTML para identificar de forma inequívoca a un solo elemento [35, 36].
+- id: q22
+  asignatura: dar
+  type: single
+  question: "Las clases (class) en CSS:"
+  options:
+    - Solo pueden usarse una vez por documento.
+    - Se aplican automáticamente sin declararlas en HTML.
+    - Pueden usarse en múltiples etiquetas.
+    - Son exclusivas del <head>.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Las clases permiten agrupar varios elementos bajo un mismo estilo visual, pudiendo repetirse el atributo 'class' en tantas etiquetas como sea necesario [35, 36].
+- id: q23
+  asignatura: dar
+  type: single
+  question: "CSS3 introduce el canal alfa para:"
+  options:
+    - Definir el tamaño de fuente.
+    - La transparencia.
+    - Mejorar la velocidad del servidor.
+    - Establecer el orden de carga del HTML.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: El canal alfa (parámetro 'a' en RGBA o HSLA) permite definir el grado de opacidad de un color, habilitando efectos de transparencia en los elementos [37, 38].
+- id: q24
+  asignatura: dar
+  type: single
+  question: "Las pseudo-clases permiten:"
+  options:
+    - Cambiar el HTML del servidor.
+    - Definir nuevos elementos HTML dinámicos.
+    - Clasificar elementos según su estado (ej. hover).
+    - Convertir CSS en un lenguaje de programación.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Las pseudo-clases se utilizan para aplicar estilos a elementos basándose en acciones del usuario o estados, como cuando el ratón pasa por encima de un enlace (:hover) [38, 39].
+- id: q25
+  asignatura: dar
+  type: single
+  question: ¿Qué propiedad de CSS3 genera bordes redondeados?
+  options:
+    - border-style.
+    - border-radius.
+    - outline.
+    - padding.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: La propiedad 'border-radius' permite definir el radio de las esquinas de un elemento para que luzcan redondeadas, una de las mejoras estéticas clave de CSS3 [38, 40].
+- id: q26
+  asignatura: dar
+  type: single
+  question: "text-shadow en CSS3 sirve para:"
+  options:
+    - Cambiar el tipo de letra por una fuente externa.
+    - Ajustar el interlineado del texto.
+    - Sombrear textos.
+    - Crear bordes redondeados en el texto.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Esta propiedad permite añadir una o varias sombras al texto de un elemento, especificando su desplazamiento, difuminado y color [41, 42].
+- id: q27
+  asignatura: dar
+  type: single
+  question: ¿Qué es un gradiente en CSS3?
+  options:
+    - Un tipo de fuente especial para títulos.
+    - Un script que genera colores aleatorios.
+    - Una transición entre al menos dos colores.
+    - Un borde que se dibuja con puntos.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Los gradientes son rellenos que muestran una transición suave entre diferentes colores, pudiendo ser lineales o radiales [40, 42].
+- id: q28
+  asignatura: dar
+  type: single
+  question: "Las transformaciones en CSS3 permiten:"
+  options:
+    - Ejecutar lógica condicional en el navegador.
+    - Realizar cambios geométricos a los elementos.
+    - Modificar la estructura del DOM en tiempo real.
+    - Sustituir imágenes por texto automáticamente.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Las transformaciones permiten modificar la geometría de los elementos mediante rotaciones, escalados, inclinaciones o traslaciones en el espacio 2D o 3D [40, 42].
+- id: q29
+  asignatura: dar
+  type: single
+  question: ¿Se recomienda incluir estilos dentro de la etiqueta HTML?
+  options:
+    - Sí, porque mejora la reutilización.
+    - Sí, porque aumenta la velocidad del servidor.
+    - No, se prefiere la separación total de contenido y estilo.
+    - Solo si se usa Bootstrap.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: La buena práctica dicta que el estilo debe estar separado en archivos externos (.css) para facilitar la escalabilidad y limpieza del código [30, 43].
+- id: q30
+  asignatura: dar
+  type: single
+  question: ¿Qué selector se usa para un elemento con un ID específico?
+  options:
+    - El símbolo .
+    - El símbolo *
+    - "El símbolo #"
+    - El símbolo @
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: En CSS, para seleccionar un elemento por su identificador único se antepone el símbolo de almohadilla (#) al nombre del ID [36, 43].
+- id: q31
+  asignatura: dar
+  type: single
+  question: "El lenguaje JavaScript normalmente se ejecuta en:"
+  options:
+    - El cliente.
+    - El servidor exclusivamente.
+    - El router de red.
+    - El compilador del sistema operativo.
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: JavaScript es un lenguaje de programación que se procesa en el navegador del usuario (lado del cliente) para proporcionar interactividad sin consultar constantemente al servidor [43, 44].
+- id: q32
+  asignatura: dar
+  type: single
+  question: "AJAX significa:"
+  options:
+    - Advanced JSON and XForms.
+    - Asynchronous JavaScript and XML (o eXtensions en algunos textos).
+    - Automatic Java and XHTML.
+    - Assembled JavaScript and XHTML.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Es el acrónimo de Asynchronous JavaScript and XML, una técnica que combina varias tecnologías para permitir el asincronismo en la web [45, 46].
+- id: q33
+  asignatura: dar
+  type: single
+  question: ¿Qué problema resuelve AJAX?
+  options:
+    - Permite compilar JavaScript a C++ automáticamente.
+    - Permite recargar áreas de la web sin recargar la página completa.
+    - Sustituye HTTP por FTP en comunicaciones web.
+    - Elimina la necesidad de usar CSS.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: AJAX permite cargar datos en segundo plano y actualizar partes específicas de la interfaz de usuario, optimizando el tráfico y mejorando la fluidez de navegación [45, 46].
+- id: q34
+  asignatura: dar
+  type: single
+  question: "La sintaxis de JQuery se basa en:"
+  options:
+    - El objeto jQuery() o $().
+    - El objeto document.queryCss().
+    - El objeto window.ajax().
+    - El objeto style.selector().
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: JQuery simplifica el desarrollo mediante el uso de este objeto global, al cual se le pasan selectores para manipular elementos del DOM de forma ágil [47, 48].
+- id: q35
+  asignatura: dar
+  type: single
+  question: ¿Qué aporta JQuery a la UX?
+  options:
+    - Sustituye HTML por un lenguaje binario.
+    - Evita el uso del DOM en el navegador.
+    - Interactividad como barras de menú, pestañas y búsquedas.
+    - Obliga a recargar la página para cada acción.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Gracias a su capacidad para manejar eventos y animaciones, JQuery permite crear interfaces mucho más ricas y dinámicas que mejoran la experiencia del usuario (UX) [48, 49].
+- id: q36
+  asignatura: dar
+  type: single
+  question: "Pasos para activar AJAX:"
+  options:
+    - Llamada a JS, petición asíncrona, recuperación de datos, modificación de la página.
+    - Cargar CSS, compilar HTML, reiniciar servidor, mostrar resultados.
+    - Guardar cookies, cerrar sesión, reiniciar navegador, volver a entrar.
+    - Definir tablas, migrar base de datos, lanzar servidor FTP, renderizar.
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: El flujo de AJAX implica iniciar una llamada de script, realizar la petición al servidor sin bloquear la página, obtener la respuesta y actualizar el contenido visualmente [48, 50].
+- id: q37
+  asignatura: dar
+  type: single
+  question: "El DOM es:"
+  options:
+    - Un lenguaje de programación para servidores.
+    - Un sistema de bases de datos del navegador.
+    - Una estructura arbórea que crea el navegador al cargar la web.
+    - Un protocolo de red para intercambiar archivos.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: El Document Object Model (DOM) es la representación jerárquica de todos los elementos de la página, la cual JavaScript utiliza para acceder y modificar el contenido dinámicamente [40, 51].
+- id: q38
+  asignatura: dar
+  type: single
+  question: "JavaScript es un lenguaje:"
+  options:
+    - Compilado a código máquina antes de ejecutarse.
+    - Exclusivo para bases de datos relacionales.
+    - De scripting e interpretado.
+    - Diseñado para sustituir HTML.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: JavaScript se clasifica como un lenguaje de scripting porque su código es interpretado directamente por el navegador en tiempo de ejecución, en lugar de requerir una compilación previa a binario [51, 52].
+- id: q39
+  asignatura: dar
+  type: single
+  question: "El objeto XMLHttpRequest es fundamental para:"
+  options:
+    - Definir estilos CSS dinámicos.
+    - AJAX.
+    - Sustituir el servidor por el cliente.
+    - Ejecutar Java dentro del navegador.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Este objeto es la pieza central de AJAX, ya que proporciona la funcionalidad necesaria para realizar peticiones HTTP de forma asíncrona al servidor desde el navegador [53, 54].
+- id: q40
+  asignatura: dar
+  type: single
+  question: "JQuery utiliza selectores basados en:"
+  options:
+    - XPath.
+    - CSS.
+    - SQL.
+    - FTP.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Una de las grandes ventajas de JQuery es que permite a los desarrolladores utilizar la misma sintaxis de selectores de CSS para encontrar y manipular elementos en el código JavaScript [54, 55].
+- id: q41
+  asignatura: dar
+  type: single
+  question: ¿Qué etiqueta avisa si JavaScript está bloqueado?
+  options:
+    - <nojs>
+    - <noscript>
+    - <script-blocked>
+    - <js-off>
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: La etiqueta <noscript> se utiliza para mostrar contenido alternativo o mensajes de advertencia a aquellos usuarios que tienen deshabilitada la ejecución de scripts en sus navegadores [54].
+- id: q42
+  asignatura: dar
+  type: single
+  question: "En JQuery, el argumento de $( ) es un:"
+  options:
+    - Compilador.
+    - Motor de renderizado.
+    - Selector.
+    - Tipo de dato binario.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: El funcionamiento básico de JQuery consiste en pasar un 'selector' como argumento a su objeto principal para identificar qué partes del documento se desean afectar [47, 54].
+- id: q43
+  asignatura: dar
+  type: single
+  question: "JavaScript es de tipado:"
+  options:
+    - Fuerte y estático.
+    - Débil o no tipado.
+    - Solo numérico.
+    - Exclusivo de enteros.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: JavaScript es un lenguaje de tipado débil, lo que significa que no es necesario declarar el tipo de dato de una variable y este puede cambiar dinámicamente durante la ejecución [56].
+- id: q44
+  asignatura: dar
+  type: single
+  question: ¿Qué permite dotar de dinamismo a una web estática?
+  options:
+    - JavaScript.
+    - HTML5.
+    - CSS3.
+    - SGML.
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Mientras que HTML y CSS definen el contenido y su aspecto, JavaScript es el lenguaje que permite que la página responda a eventos y cambie su contenido sin recargar [56, 57].
+- id: q45
+  asignatura: dar
+  type: single
+  question: ¿Se puede incluir JS dentro del archivo HTML?
+  options:
+    - No, debe ir siempre en un archivo externo.
+    - Sí, entre etiquetas <script>.
+    - Solo si se usa XHTML estricto.
+    - Solo dentro de <style>.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Aunque se recomienda el uso de archivos externos por orden, JavaScript permite incluir código directamente en el documento HTML utilizando el bloque contenedor <script> [52, 56].
+- id: q46
+  asignatura: dar
+  type: single
+  question: "Un componente es:"
+  options:
+    - Un único objeto sin interfaces.
+    - Una colección de objetos que proporcionan servicios a diferentes sistemas.
+    - Un archivo HTML con estilos embebidos.
+    - Un script que solo se ejecuta en cliente.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: En el paradigma de la POC, un componente se define como una unidad de software que encapsula funcionalidades y las expone para ser consumidas por otros sistemas [58, 59].
+- id: q47
+  asignatura: dar
+  type: single
+  question: "Estados de creación de un componente:"
+  options:
+    - Diseño, compilación, ejecución y depuración.
+    - Construcción, despliegue, borrado y reinicio.
+    - Análisis, prueba, mantenimiento y retirada.
+    - Especificación, implementación, objeto y contratos.
+  correct:
+    - 3
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El ciclo de creación de un componente requiere pasar por su definición abstracta, desarrollo técnico, existencia en el sistema y acuerdos legales de uso de su interfaz [59, 60].
+- id: q48
+  asignatura: dar
+  type: single
+  question: "Ventaja principal de la POC:"
+  options:
+    - Reutilización de código.
+    - Sustituir completamente la POO.
+    - Evitar el uso de interfaces.
+    - Obligar a la herencia múltiple.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: La principal motivación de la programación por componentes es asegurar que el código sea modular y pueda ser reutilizado en múltiples proyectos sin cambios internos [61, 62].
+- id: q49
+  asignatura: dar
+  type: single
+  question: "Diferencia entre objeto y componente:"
+  options:
+    - Un componente no puede reutilizarse.
+    - Un objeto siempre se ejecuta en red y un componente no.
+    - El componente es una entidad autónoma que exporta rendimiento y usa interfaces abiertas.
+    - Un componente no tiene contratos ni interfaces.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: A diferencia de un objeto simple de programación, el componente está diseñado para ser una pieza autónoma e independiente que se comunica mediante interfaces estandarizadas [62].
+- id: q50
+  asignatura: dar
+  type: single
+  question: "Reutilización de 'caja negra' significa:"
+  options:
+    - No se conoce la implementación interna, solo su interfaz.
+    - Se conoce todo el código fuente y se modifica libremente.
+    - Se reutiliza copiando y pegando el código en cada proyecto.
+    - Solo se reutilizan variables globales.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Este concepto implica que el usuario del componente no necesita (ni puede) ver cómo está programado por dentro; simplemente confía en lo que la interfaz promete hacer [63, 64].
+- id: q51
+  asignatura: dar
+  type: single
+  question: "La POC es una variante de:"
+  options:
+    - Programación estructurada.
+    - Programación funcional.
+    - La Programación Orientada a Objetos (POO).
+    - Programación lógica.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: La POC surge como una evolución de la POO, cambiando el enfoque de la jerarquía de clases y la herencia por el de la composición y los servicios independientes [55, 64].
+- id: q52
+  asignatura: dar
+  type: single
+  question: "La interfaz de un componente es:"
+  options:
+    - Un archivo de configuración sin relación con el cliente.
+    - El nexo de unión entre el cliente y la implementación.
+    - Un conjunto de estilos CSS.
+    - Un protocolo de red.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: La interfaz define formalmente qué operaciones ofrece el componente y cómo debe ser invocado, actuando como el único punto de contacto para el desarrollador externo [65, 66].
+- id: q53
+  asignatura: dar
+  type: single
+  question: "Componentes con estado:"
+  options:
+    - Aquellos que no guardan datos nunca.
+    - Aquellos que solo tienen métodos estáticos.
+    - Aquellos que almacenan datos de manera local (ej. un contador).
+    - Aquellos que solo funcionan en bases de datos.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Se dice que un componente tiene estado cuando es capaz de recordar información entre diferentes llamadas o interacciones durante su ejecución en el sistema [66, 67].
+- id: q54
+  asignatura: dar
+  type: single
+  question: ¿Qué lenguaje permite la creación clara de componentes?
+  options:
+    - Java y Ada95.
+    - HTML y CSS.
+    - SQL y XML.
+    - Python y Bash.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Java (con sus Beans) y Ada95 son ejemplos académicos clásicos de lenguajes diseñados con características que facilitan la encapsulación y creación de componentes modulares [67, 68].
+- id: q55
+  asignatura: dar
+  type: single
+  question: "Un contrato de uso establece:"
+  options:
+    - La funcionalidad a través de su interfaz.
+    - La estética visual del componente.
+    - La velocidad de descarga de la web.
+    - El tipo de navegador obligatorio.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El contrato de uso es el acuerdo técnico que asegura que el componente cumplirá con las funciones descritas en su interfaz si se utiliza correctamente [68, 69].
+- id: q56
+  asignatura: dar
+  type: single
+  question: "La POC utiliza principalmente:"
+  options:
+    - La herencia en lugar de la composición.
+    - La recursividad como base del diseño.
+    - La composición en lugar de la herencia.
+    - El acoplamiento fuerte como objetivo.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: A diferencia de la POO tradicional que abusa de la jerarquía (herencia), la POC prefiere construir sistemas complejos uniendo piezas independientes (composición) [68, 70].
+- id: q57
+  asignatura: dar
+  type: single
+  question: "Los componentes pueden ejecutarse de forma:"
+  options:
+    - Solo local.
+    - Local o distribuida.
+    - Solo en cliente.
+    - Solo en servidor.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Dada su naturaleza independiente y modular, un componente puede funcionar dentro del mismo programa o estar alojado en una red para ser consultado remotamente [70, 71].
+- id: q58
+  asignatura: dar
+  type: single
+  question: ¿Es necesaria la fase de instalación de un componente?
+  options:
+    - No, los componentes no requieren registro.
+    - Solo si el componente usa CSS3.
+    - Sí, para registrarlo en el sistema y que las aplicaciones lo usen.
+    - Solo en aplicaciones móviles.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: La instalación es el paso donde el componente se integra físicamente en el entorno de ejecución, permitiendo que otras partes del software lo reconozcan y utilicen [71, 72].
+- id: q59
+  asignatura: dar
+  type: single
+  question: "La fase de especificación debe ser:"
+  options:
+    - Independiente de la plataforma de desarrollo.
+    - Dependiente del lenguaje de programación del cliente.
+    - Exclusiva para Windows.
+    - Obligatoria en HTML.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Para que un componente sea verdaderamente universal, su definición abstracta (qué hace) debe realizarse sin atarse a un lenguaje o sistema operativo específico [71, 73].
+- id: q60
+  asignatura: dar
+  type: single
+  question: "Bajo acoplamiento en componentes implica:"
+  options:
+    - Mayor dependencia y menos flexibilidad.
+    - Menor dependencia entre módulos.
+    - Herencia obligatoria entre módulos.
+    - Uso exclusivo de variables globales.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El bajo acoplamiento busca que los cambios realizados dentro de un componente no afecten a los demás, permitiendo que el sistema sea más flexible y fácil de arreglar [74, 75].
+- id: q61
+  asignatura: dar
+  type: single
+  question: "La arquitectura de componentes busca:"
+  options:
+    - Evitar cualquier reutilización de código.
+    - Sustituir el ciclo de vida del software por prototipos.
+    - Desarrollos más robustos, homogéneos y escalables.
+    - Obligar a usar un único lenguaje de programación.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Al basarse en piezas ya probadas y estándares, la arquitectura de componentes asegura que el software resultante sea de mayor calidad y fácil de ampliar [7, 74].
+- id: q62
+  asignatura: dar
+  type: single
+  question: "CORBA se centra en:"
+  options:
+    - Facilitar el uso de componentes remotos mediante POO.
+    - Sustituir HTTP por SMTP.
+    - Eliminar el uso de middleware en redes.
+    - Crear únicamente páginas estáticas HTML.
+  correct:
+    - 0
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: CORBA es un estándar diseñado para permitir que objetos escritos en diferentes lenguajes puedan comunicarse a través de una red de forma transparente [76, 77].
+- id: q63
+  asignatura: dar
+  type: single
+  question: "DCOM permite:"
+  options:
+    - Ejecutar CSS en el servidor.
+    - Diseñar interfaces gráficas con HTML5.
+    - Desarrollar componentes distribuidos.
+    - Sustituir Java por JavaScript.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: DCOM (Distributed Component Object Model) es la tecnología de Microsoft que permite que los componentes se comuniquen entre sí aunque estén en diferentes ordenadores [76, 77].
+- id: q64
+  asignatura: dar
+  type: single
+  question: "Enterprise JavaBeans (EJB) utiliza un modelo:"
+  options:
+    - Peer-to-peer.
+    - Monolítico sin capas.
+    - Cliente-Servidor.
+    - Exclusivo de escritorio.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Los EJB forman parte del estándar J2EE para aplicaciones empresariales distribuidas, operando típicamente bajo la arquitectura de cliente que solicita servicios al servidor [77, 78].
+- id: q65
+  asignatura: dar
+  type: single
+  question: "Composición simple en POC ocurre cuando:"
+  options:
+    - Solo se usan componentes propios sin frameworks.
+    - Se combinan componentes de un framework con otros.
+    - Se elimina toda dependencia y no hay interfaces.
+    - Los componentes se copian dentro del mismo archivo.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Se habla de composición simple cuando aprovechamos las herramientas de integración que ofrece un framework para unir diferentes componentes entre sí [79, 80].
+- id: q66
+  asignatura: dar
+  type: single
+  question: "La arquitectura software detalla estructuras con un:"
+  options:
+    - Alto nivel de abstracción.
+    - Bajo nivel de ensamblador.
+    - Nivel de microcódigo.
+    - Nivel de hardware físico.
+  correct:
+    - 0
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: La arquitectura no se pierde en los detalles técnicos de cada línea de código, sino que define el esquema global, las conexiones y el comportamiento del sistema a gran escala [76, 80].
+- id: q67
+  asignatura: dar
+  type: single
+  question: ¿Qué tecnología busca transparencia para el desarrollador?
+  options:
+    - CORBA.
+    - .NET.
+    - HTML5.
+    - CSS3.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: La plataforma .NET de Microsoft fue diseñada para que el programador pueda centrarse en la lógica del negocio mientras que el framework se encarga de la interoperabilidad y gestión de recursos [76, 81].
+- id: q68
+  asignatura: dar
+  type: single
+  question: "La composición heterogénea implica:"
+  options:
+    - Componer solo dentro del mismo lenguaje.
+    - Eliminar frameworks y usar solo componentes puros.
+    - Componer componentes a través de diferentes frameworks.
+    - Ejecutar componentes solo localmente.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Este tipo de composición compleja se da cuando un sistema requiere integrar piezas que provienen de distintos entornos de trabajo o tecnologías [81, 82].
+- id: q69
+  asignatura: dar
+  type: single
+  question: ¿Es posible tratar a un framework como un componente?
+  options:
+    - No, un framework nunca puede encapsularse.
+    - Solo si se reescribe en ensamblador.
+    - Sí, mediante la extensión del framework.
+    - Solo en arquitecturas monolíticas.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Un framework avanzado puede ser encapsulado y tratado como un componente de mayor tamaño para ser integrado dentro de otras arquitecturas más amplias [81, 83].
+- id: q70
+  asignatura: dar
+  type: single
+  question: "Composición transitiva es:"
+  options:
+    - La composición que se hace en un único paso y termina ahí.
+    - El resultado de una composición previa que se vuelve a combinar.
+    - La composición exclusiva de componentes gráficos.
+    - La eliminación de interfaces para simplificar.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: En sistemas complejos, el producto de unir dos componentes puede ser utilizado como una pieza única para formar una composición aún mayor, siguiendo una cadena de integración [83, 84].
+- id: q71
+  asignatura: dar
+  type: single
+  question: "Para lograr reutilización es necesario crear:"
+  options:
+    - Repositorios de imágenes.
+    - Repositorios de componentes.
+    - Repositorios de usuarios.
+    - Repositorios de conexiones HTTP.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Para que la industria del software sea eficiente, los componentes validados deben almacenarse en repositorios accesibles para que otros desarrolladores puedan localizarlos y usarlos [84, 85].
+- id: q72
+  asignatura: dar
+  type: single
+  question: "La arquitectura basada en componentes enfatiza:"
+  options:
+    - La herencia y el acoplamiento fuerte.
+    - La descomposición en componentes funcionales con interfaces definidas.
+    - El uso exclusivo de variables globales.
+    - La ausencia total de contratos.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: El pilar de esta arquitectura es dividir el problema en partes manejables que hablen entre sí únicamente a través de puntos de conexión estandarizados e interfaces [58, 86].
+- id: q73
+  asignatura: dar
+  type: single
+  question: ¿Qué aporta la arquitectura de componentes al ciclo industrial?
+  options:
+    - Mayor eficiencia.
+    - Mayor dependencia entre módulos.
+    - Menor reutilización.
+    - Sustitución de pruebas por despliegue directo.
+  correct:
+    - 0
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Al industrializar el desarrollo y evitar 'reinventar la rueda', las empresas pueden entregar software de calidad en menos tiempo y con menos errores [86, 87].
+- id: q74
+  asignatura: dar
+  type: single
+  question: "La arquitectura ayuda a prever:"
+  options:
+    - El color final del diseño.
+    - Cambios en el software.
+    - La marca del navegador del usuario.
+    - El tipo de teclado del programador.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Un sistema bien arquitecturado permite anticipar cómo afectarán las futuras modificaciones y asegura que el software pueda evolucionar sin colapsar [79, 88].
+- id: q75
+  asignatura: dar
+  type: single
+  question: ¿Los componentes deben ser dependientes entre sí?
+  options:
+    - Sí, porque mejora el control.
+    - Sí, porque evita interfaces.
+    - No, la fuerza de la arquitectura reside en su independencia e interfaz.
+    - Solo en sistemas distribuidos.
+  correct:
+    - 2
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: "La meta es la independencia absoluta: un componente debe poder ser extraído de un sistema y puesto en otro totalmente distinto siempre que se respete su interfaz [88, 89]."
+- id: q76
+  asignatura: dar
+  type: single
+  question: "Bootstrap garantiza:"
+  options:
+    - Un diseño adaptativo y principios de accesibilidad.
+    - La ejecución de Java en el navegador sin servidor.
+    - La compilación automática de CSS a HTML.
+    - La eliminación de JavaScript en interfaces web.
+  correct:
+    - 0
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap está diseñado para que la web se adapte a cualquier tamaño de pantalla (responsive) y para que sea usable por personas con discapacidades mediante estándares de accesibilidad [90, 91].
+- id: q77
+  asignatura: dar
+  type: single
+  question: "Requisitos para ejecutar Bootstrap 3:"
+  options:
+    - Solo HTML y CSS.
+    - CSS, JS, HTML5 y JQuery.
+    - PHP, MySQL y Apache.
+    - XML, XSLT y XPath.
+  correct:
+    - 1
+  tema: "Tema 6: Bootstrap"
+  explicacion: La versión 3 de Bootstrap depende internamente de la librería JQuery para sus componentes interactivos (modales, menús, etc.) y requiere los estándares modernos de HTML5 y CSS3 [57, 91].
+- id: q78
+  asignatura: dar
+  type: single
+  question: "El diseño con rejilla de Bootstrap:"
+  options:
+    - Obliga a usar tablas HTML para maquetar.
+    - Elimina el uso de contenedores en la web.
+    - Sustituye CSS por JavaScript para el layout.
+    - Crea una estructura ordenada y proporciona continuidad.
+  correct:
+    - 3
+  tema: "Tema 6: Bootstrap"
+  explicacion: El sistema de rejilla (grid) permite organizar el contenido en columnas y filas, lo que otorga un aspecto profesional, limpio y equilibrado a la página [91, 92].
+- id: q79
+  asignatura: dar
+  type: single
+  question: "Etiqueta necesaria para el diseño adaptativo en móviles:"
+  options:
+    - <meta name='mobile' content='true'>
+    - <meta charset='UTF-8'>
+    - <meta name='viewport' content='width=device-width, initial-scale=1'>
+    - <meta http-equiv='refresh' content='30'>
+  correct:
+    - 2
+  tema: "Tema 6: Bootstrap"
+  explicacion: Esta etiqueta indica al navegador que el ancho de la página debe ser igual al ancho de la pantalla del dispositivo, evitando que la web se vea minúscula en los móviles [93, 94].
+- id: q80
+  asignatura: dar
+  type: single
+  question: "Tipos de rejillas según dispositivo:"
+  options:
+    - tv, console, pc, mobile.
+    - xs (móviles), sm (tablets), md (PC), lg (PC gran pantalla).
+    - small, medium, large, xlarge.
+    - 1col, 2col, 3col, 4col.
+  correct:
+    - 1
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap utiliza estos prefijos de clase para que el desarrollador pueda definir un comportamiento distinto del diseño según el tamaño de la pantalla [93, 95].
+- id: q81
+  asignatura: dar
+  type: single
+  question: "Clase para centrar la web automáticamente:"
+  options:
+    - row-center
+    - container
+    - align-web
+    - center-blocks
+  correct:
+    - 1
+  tema: "Tema 6: Bootstrap"
+  explicacion: La clase '.container' es el elemento raíz de la estructura de Bootstrap; centra el contenido y le otorga un ancho máximo adecuado para cada tipo de monitor [96, 97].
+- id: q82
+  asignatura: dar
+  type: single
+  question: "Bootstrap es un framework orientado a:"
+  options:
+    - Enmaquetado HTML y diseño CSS.
+    - Bases de datos distribuidas.
+    - Control de procesos del sistema operativo.
+    - Compilación de Java en servidor.
+  correct:
+    - 0
+  tema: "Tema 6: Bootstrap"
+  explicacion: A diferencia de los frameworks de back-end, Bootstrap se enfoca exclusivamente en la capa visual y estructural de la aplicación web (front-end) [97, 98].
+- id: q83
+  asignatura: dar
+  type: single
+  question: "Atributo box-shadow en Bootstrap:"
+  options:
+    - Añade efectos visuales según el estado de un campo.
+    - Cambia el método HTTP de un formulario.
+    - Define el tamaño de la rejilla responsive.
+    - Crea enlaces de navegación semánticos.
+  correct:
+    - 0
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap utiliza sombras para resaltar campos de formulario cuando estos obtienen el foco o contienen errores, mejorando la respuesta visual al usuario [97, 99].
+- id: q84
+  asignatura: dar
+  type: single
+  question: "Para formularios que ocupen poco espacio se usa la clase:"
+  options:
+    - form-compact
+    - form-inline
+    - form-small
+    - form-grid
+  correct:
+    - 1
+  tema: "Tema 6: Bootstrap"
+  explicacion: La clase '.form-inline' coloca todos los elementos del formulario en una sola línea horizontal, ideal para barras de búsqueda o logins sencillos [100, 101].
+- id: q85
+  asignatura: dar
+  type: single
+  question: ¿Cómo se desactiva el diseño adaptativo?
+  options:
+    - Eliminando los archivos CSS.
+    - Desactivando JavaScript del navegador.
+    - Eliminando la etiqueta viewport y el max-width de contenedores.
+    - Cambiando <div> por <span>.
+  correct:
+    - 2
+  tema: "Tema 6: Bootstrap"
+  explicacion: Si se desea una web con ancho fijo que no cambie en móviles, se deben quitar las instrucciones que fuerzan al navegador a adaptar la escala y el tamaño del contenedor [101, 102].
+- id: q86
+  asignatura: dar
+  type: single
+  question: "Bootstrap distingue tres estados en formularios:"
+  options:
+    - error-only, success-only, warning-only.
+    - has-error, has-success y has-warning.
+    - form-red, form-green, form-yellow.
+    - state-0, state-1, state-2.
+  correct:
+    - 1
+  tema: "Tema 6: Bootstrap"
+  explicacion: Estas clases permiten aplicar colores automáticos (rojo, verde y amarillo) a los campos de texto para informar al usuario sobre la validez de sus datos [101, 103].
+- id: q87
+  asignatura: dar
+  type: single
+  question: "La clase sr-only sirve para:"
+  options:
+    - Aumentar el tamaño del texto en móviles.
+    - Ocultar elementos para mejorar rendimiento.
+    - Accesibilidad, ocultando etiquetas visualmente pero no para lectores.
+    - Crear sombras en texto automáticamente.
+  correct:
+    - 2
+  tema: "Tema 6: Bootstrap"
+  explicacion: Es vital para el cumplimiento de las normas de accesibilidad (Screen Reader Only); permite que los invidentes escuchen la etiqueta del campo aunque esta no se vea en pantalla [100, 104].
+- id: q88
+  asignatura: dar
+  type: single
+  question: ¿Bootstrap incluye iconos?
+  options:
+    - No, requiere librerías externas obligatorias.
+    - Sí, pero solo si se usa React.
+    - Sí, tiene un amplio número de componentes CSS disponibles.
+    - Solo soporta iconos SVG personalizados.
+  correct:
+    - 2
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap viene por defecto con una librería de iconos (Glyphicons) que pueden insertarse fácilmente en botones, menús y alertas mediante clases de CSS [104, 105].
+- id: q89
+  asignatura: dar
+  type: single
+  question: "La rejilla de Bootstrap divide la página en:"
+  options:
+    - Filas sin columnas.
+    - Columnas sin filas.
+    - Campos e interludios dentro de márgenes.
+    - Un único contenedor fijo sin divisiones.
+  correct:
+    - 2
+  tema: "Tema 6: Bootstrap"
+  explicacion: Técnicamente, la rejilla o retícula divide el espacio de trabajo en 12 columnas imaginarias que permiten colocar los elementos con precisión matemática [92, 106].
+- id: q90
+  asignatura: dar
+  type: single
+  question: "Bootstrap es capaz de lograr diseño adaptativo en:"
+  options:
+    - Solo móviles.
+    - Solo PC.
+    - Solo tablets.
+    - PC, Tablet y Smartphones.
+  correct:
+    - 3
+  tema: "Tema 6: Bootstrap"
+  explicacion: La universalidad de Bootstrap radica en que una sola base de código sirve para visualizar correctamente la aplicación en cualquier tipo de terminal inteligente [8, 106].
+- id: q91
+  asignatura: dar
+  type: single
+  question: "En MVC, la M significa:"
+  options:
+    - "Módulo: controla la navegación de la web."
+    - "Monitor: supervisa las peticiones HTTP."
+    - "Modelo: Maneja datos y lógica de negocios."
+    - "Motor: renderiza la interfaz de usuario."
+  correct:
+    - 2
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: El Modelo es la capa que se comunica con la base de datos y contiene todas las reglas de negocio de la aplicación [90, 106].
+- id: q92
+  asignatura: dar
+  type: single
+  question: "En MVC, la V significa:"
+  options:
+    - "Vista: Se encarga del diseño y presentación."
+    - "Validación: comprueba reglas de negocio."
+    - "Versión: gestiona cambios del código."
+    - "Variable: contiene datos temporales."
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: La Vista es la capa de interfaz de usuario; su única responsabilidad es mostrar la información procesada al consumidor final [60, 107].
+- id: q93
+  asignatura: dar
+  type: single
+  question: "En MVC, la C significa:"
+  options:
+    - "Cliente: ejecuta la aplicación."
+    - "Conector: une capas de persistencia."
+    - "Controlador: Enruta comandos a modelos y vistas."
+    - "Compilador: transforma el código a binario."
+  correct:
+    - 2
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: El Controlador actúa como cerebro o enlace, tomando las acciones del usuario y decidiendo qué datos del Modelo debe mostrar en qué Vista [107, 108].
+- id: q94
+  asignatura: dar
+  type: single
+  question: "El controlador en MVC actúa como:"
+  options:
+    - Enlace entre el modelo y la vista ante eventos de usuario.
+    - Motor de base de datos relacional.
+    - Sustituto de la vista para mostrar HTML.
+    - Sistema de archivos para recursos estáticos.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: "Su función principal es la mediación: recibe peticiones del usuario, interactúa con el modelo y selecciona la vista apropiada para la respuesta [109, 110]."
+- id: q95
+  asignatura: dar
+  type: single
+  question: "En la implementación Java de MVC, el Servlet suele ser:"
+  options:
+    - La Vista.
+    - El Controlador.
+    - El Modelo.
+    - El navegador del cliente.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Dentro de la arquitectura web de Java, los servlets procesan las peticiones HTTP iniciales, funcionando perfectamente como la pieza controladora del patrón [110, 111].
+- id: q96
+  asignatura: dar
+  type: single
+  question: "En la implementación Java de MVC, el JSP suele ser:"
+  options:
+    - La Vista.
+    - El Controlador.
+    - El Modelo.
+    - El servidor de aplicaciones.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: JavaServer Pages (JSP) se utiliza para generar contenido HTML de forma dinámica en el servidor, asumiendo el rol de representación visual para el usuario [110, 112].
+- id: q97
+  asignatura: dar
+  type: single
+  question: "En la implementación Java de MVC, el JavaBean o EJB es:"
+  options:
+    - El Controlador (recibe eventos).
+    - La Vista (renderiza HTML).
+    - El Modelo (comunica con BD).
+    - El Router (gestiona red).
+  correct:
+    - 2
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Los JavaBeans y EJB (Enterprise JavaBeans) encapsulan los datos y las operaciones de acceso a bases de datos, cumpliendo con la definición de la capa de Modelo [113, 114].
+- id: q98
+  asignatura: dar
+  type: single
+  question: "WSDM es un método de desarrollo web centrado en:"
+  options:
+    - La base de datos más que el usuario.
+    - El usuario más que en los datos.
+    - La compilación y despliegue automático.
+    - El diseño gráfico exclusivamente.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Web Site Design Method (WSDM) es una metodología que prioriza los requisitos y perfiles de los usuarios finales para guiar todo el proceso de diseño del sitio [9, 114].
+- id: q99
+  asignatura: dar
+  type: single
+  question: "Metodología UWE se fundamenta en:"
+  options:
+    - Un metamodelo basado en XML.
+    - Un metamodelo basado en UML.
+    - Un metamodelo basado en HTML5.
+    - Un metamodelo basado en CSS3.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: UWE (UML-based Web Engineering) utiliza el estándar de modelado UML para definir por separado los aspectos de contenido, navegación y presentación de una web [109, 114].
+- id: q100
+  asignatura: dar
+  type: single
+  question: "WebML se caracteriza por:"
+  options:
+    - Bajo nivel de abstracción y foco técnico inicial.
+    - Un alto nivel de abstracción sin considerar detalles técnicos iniciales.
+    - Exclusividad para aplicaciones móviles.
+    - Sustituir patrones de diseño por scripts.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: WebML permite construir sitios web complejos mediante modelos visuales, abstrayendo al desarrollador de la codificación técnica en las fases iniciales del diseño [9, 115].
+- id: q101
+  asignatura: dar
+  type: single
+  question: "Framework para la capa de Modelo en Java:"
+  options:
+    - Bootstrap.
+    - Node.js.
+    - JPA o Hibernate.
+    - JQuery.
+  correct:
+    - 2
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Estas herramientas facilitan el mapeo de objetos Java a tablas de bases de datos relacionales, siendo el estándar de la industria para la capa de persistencia [115, 116].
+- id: q102
+  asignatura: dar
+  type: single
+  question: "Framework para la capa de Vista en Java:"
+  options:
+    - JSF (Java Servlet Faces).
+    - JPA.
+    - Hibernate.
+    - Apache Axis.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: JavaServer Faces (JSF) es un framework centrado en componentes para construir interfaces de usuario de aplicaciones web basadas en Java [115, 116].
+- id: q103
+  asignatura: dar
+  type: single
+  question: "Un patrón de diseño es:"
+  options:
+    - Un lenguaje de programación para web.
+    - Una solución general y reutilizable a problemas comunes.
+    - Un protocolo de transporte de datos.
+    - Un estándar de marcado derivado de SGML.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: En ingeniería de software, los patrones son 'recetas' o arquitecturas ya probadas por la comunidad que resuelven retos típicos de diseño de forma eficiente [117, 118].
+- id: q104
+  asignatura: dar
+  type: single
+  question: "Tipos de patrones de diseño:"
+  options:
+    - Estáticos, dinámicos y persistentes.
+    - Creacionales, estructurales y de comportamiento.
+    - Cliente, servidor y distribuido.
+    - HTML, CSS y JavaScript.
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: "Esta es la clasificación estándar de la ingeniería de software: patrones para crear objetos, para organizar estructuras y para definir la interacción entre ellos [118, 119]."
+- id: q105
+  asignatura: dar
+  type: single
+  question: ¿MVC permite la separación de lógica de negocio y visualización?
+  options:
+    - No, mezcla ambas capas para simplificar.
+    - Solo en aplicaciones sin base de datos.
+    - Sí, es su objetivo fundamental.
+    - Solo si se usa AJAX.
+  correct:
+    - 2
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Al separar la Vista (visualización) del Modelo (lógica), se permite que diseñadores y programadores trabajen de forma independiente y que el sistema sea más fácil de mantener [120, 121].
+- id: q106
+  asignatura: dar
+  type: single
+  question: "Con la creación de clusters se consigue:"
+  options:
+    - Eliminar completamente la necesidad de redes.
+    - Ejecutar únicamente tareas de usuario individuales.
+    - Reemplazar HTTP por FTP en sistemas distribuidos.
+    - Compartir recursos (carga o computación) entre nodos.
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Un cluster consiste en un grupo de ordenadores conectados en una red local que actúan como si fueran una sola máquina potente para resolver tareas compartidas [121, 122].
+- id: q107
+  asignatura: dar
+  type: single
+  question: "Las aplicaciones distribuidas de alto rendimiento (HPC):"
+  options:
+    - Requieren gran capacidad de cómputo, superior a un único superordenador.
+    - Solo ejecutan tareas ofimáticas de bajo consumo.
+    - Se limitan a sistemas monousuario.
+    - Funcionan siempre sin paralelismo.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Las aplicaciones HPC (High Performance Computing) necesitan tal nivel de procesamiento que solo pueden ejecutarse mediante el trabajo paralelo de múltiples nodos en un cluster o grid [122, 123].
+- id: q108
+  asignatura: dar
+  type: single
+  question: "La Tecnología Grid está diseñada para:"
+  options:
+    - Resolver problemas demasiado grandes para un superordenador.
+    - Ejecutar solo páginas HTML estáticas.
+    - Eliminar el uso de middleware distribuido.
+    - Sustituir los clusters locales por un único PC.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: El Grid es una infraestructura que permite la coordinación de recursos de computación geográficamente dispersos para afrontar problemas científicos o industriales masivos [45, 123].
+- id: q109
+  asignatura: dar
+  type: single
+  question: "Tres puntos fundamentales para considerar un sistema como Grid:"
+  options:
+    - Coordinación de recursos, protocolos estándar y QoS.
+    - Uso exclusivo de JavaScript, HTML5 y CSS3.
+    - Monolitismo, acoplamiento fuerte y baja latencia.
+    - Seguridad nula, ejecución local y sin estándares.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Para que un sistema sea Grid debe haber una gestión centralizada de recursos heterogéneos, usar interfaces abiertas para la interoperabilidad y garantizar una calidad de servicio [124, 125].
+- id: q110
+  asignatura: dar
+  type: single
+  question: "La tecnología Grid ha de ser:"
+  options:
+    - Dependiente de un único proveedor y plataforma.
+    - Local, monolítica y rígida.
+    - Exclusiva para superordenadores idénticos.
+    - Dependiente, Consistente, Penetrante y Económica.
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: El manual oficial define que el Grid debe ser estable (Dependiente), basado en estándares (Consistente), comunicativo (Penetrante) y rentable (Económico) [10, 125].
+- id: q111
+  asignatura: dar
+  type: single
+  question: "Diferencia entre Cluster y Grid:"
+  options:
+    - Un grid siempre es local y un cluster siempre remoto.
+    - Los clusters suelen ser locales, el Grid une clusters dispersos geográficamente.
+    - Un cluster usa HTTP y un grid usa FTP.
+    - "No existe diferencia: son sinónimos."
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Mientras que un cluster es una agrupación de proximidad física, el Grid es una 'malla' que conecta diversos centros de datos o clusters a través de grandes distancias [10, 126].
+- id: q112
+  asignatura: dar
+  type: single
+  question: "Aplicaciones HTC (Alta Productividad) se encargan de:"
+  options:
+    - Renderizado gráfico en tiempo real exclusivamente.
+    - Tareas secuenciales que pueden dividirse y componerse.
+    - Solo tareas interactivas de baja duración.
+    - Tareas que requieren GPU obligatoria.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: HTC (High Throughput Computing) se centra en procesar una gran cantidad de tareas pequeñas o divisibles que requieren mucha potencia de cálculo durante periodos largos de tiempo [10, 126].
+- id: q113
+  asignatura: dar
+  type: single
+  question: "La e-Ciencia es:"
+  options:
+    - Cuando la ciencia depende de la computación (meteorología, bioinformática).
+    - La ciencia realizada sin herramientas digitales.
+    - Un tipo de diseño web orientado a datos.
+    - Un estándar de comunicación HTTP.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: El término e-Ciencia se refiere a la investigación científica que utiliza recursos computacionales avanzados para analizar grandes volúmenes de datos distribuidos [127, 128].
+- id: q114
+  asignatura: dar
+  type: single
+  question: ¿Qué es la Meta-computación?
+  options:
+    - Un único superordenador con más memoria.
+    - La unión de varios superordenadores.
+    - Un navegador especializado en HPC.
+    - Un protocolo de cifrado de red.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Fue el concepto precursor del Grid; consistía en interconectar varios superordenadores distantes para que funcionaran de forma coordinada como una única entidad lógica [127, 128].
+- id: q115
+  asignatura: dar
+  type: single
+  question: "Ventaja de los clusters:"
+  options:
+    - Menor fiabilidad por depender de múltiples nodos.
+    - Obligan a usar nodos idénticos siempre.
+    - No permiten paralelización.
+    - Disminución de la obsolescencia y mayor fiabilidad (tolerancia a fallos).
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Al usar múltiples máquinas estándar, si una falla, las demás continúan el trabajo. Además, permite actualizar el hardware de forma modular y económica [129, 130].
+- id: q116
+  asignatura: dar
+  type: single
+  question: "El software de control en Grid sirve para:"
+  options:
+    - Cambiar el HTML de las páginas servidas.
+    - Monitorizar y controlar los recursos globalmente.
+    - Compilar programas en lenguaje ensamblador.
+    - Sustituir la red por ejecución local.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Un sistema Grid necesita una capa de software (middleware) que se encargue de saber qué nodos están libres, repartir las tareas y vigilar la seguridad de la red [10, 129].
+- id: q117
+  asignatura: dar
+  type: single
+  question: "El criterio económico en Grid implica:"
+  options:
+    - Ser más caro que usar un superordenador dedicado.
+    - Ser más rentable que el uso de mainframes.
+    - Evitar cualquier reutilización de recursos.
+    - Obligar a adquirir hardware propietario.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: La implantación de un Grid solo tiene sentido si ofrece una capacidad de cálculo similar a la de un superordenador mainframe pero a un coste significativamente inferior [131, 132].
+- id: q118
+  asignatura: dar
+  type: single
+  question: "QoS en Grid mide:"
+  options:
+    - Tiempo de respuesta, rendimiento y seguridad.
+    - Solo el ancho de banda de red.
+    - Únicamente el número de usuarios conectados.
+    - El tamaño de archivos HTML.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Quality of Service (QoS) asegura que el sistema Grid cumpla con niveles mínimos de estabilidad y rapidez necesarios para que las aplicaciones HPC funcionen [131, 132].
+- id: q119
+  asignatura: dar
+  type: single
+  question: ¿Los nodos en un Grid deben ser idénticos?
+  options:
+    - Sí, es obligatorio que sean iguales.
+    - Sí, para asegurar compatibilidad de hardware.
+    - No, se usan elementos heterogéneos.
+    - Solo si el Grid usa HTTP.
+  correct:
+    - 2
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Una de las fortalezas del Grid es su capacidad para integrar máquinas con distintos sistemas operativos y hardware (heterogeneidad) mediante protocolos comunes [10, 133].
+- id: q120
+  asignatura: dar
+  type: single
+  question: "La tecnología Grid se enmarca en el paradigma de:"
+  options:
+    - Programación local monousuario.
+    - Computación distribuida.
+    - Computación sin red.
+    - Compilación estática.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: La computación distribuida es el modelo donde los recursos de diferentes equipos se unen para trabajar en un objetivo común, siendo el Grid su máxima expresión [130, 133].
+- id: q121
+  asignatura: dar
+  type: single
+  question: "SOAP es la tecnología utilizada para:"
+  options:
+    - Invocar servicios descubiertos y comunicar consumidor con proveedor.
+    - Diseñar interfaces web responsive.
+    - Reemplazar HTTP por FTP en servicios.
+    - Sustituir XML por CSS3.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: SOAP (Simple Object Access Protocol) es el protocolo de mensajería basado en XML que permite la comunicación estandarizada entre el cliente y el servicio web [133, 134].
+- id: q122
+  asignatura: dar
+  type: single
+  question: ¿Qué es un Web Service?
+  options:
+    - Un archivo HTML con estilos embebidos.
+    - Un componente que solo funciona en local.
+    - Una tecnología que habilita la comunicación entre computadoras mediante protocolos y estándares.
+    - Un estándar de diseño gráfico para web.
+  correct:
+    - 2
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Los servicios web son aplicaciones modulares que pueden ser localizadas e invocadas a través de la red para realizar tareas específicas de forma distribuida [135, 136].
+- id: q123
+  asignatura: dar
+  type: single
+  question: "Apache Axis está formado por:"
+  options:
+    - La aplicación AXIS y el servidor Apache.
+    - Un navegador y un motor CSS.
+    - Un compilador JavaScript y un router.
+    - Un framework de Bootstrap y un plugin JQuery.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Apache Axis es un framework de código abierto para la construcción y despliegue de servicios web utilizando el servidor web de Apache [108, 135].
+- id: q124
+  asignatura: dar
+  type: single
+  question: "Un Web Service puede utilizar protocolos como:"
+  options:
+    - TCP únicamente.
+    - SMTP exclusivamente.
+    - XML-RPC, SOAP o REST.
+    - FTP para todos los casos.
+  correct:
+    - 2
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Dependiendo de la arquitectura seleccionada, los servicios web pueden emplear diferentes protocolos de mensajería y transferencia sobre HTTP [137, 138].
+- id: q125
+  asignatura: dar
+  type: single
+  question: "WSDL sirve para:"
+  options:
+    - Describir las interfaces de los servicios web.
+    - Ejecutar JavaScript en el servidor.
+    - Definir estilos de presentación CSS.
+    - Realizar consultas SQL en remoto.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: WSDL (Web Services Description Language) es un archivo XML que informa al consumidor sobre qué funciones tiene el servicio y qué parámetros debe enviar [137, 139].
+- id: q126
+  asignatura: dar
+  type: single
+  question: "Elementos de la arquitectura SOA:"
+  options:
+    - Cliente, Servidor, Navegador, HTML.
+    - Proveedor, Consumidor, Registro y el Servicio.
+    - Modelo, Vista, Controlador y Servlet.
+    - DNS, TCP, UDP y HTTP.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: La arquitectura SOA (Service Oriented Architecture) requiere piezas que ofrecen servicios, piezas que los consumen y un registro central para localizarlos [137, 139].
+- id: q127
+  asignatura: dar
+  type: single
+  question: "SOA permite el desarrollo de aplicaciones:"
+  options:
+    - Monolíticas y fuertemente acopladas.
+    - Débilmente acopladas y distribuidas.
+    - Sin interfaces y sin contratos.
+    - Exclusivas para escritorio.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: El objetivo de SOA es que las aplicaciones se construyan uniendo servicios independientes que no dependan internamente unos de otros (débil acoplamiento) [140, 141].
+- id: q128
+  asignatura: dar
+  type: single
+  question: ¿SOA se vincula a una única tecnología?
+  options:
+    - Sí, solo se usa con SOAP.
+    - No, puede usar RPC, CORBA o Web Services.
+    - Sí, es obligatorio usar REST.
+    - Sí, únicamente funciona con HTTP/3.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: SOA es un estilo arquitectónico conceptual e independiente de la implementación técnica que se elija para desplegar los servicios [140, 141].
+- id: q129
+  asignatura: dar
+  type: single
+  question: "La fase de registro en SOA sirve para:"
+  options:
+    - Que el consumidor publique sus necesidades en un repositorio.
+    - Que el proveedor especifique su interfaz y funcionalidades en un repositorio.
+    - Que el servidor elimine servicios obsoletos automáticamente.
+    - Que el navegador guarde cookies de sesión.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: El registro (como UDDI) actúa como 'páginas amarillas' donde los proveedores anuncian sus servicios para que los consumidores puedan encontrarlos [140, 142].
+- id: q130
+  asignatura: dar
+  type: single
+  question: ¿Qué protocolo de transporte usa SOA por defecto?
+  options:
+    - SMTP.
+    - FTP.
+    - HTTP.
+    - UDP.
+  correct:
+    - 2
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Aunque podría usar otros, HTTP es el protocolo estándar de transporte sobre el cual viajan los mensajes SOAP y las peticiones a los servicios web en Internet [143, 144].
+- id: q131
+  asignatura: dar
+  type: single
+  question: "IBM WebSphere es:"
+  options:
+    - Un lenguaje de marcado derivado de SGML.
+    - Un middleware para crear aplicaciones multiplataforma usando servicios web.
+    - Un estándar de estilos para CSS3.
+    - Un framework para diseño responsive en cliente.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: WebSphere es una plataforma de software de IBM (middleware) diseñada para facilitar el despliegue de aplicaciones empresariales basadas en SOA [142, 143].
+- id: q132
+  asignatura: dar
+  type: single
+  question: "SOA busca soluciones:"
+  options:
+    - Independientes para cada problema mediante módulos.
+    - Dependientes y fuertemente acopladas.
+    - Basadas solo en HTML estático.
+    - Que eliminen el registro de servicios.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: La filosofía SOA promueve resolver grandes retos de negocio mediante la unión de pequeños servicios específicos y reutilizables [143, 145].
+- id: q133
+  asignatura: dar
+  type: single
+  question: "El consumidor en SOA es quien:"
+  options:
+    - Publica servicios en el registro.
+    - Implementa el servicio web.
+    - Demanda la utilización de determinados servicios.
+    - Compila el WSDL a HTML.
+  correct:
+    - 2
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: El consumidor (o cliente) es la aplicación que localiza un servicio en el registro y envía una petición para utilizar su funcionalidad [146, 147].
+- id: q134
+  asignatura: dar
+  type: single
+  question: "Enhanced Web Services en Java incluyen:"
+  options:
+    - Un motor de estilos para CSS3.
+    - Funcionalidades para intercambio de mensajes.
+    - Un navegador integrado para pruebas.
+    - Un compilador de Bootstrap.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Java incorpora extensiones específicas para mejorar la fiabilidad y seguridad en la transmisión de mensajes XML entre servicios distribuidos [144, 146].
+- id: q135
+  asignatura: dar
+  type: single
+  question: "SOA ofrece un desarrollo de aplicaciones web:"
+  options:
+    - Lento e inestable.
+    - Solo válido para aplicaciones sin red.
+    - Ágil y robusto.
+    - Incompatible con sistemas distribuidos.
+  correct:
+    - 2
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Al basarse en componentes ya probados y protocolos estandarizados, SOA permite construir sistemas complejos con gran rapidez y estabilidad [148, 149].
+- id: q136
+  asignatura: dar
+  type: single
+  question: "HTTP es un protocolo:"
+  options:
+    - Exclusivo para transferencia de archivos multimedia.
+    - De capa física para transmisión eléctrica.
+    - Basado en redes P2P sin servidor.
+    - Basado en arquitectura cliente-servidor, para intercambio de información y carente de estado.
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Hypertext Transfer Protocol (HTTP) es la base de la comunicación web; funciona mediante peticiones de clientes (navegadores) y respuestas de servidores [148, 150].
+- id: q137
+  asignatura: dar
+  type: single
+  question: "Diferencia principal entre HTTP y HTTPS:"
+  options:
+    - La seguridad.
+    - La sintaxis del HTML.
+    - La capacidad de ejecutar JavaScript.
+    - El uso de CSS3 obligatorio.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: HTTPS es la versión segura de HTTP; utiliza certificados y cifrado (SSL/TLS) para proteger la información transmitida [151, 152].
+- id: q138
+  asignatura: dar
+  type: single
+  question: "Un código de respuesta HTTP 404 significa:"
+  options:
+    - El servidor ha fallado completamente (error 5xx).
+    - El recurso existe, pero requiere autenticación.
+    - Se ha comunicado con el servidor, pero el recurso no existe.
+    - La petición se ha procesado correctamente sin contenido.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: El error 404 indica que la conexión con el servidor fue exitosa, pero la URL solicitada no apunta a ningún archivo o página existente [152, 153].
+- id: q139
+  asignatura: dar
+  type: single
+  question: "Diferencia entre petición GET y POST:"
+  options:
+    - GET solo funciona en HTTPS y POST solo en HTTP.
+    - GET envía datos en la URL; POST los envía de forma 'oculta' en el cuerpo del mensaje.
+    - GET siempre cifra el contenido y POST no.
+    - GET se usa para subir archivos y POST para leer páginas.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: GET es público y visible en la barra de direcciones; POST es más seguro para datos sensibles al incluirlos dentro del paquete de datos de la petición [58, 154].
+- id: q140
+  asignatura: dar
+  type: single
+  question: "Las cookies se clasifican por almacenamiento en:"
+  options:
+    - De sesión y persistentes.
+    - Públicas y privadas.
+    - Locales y remotas.
+    - Temporales y cifradas únicamente.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Las cookies de sesión desaparecen al cerrar el navegador, mientras que las persistentes tienen una fecha de caducidad y se guardan en el disco duro [154, 155].
+- id: q141
+  asignatura: dar
+  type: single
+  question: "SSL y TLS son:"
+  options:
+    - Lenguajes de marcado para servicios web.
+    - Métodos HTTP equivalentes a GET y POST.
+    - Frameworks de Java para MVC.
+    - Protocolos seguros usados por HTTPS para conexiones cliente-servidor.
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Estos protocolos criptográficos cifran el canal de comunicación para asegurar que la privacidad y la integridad de los datos se mantengan [47, 156].
+- id: q142
+  asignatura: dar
+  type: single
+  question: "El protocolo HTTP pertenece a la capa de:"
+  options:
+    - Enlace de datos.
+    - Aplicación.
+    - Física.
+    - Transporte.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: En el modelo TCP/IP, HTTP se ubica en la capa superior (aplicación), por encima de las capas de transporte (TCP) e Internet (IP) [3, 156].
+- id: q143
+  asignatura: dar
+  type: single
+  question: "Una URL especifica:"
+  options:
+    - Solo la IP del servidor y nada más.
+    - El método HTTP y el tamaño de respuesta.
+    - Protocolo, dirección/nombre del recurso y opcionalmente puerto.
+    - El tipo de cifrado de la conexión.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: La Uniform Resource Locator (URL) es la dirección completa que le dice al navegador exactamente dónde encontrar un recurso en la red [156, 157].
+- id: q144
+  asignatura: dar
+  type: single
+  question: "URI puede entenderse como:"
+  options:
+    - Un localizador.
+    - Un cifrado de red.
+    - Un tipo de cookie persistente.
+    - Un puerto TCP fijo.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Un Uniform Resource Identifier (URI) es el concepto genérico de identificador para recursos en la red, siendo la URL su forma más común de localización [108, 158].
+- id: q145
+  asignatura: dar
+  type: single
+  question: "URN permite:"
+  options:
+    - Indicar el protocolo y puerto obligatorios.
+    - Identificar recursos en la red pero no indica cómo acceder a ellos.
+    - Sustituir completamente a las URLs en navegadores.
+    - Transferir datos cifrados en HTTP.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: A diferencia de la URL, el URN (Uniform Resource Name) identifica un recurso de forma persistente e independiente de su ubicación física [158, 159].
+- id: q146
+  asignatura: dar
+  type: single
+  question: "Las conexiones persistentes sirven para:"
+  options:
+    - Aumentar el número de errores 404.
+    - Obligar a cerrar TCP tras cada petición.
+    - Reducir el tráfico de peticiones usando una misma conexión TCP.
+    - Sustituir GET por POST automáticamente.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Permiten que varias peticiones y respuestas viajen por el mismo canal, evitando el coste de tiempo de abrir y cerrar la conexión para cada imagen o script [158, 160].
+- id: q147
+  asignatura: dar
+  type: single
+  question: ¿Qué protocolo es más inapropiado para información sensible?
+  options:
+    - POST.
+    - GET.
+    - HTTPS.
+    - TLS.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: El método GET nunca debe usarse para contraseñas o datos personales porque la información queda grabada en el historial del navegador y en los registros del servidor [161, 162].
+- id: q148
+  asignatura: dar
+  type: single
+  question: "Los códigos HTTP 5xx indican:"
+  options:
+    - Redirecciones del navegador.
+    - Error del servidor.
+    - Error del cliente (URL incorrecta).
+    - Respuestas informativas 1xx.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: La serie 500 indica que la petición era correcta, pero el servidor no pudo completarla debido a un fallo interno en su configuración o software [162, 163].
+- id: q149
+  asignatura: dar
+  type: single
+  question: "El método HEAD es equivalente a GET pero:"
+  options:
+    - Devuelve el cuerpo del mensaje y no cabeceras.
+    - Solo devuelve las cabeceras, no el mensaje.
+    - Cambia recursos en el servidor.
+    - Se usa únicamente para subir archivos.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Es útil para verificar si un archivo ha cambiado o existe sin necesidad de descargar todo el contenido, ahorrando ancho de banda [27, 162].
+- id: q150
+  asignatura: dar
+  type: single
+  question: ¿Qué sistema de cifrado usa HTTPS?
+  options:
+    - Solo cifrado simétrico.
+    - Solo cifrado asimétrico.
+    - Una combinación de clave asimétrica (SSL) y simétrica (TLS).
+    - No usa cifrado, solo hashing.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: "HTTPS utiliza un sistema híbrido: clave asimétrica para identificarse y acordar una clave, y clave simétrica para el intercambio rápido de datos durante la sesión [164, 165]."
+- id: q151
+  asignatura: dar
+  type: single
+  question: "El protocolo HTTP:"
+  options:
+    - Debe comunicar con una capa de sockets de aplicación.
+    - Se encuentra por debajo del protocolo FTP.
+    - Sirve de base al protocolo TCP.
+    - Sirve de base al protocolo UDP.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: HTTP es un protocolo de la capa de aplicación que, para establecer comunicación, utiliza sockets que operan sobre el protocolo de transporte TCP [1, 2].
+- id: q152
+  asignatura: dar
+  type: single
+  question: "Dado el siguiente código HTML: Alternativa A: <x><y><z>… <\\/z><\\/y><\\/x> Alternativa B: <x><y><z>… <\\/x><\\/y><\\/z>. Se puede decir que:"
+  options:
+    - Tanto la alternativa A como la B son correctas.
+    - La alternativa B es correcta porque el anidamiento implica que se cierren primero las tags que primero se abren.
+    - La alternativa A es correcta porque el anidamiento implica que se cierren las tags en dicho orden.
+    - No se pueden anidar tags.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: El estándar HTML exige un anidamiento estricto basado en el principio LIFO (Last In, First Out); la última etiqueta en abrirse debe ser la primera en cerrarse [3, 4].
+- id: q153
+  asignatura: dar
+  type: single
+  question: "Sobre la naturaleza de Javascript, es cierto que:"
+  options:
+    - Es de bajo nivel.
+    - Es compilado.
+    - Es de tipado fuerte.
+    - Todas las respuestas son falsas.
+  correct:
+    - 3
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: JavaScript es un lenguaje de alto nivel, de tipado débil y es un lenguaje de scripting interpretado por el navegador, no compilado [5, 6].
+- id: q154
+  asignatura: dar
+  type: single
+  question: "Alguna de las formas de conseguir dinamismo en una web son:"
+  options:
+    - Contenido actualizado e interacción con el usuario.
+    - Motor de base de datos adecuado y basado en componentes.
+    - Contenido excepcional basado en texto.
+    - Diseño estático y motor de base de datos adecuado.
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Una página web es dinámica cuando su contenido puede cambiar tras la carga y permite al usuario interactuar con los elementos de la interfaz [7, 8].
+- id: q155
+  asignatura: dar
+  type: single
+  question: "Dado el siguiente código: <p><b>Texto A<\\/b><\\/p> <p><i>Texto B<\\/i><\\/p>, ¿qué resultado se obtiene?"
+  options:
+    - Se produce un error porque las etiquetas están mal anidadas.
+    - El primer párrafo se muestra en negrita y el segundo en cursiva.
+    - El segundo párrafo se muestra en negrita y el primero en cursiva.
+    - Ambos párrafos se muestran en negrita.
+  correct:
+    - 1
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: La etiqueta <b> (bold) define texto en negrita y la etiqueta <i> (italic) define texto en cursiva [9, 10].
+- id: q156
+  asignatura: dar
+  type: single
+  question: "Respecto a los diferentes tipos de rejillas en Bootstrap:"
+  options:
+    - Se pueden combinar según las necesidades del programador.
+    - Proporcionan diferentes tipos de rendimiento.
+    - No se pueden combinar a no ser que se recompile el código.
+    - Ninguna de las respuestas es correcta.
+  correct:
+    - 0
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap permite el uso simultáneo de clases de diferentes tamaños (como col-xs y col-md) para adaptar el diseño a distintas resoluciones [11, 12].
+- id: q157
+  asignatura: dar
+  type: single
+  question: ¿Qué se consigue con este código? <meta name=“view” content=“with=device-with, initial – scaler=1”>
+  options:
+    - Optimización y claridad.
+    - Que el código resultante se adapte al tipo de dispositivo.
+    - Rejilla para poder insertar los elementos.
+    - El código contiene errores de sintaxis.
+  correct:
+    - 3
+  tema: "Tema 6: Bootstrap"
+  explicacion: "El código tiene múltiples errores: debe ser 'viewport' en lugar de 'view', 'width' en lugar de 'with' y 'scale' en lugar de 'scaler' [13-15]."
+- id: q158
+  asignatura: dar
+  type: single
+  question: "Sobre la Arquitectura basada en componentes, NO es cierto que:"
+  options:
+    - Describe una aproximación de ingeniería de software al diseño de un sistema.
+    - Se enfoca en la descomposición del diseño en componentes funcionales.
+    - Es un estilo de diseño para aplicaciones compuestas de componentes individuales.
+    - No pone énfasis en que las interfaces estén bien definidas.
+  correct:
+    - 3
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Es falso porque esta arquitectura precisamente enfatiza que los componentes expongan interfaces de comunicación bien definidas [3, 4].
+- id: q159
+  asignatura: dar
+  type: single
+  question: "Respecto a SOAP en la arquitectura SOA:"
+  options:
+    - Es la tecnología utilizada para invocar servicios descubiertos y comunicarse con el proveedor.
+    - Significa 'System Object Access Protocol'.
+    - Es un solo elemento que trabaja de manera individual.
+    - Solo existe una definición posible de su uso.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: SOAP es el protocolo que permite al consumidor invocar las funcionalidades del servicio web ofrecido por el proveedor [2, 16-18].
+- id: q160
+  asignatura: dar
+  type: single
+  question: "Las aplicaciones distribuidas de alto rendimiento (HPC):"
+  options:
+    - Son aplicaciones que requieren de gran capacidad de cómputo y no pueden ser tratadas por un único superordenador.
+    - Se ejecutan de manera óptima en un sistema multiprocesador local.
+    - Tiene alta demanda de CPU pero no de memoria.
+    - Son independientes del contexto.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Las HPC necesitan tal potencia de procesamiento que requieren el uso coordinado de múltiples recursos distribuidos (Grid o Clusters) [19].
+- id: q161
+  asignatura: dar
+  type: single
+  question: "En relación con las URLs, es falso que:"
+  options:
+    - URI puede entenderse como un localizador.
+    - URN identifica recursos en la red e indica cómo acceder a ellos.
+    - Un ejemplo de URL es 'Protocolo://maquina:puerto/directorio/archivo'.
+    - URL permite recuperar recursos de la web.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Es falso porque la URN identifica el recurso de forma única pero, a diferencia de la URL, no indica su ubicación ni cómo acceder a él [20, 21].
+- id: q162
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la sintaxis correcta para escribir un comentario dentro del código fuente de un documento HTML?
+  options:
+    - small, medium, large, xlarge.
+    - "Modelo: Maneja datos y lógica de negocios."
+    - El símbolo *
+    - <!-- comentario -->
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Los comentarios en HTML comienzan con ''. El navegador ignora por completo todo el contenido que se encuentre entre estos caracteres, lo que permite a los desarrolladores dejar notas explicativas en el código.
+- id: q163
+  asignatura: dar
+  type: single
+  question: ¿Cómo se define el DTD (Document Type Definition) en HTML5 a diferencia de las versiones anteriores como HTML4 o XHTML?
+  options:
+    - Aplicación.
+    - "Cliente: ejecuta la aplicación."
+    - Diseñado para sustituir HTML.
+    - Se reduce a la declaración mínima <!DOCTYPE html> y ya no hace referencia a una URL o un estándar SGML específico.
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Dado que HTML5 ya no está basado en SGML, la declaración de tipo de documento no necesita cargar un archivo .dtd externo. Su único propósito actual es activar el "modo estándar" (standards mode) en los navegadores web para que rendericen la página correctamente.
+- id: q164
+  asignatura: dar
+  type: single
+  question: ¿Cuál era el propósito original del elemento <keygen> en los formularios y cuál es su situación en el estándar HTML5 moderno?
+  options:
+    - Definir tablas, migrar base de datos, lanzar servidor FTP, renderizar.
+    - Su propósito era generar un par de claves criptográficas (pública y privada) para autenticación segura;
+    - El método HTTP y el tamaño de respuesta.
+    - Indicar el protocolo y puerto obligatorios.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Aunque se introdujo con fuerza al inicio de HTML5, presentaba problemas de consistencia entre navegadores y riesgos de seguridad, por lo que fue retirado y reemplazado por la API Web Crypto de JavaScript.
+- id: q165
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el enfoque principal que diferencia a HTML5 de las especificaciones web tradicionales del pasado?
+  options:
+    - Enlace entre el modelo y la vista ante eventos de usuario.
+    - Rejilla para poder insertar los elementos.
+    - Un enfoque centrado en la semántica nativa, el soporte multimedia integrado sin plugins y el desarrollo de aplicaciones web...
+    - TCP únicamente.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: HTML5 nació para estandarizar lo que antes requería herramientas de terceros (como Adobe Flash) introduciendo etiquetas de audio/video y APIs potentes de programación directa.
+- id: q166
+  asignatura: dar
+  type: single
+  question: ¿Cuál de los siguientes tipos de entrada fue incorporado en HTML5 para mejorar los formularios?
+  options:
+    - Mejorar la velocidad del servidor.
+    - Monolíticas y fuertemente acopladas.
+    - No, debe ir siempre en un archivo externo.
+    - Email
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: HTML5 añadió semántica nativa y validaciones automáticas de datos en el cliente introduciendo tipos especializados de input como email, url o date.
+- id: q167
+  asignatura: dar
+  type: single
+  question: ¿Qué diferencia conceptual y estructural existe entre una etiqueta cerrada (o elemento vacío) y una abierta en HTML?
+  options:
+    - Las etiquetas cerradas (o void elements) no contienen texto ni encierran otros elementos, por lo que constan de una sola parte...
+    - La especificación ECMAScript del W3C.
+    - Ejecutar JavaScript en el servidor.
+    - Computación distribuida.
+  correct:
+    - 0
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: "Es justo el concepto que veíamos corregido en tu primera captura del examen: las etiquetas de contenido necesitan delimitar dónde empieza y dónde acaba su zona de influencia."
+- id: q168
+  asignatura: dar
+  type: single
+  question: ¿Qué atributos globales de HTML5 permiten capturar de forma directa eventos que ocurren sobre la ventana global del documento, como la carga completa de la página?
+  options:
+    - El servidor ha fallado completamente (error 5xx).
+    - Cargar CSS, compilar HTML, reiniciar servidor, mostrar resultados.
+    - Exclusivo para bases de datos relacionales.
+    - El atributo onload aplicado generalmente a la etiqueta <body> (o reflejado en el objeto window).
+  correct:
+    - 3
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Estos atributos de evento vinculan el marcado HTML con funciones de JavaScript que se ejecutan automáticamente cuando el navegador detecta una acción o cambio de estado específico del documento.
+- id: q169
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la función del elemento <fieldset> dentro de un formulario HTML5 y qué subelemento se utiliza habitualmente para darle un título explícito?
+  options:
+    - Sustituir el servidor por el cliente.
+    - Cambios en el software.
+    - Su función es agrupar de forma lógica y visual elementos de formulario relacionados, y se le añade un título mediante la etiqueta...
+    - Control de procesos del sistema operativo.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Ayuda a la accesibilidad y organización del formulario, creando un recuadro visual que engloba campos afines (por ejemplo, los datos de la dirección de envío).
+- id: q170
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la finalidad principal de los nuevos elementos de estructura introducidos en HTML5 como <header>, <nav>, <article> o <footer>?
+  options:
+    - La capacidad de ejecutar JavaScript.
+    - Enmaquetado HTML y diseño CSS.
+    - Aportar valor semántico al documento, permitiendo que tanto los buscadores (SEO) como las tecnologías asistenciales (lectores de...
+    - Se enfoca en la descomposición del diseño en componentes funcionales.
+  correct:
+    - 2
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Sustituyen al abuso de la etiqueta genérica <div>, estructurando el código de forma legible para que las máquinas sepan exactamente qué parte es el menú, qué parte es el pie de página o cuál es el contenido principal.
+- id: q171
+  asignatura: dar
+  type: single
+  question: ¿Qué características tiene la etiqueta <article> en HTML5?
+  options:
+    - Compilado a código máquina antes de ejecutarse.
+    - JPA.
+    - Cliente, servidor y distribuido.
+    - Define un contenido independiente que puede funcionar por sí solo
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: "Aporta semántica nativa estructurando bloques de información autónomos que mantendrían su significado completo si fuesen extraídos o distribuidos individualmente (ej: una noticia o un post)."
+- id: q172
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la función fundamental de los atributos dentro de una etiqueta HTML?
+  options:
+    - Sirve de base al protocolo UDP.
+    - Cargar CSS, compilar HTML, reiniciar servidor, mostrar resultados.
+    - Obliga a escribir los estilos dentro del HTML.
+    - Proporcionar información adicional o modificar el comportamiento predeterminado del elemento HTML donde se declaran.
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: "Se escriben siempre en la etiqueta de apertura (ej: name=\"valor\") y definen propiedades críticas como el destino de un enlace (href), la ruta de una imagen (src) o un identificador único (id)."
+- id: q173
+  asignatura: dar
+  type: single
+  question: ¿Qué es un atributo en el contexto de HTML?
+  options:
+    - Un metamodelo basado en CSS3.
+    - Error del cliente (URL incorrecta).
+    - Ejecutar lógica condicional en el navegador.
+    - Permite afinar el comportamiento de las etiquetas
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Los atributos inyectan propiedades específicas y metadatos complementarios que alteran o configuran el comportamiento nativo de una etiqueta.
+- id: q174
+  asignatura: dar
+  type: single
+  question: ¿Cuáles son los tres elementos estructurales de nivel superior que componen el esqueleto jerárquico básico y obligatorio de cualquier documento HTML válido?
+  options:
+    - Son exclusivas del <head>.
+    - Menor reutilización.
+    - PHP, MySQL y Apache.
+    - La raíz <html>, seguida internamente por la cabecera <head> y el cuerpo <body>.
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: El elemento <html> envuelve todo; <head> contiene los metadatos, títulos y enlaces a scripts o estilos (información que no ve el usuario); y <body> alberga todo el contenido visual y físico de la página web.
+- id: q175
+  asignatura: dar
+  type: single
+  question: Para aplicar estilos uniformes a los campos de un formulario en Bootstrap, ¿a qué elementos se debe asignar la clase form-control?
+  options:
+    - Se aplica a elementos de formulario como input o textarea
+    - "Módulo: controla la navegación de la web."
+    - xs (móviles), sm (tablets), md (PC), lg (PC gran pantalla).
+    - Exclusivo para transferencia de archivos multimedia.
+  correct:
+    - 0
+  tema: "Tema 6: Bootstrap"
+  explicacion: Bootstrap utiliza la clase estandarizada form-control para dar estructura, bordes e interactividad adaptativa a las etiquetas nativas <input> y <textarea>.
+- id: q176
+  asignatura: dar
+  type: single
+  question: ¿Cómo se gestionaba la compatibilidad de los gradientes CSS3 en navegadores antiguos antes de que se estandarizara la propiedad limpia linear-gradient?
+  options:
+    - Tipo de dato binario.
+    - Mediante el uso de prefijos de motor de renderizado (como -webkit-, -moz-, -o-).
+    - Impide que el navegador use caché.
+    - El servidor ha fallado completamente (error 5xx).
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: "Al principio de CSS3, cada navegador experimentaba con la propiedad de forma independiente. Para que funcionara de manera universal, se debía escribir la regla repetidas veces adaptada a cada motor (ej: -webkit-linear-gradient)."
+- id: q177
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la sintaxis de CSS3 recomendada para aplicar estilos a un pseudo-elemento y qué parte del documento afecta?
+  options:
+    - "Utiliza la doble señal de dos puntos (::) (ej: ::before) y afecta a una parte específica o virtual del contenido de un elemento,..."
+    - Un compilador de Bootstrap.
+    - Compilador.
+    - Sí, porque evita interfaces.
+  correct:
+    - 0
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Permiten inyectar contenido decorativo o dar estilo a fragmentos abstractos (como la primera letra con ::first-letter) sin modificar el archivo HTML.
+- id: q178
+  asignatura: dar
+  type: single
+  question: ¿Qué ventaja clave aportó la organización de la especificación de CSS3 en "módulos independientes" para su estandarización?
+  options:
+    - Menor reutilización.
+    - Permite que cada característica evolucione y se apruebe de forma autónoma sin obligar a paralizar todo el lenguaje por culpa de...
+    - Basado en arquitectura cliente-servidor, para intercambio de información y carente de estado.
+    - Transferir datos cifrados en HTTP.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: El consorcio W3C pudo avanzar rápido aprobando módulos sencillos (como el color o los bordes) mientras continuaba debatiendo los más complejos (como Grid o Flexbox).
+- id: q179
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la función principal de una pseudo-clase en una hoja de estilos CSS?
+  options:
+    - Ejecutar solo páginas HTML estáticas.
+    - Aplicar propiedades visuales a un elemento basándose en su estado dinámico o su relación estructural en el documento.
+    - padding.
+    - URL permite recuperar recursos de la web.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Permiten reaccionar a acciones del usuario (como pasar el ratón por encima con :hover o clicar con :active) y también seleccionar elementos por su orden lógico (como :nth-child()).
+- id: q180
+  asignatura: dar
+  type: single
+  question: Si un mismo elemento HTML recibe estilos conflictivos de un selector de ID y de un selector de clase, ¿cuál se aplica y por qué?
+  options:
+    - Se aplica el del ID, porque posee un valor numérico de especificidad significativamente mayor en las reglas de cascada de CSS.
+    - Sombrear textos.
+    - Monolíticas y fuertemente acopladas.
+    - Eliminar el uso de middleware distribuido.
+  correct:
+    - 0
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Las clases (.class) son genéricas y reutilizables en muchos elementos, mientras que el ID (#id) es único por página, lo que le da máxima prioridad ante conflictos de estilo ordinarios.
+- id: q181
+  asignatura: dar
+  type: single
+  question: ¿Qué propiedades nativas introdujo CSS3 para diseñar cajas sin depender de imágenes de fondo recortadas?
+  options:
+    - Propiedades como border-radius (para esquinas redondeadas) y box-shadow (para sombras en contenedores).
+    - Temporales y cifradas únicamente.
+    - Optimización y claridad.
+    - La Vista.
+  correct:
+    - 0
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Estas adiciones redujeron drásticamente la carga de red de las páginas web al sustituir recursos gráficos pesados por simples líneas de código declarativo.
+- id: q182
+  asignatura: dar
+  type: single
+  question: Según el material, ¿en qué niveles puede definirse la apariencia de una web mediante CSS?
+  options:
+    - Definir el pie de página del documento.
+    - Local, a nivel de página y en archivos externos
+    - Estáticos, dinámicos y persistentes.
+    - Locales y remotas.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: CSS puede aplicarse de forma en línea o inline (local), en la cabecera <style> del documento (a nivel de página) o en archivos .css independientes vinculados (archivos externos).
+- id: q183
+  asignatura: dar
+  type: single
+  question: Los selectores por combinación permiten acotar el conjunto de etiquetas a modificar. ¿Qué tipos de relaciones incluyen estos selectores según el material?
+  options:
+    - El nexo de unión entre el cliente y la implementación.
+    - border-style.
+    - C. Ascendientes/Descendientes, Padres/Hijos y Hermanos
+    - La Vista.
+  correct:
+    - 2
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+- id: q184
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el beneficio arquitectónico primordial de implementar CSS en un sitio web?
+  options:
+    - "Modelo: Maneja datos y lógica de negocios."
+    - Acceso a datos y seguridad.
+    - Campos e interludios dentro de márgenes.
+    - Lograr la separación estricta entre el contenido/estructura (HTML) y el diseño visual (CSS).
+  correct:
+    - 3
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Esto permite modificar por completo la apariencia estética de cientos de páginas web de forma simultánea alterando un único archivo centralizado, facilitando enormemente el mantenimiento.
+- id: q185
+  asignatura: dar
+  type: single
+  question: ¿Por qué se recomienda usar hojas de estilo externas en lugar de estilos embebidos?
+  options:
+    - Computación sin red.
+    - Porque facilitan el mantenimiento y aplican cambios globales
+    - Un motor de estilos para CSS3.
+    - Columnas sin filas.
+  correct:
+    - 1
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: Separar la presentación (CSS) de la estructura (HTML) permite modificar radicalmente el aspecto visual de miles de páginas alterando un único archivo centralizado.
+- id: q186
+  asignatura: dar
+  type: single
+  question: Los selectores por combinación permiten acotar el conjunto de etiquetas a modificar. ¿Qué tipo de relaciones incluyen?
+  options:
+    - Eliminar frameworks y usar solo componentes puros.
+    - Python y Bash.
+    - Relaciones de ascendientes/descendientes, padres/hijos y hermanos
+    - Gestión de sesiones y cookies.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Los combinadores de CSS ( , >, +, ~) definen reglas de coincidencia basadas estrictamente en las relaciones jerárquicas del árbol del DOM.
+- id: q187
+  asignatura: dar
+  type: single
+  question: "El selector universal CSS, representado por , aplica sus reglas a:"
+  options:
+    - HTML, CSS y JavaScript.
+    - No posee un conjunto de etiquetas predefinido.
+    - Ajustar el interlineado del texto.
+    - Todos los elementos del documento
+  correct:
+    - 3
+  tema: "Tema 2: Introducción a hojas de estilo CSS"
+  explicacion: El asterisco es un comodín que selecciona de forma directa y simultánea cada una de las etiquetas presentes en el árbol HTML.
+- id: q188
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el método nativo de JavaScript más rápido y eficiente para acceder directamente a un único nodo específico del DOM?
+  options:
+    - "Conector: une capas de persistencia."
+    - No, los componentes no requieren registro.
+    - Un puerto TCP fijo.
+    - document.getElementById('id_del_elemento')
+  correct:
+    - 3
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Al ser los identificadores (id) únicos dentro de un documento HTML válido, el navegador tiene indexados estos nodos, lo que permite recuperarlos de forma inmediata sin recorrer todo el árbol.
+- id: q189
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la ventaja principal de utilizar el método addEventListener() para gestionar eventos en lugar de propiedades tradicionales como onclick?
+  options:
+    - La base de datos más que el usuario.
+    - "No existe diferencia: son sinónimos."
+    - Un diseño adaptativo y principios de accesibilidad.
+    - Permite asignar múltiples funciones manejadoras a un mismo evento sobre el mismo elemento sin destruir ni sobrescribir las...
+  correct:
+    - 3
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Las propiedades clásicas (elemento.onclick = funcion) solo admiten un valor, por lo que si otra parte del código asignaba una función posterior, la primera se borraba. addEventListener soluciona esto de forma modular.
+- id: q190
+  asignatura: dar
+  type: single
+  question: ¿Cuál describe mejor la ventaja principal de utilizar AJAX en una aplicación web?
+  options:
+    - Métodos HTTP equivalentes a GET y POST.
+    - UDP.
+    - Permitir actualizar de forma asíncrona partes concretas de la página sin recargarla por completo
+    - Obliga a escribir los estilos dentro del HTML.
+  correct:
+    - 2
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: AJAX rompe el ciclo tradicional de recarga total del navegador, optimizando el rendimiento y la transferencia de datos en segundo plano.
+- id: q191
+  asignatura: dar
+  type: single
+  question: ¿Cuál ha sido históricamente el propósito fundamental de la librería jQuery en el desarrollo front-end?
+  options:
+    - Simplificar la manipulación del DOM, la gestión de eventos y las llamadas AJAX, garantizando compatibilidad automática entre...
+    - XPath.
+    - Es un documento de texto plano sin estructura.
+    - form-red, form-green, form-yellow.
+  correct:
+    - 0
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Nació bajo el lema "Write less, do more". Evitaba que el programador tuviera que escribir código condicional complejo para solucionar las inconsistencias de interpretación que existían entre navegadores como Internet Explorer, Chrome o Firefox.
+- id: q192
+  asignatura: dar
+  type: single
+  question: Según sus características de ejecución y tipado, ¿cómo se clasifica formalmente al lenguaje JavaScript?
+  options:
+    - <svg>.
+    - Es un lenguaje multiparadigma, interpretado (o compilado Just-In-Time), de tipado dinámico y débil.
+    - Dependiente, Consistente, Penetrante y Económica.
+    - El servidor de aplicaciones.
+  correct:
+    - 1
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: "\"Tipado dinámico\" significa que las variables no se ligan a un tipo de dato fijo y pueden cambiar de valor (de texto a número, por ejemplo); \"tipado débil\" implica que realiza conversiones automáticas de tipo (coerción) de manera implícita cuando detecta operaciones entre datos de distinta naturaleza."
+- id: q193
+  asignatura: dar
+  type: single
+  question: ¿Qué es el DOM (Document Object Model) y cómo estructura un documento web?
+  options:
+    - Física.
+    - Ejecutar componentes solo localmente.
+    - Sí, porque mejora el control.
+    - Es una interfaz de programación (API) estandarizada que representa el documento HTML como una estructura jerárquica en forma de...
+  correct:
+    - 3
+  tema: "Tema 3: Lenguaje script de navegador JavaScript"
+  explicacion: Transforma el texto plano del archivo HTML en nodos interactivos (elementos, atributos, textos) que los lenguajes de programación como JavaScript pueden leer, modificar, añadir o eliminar en tiempo de ejecución.
+- id: q194
+  asignatura: dar
+  type: single
+  question: Respecto a la relación entre la arquitectura del software y el framework seleccionado, ¿qué opción es correcta?
+  options:
+    - La arquitectura está muy vinculada al framework elegido
+    - Mayor eficiencia.
+    - Permite compilar JavaScript a C++ automáticamente.
+    - Un componente no tiene contratos ni interfaces.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El framework no es neutral; actúa como un molde que impone sus propias restricciones, patrones de diseño y flujos de control estructurando físicamente el código.
+- id: q195
+  asignatura: dar
+  type: single
+  question: ¿Qué mide el indicador de "cobertura de la arquitectura" en un desarrollo basado en componentes?
+  options:
+    - El porcentaje o grado en el que la infraestructura técnica actual y los componentes disponibles en la organización satisfacen la...
+    - Modelo, Vista, Controlador y Servlet.
+    - Un metamodelo basado en HTML5.
+    - PHP, MySQL y Apache.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Sirve para detectar brechas (gaps). Si la cobertura es baja, significa que el equipo tendrá que programar muchas piezas nuevas desde cero o comprar soluciones de terceros.
+- id: q196
+  asignatura: dar
+  type: single
+  question: ¿Qué define a una "composición heterogénea" de componentes en una aplicación distribuida?
+  options:
+    - Añade efectos visuales según el estado de un campo.
+    - align-web
+    - Componer componentes a través de diferentes frameworks.
+    - La integración de componentes que han sido desarrollados en diferentes lenguajes de programación, ejecutados en plataformas...
+  correct:
+    - 3
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Para que funcione, exige que los componentes interactúen mediante protocolos de red neutrales y formatos de datos universales (como JSON o XML) que actúen como un lenguaje común.
+- id: q197
+  asignatura: dar
+  type: single
+  question: ¿En qué consiste la "composición simple" de componentes de software?
+  options:
+    - Bootstrap.
+    - Es el acoplamiento directo y lineal entre dos piezas de software, donde un componente $A$ consume o utiliza directamente los...
+    - No sigue ninguna regla de sintaxis estricta.
+    - Sustituye HTML por un lenguaje binario.
+  correct:
+    - 1
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Es la forma más básica de integración. Es fácil de diseñar, trazar y probar de forma aislada porque no arrastra dependencias ocultas de otros niveles inferiores.
+- id: q198
+  asignatura: dar
+  type: single
+  question: ¿Qué establece la propiedad de "composición transitiva" en una estructura de componentes y qué riesgo añade?
+  options:
+    - Establece que si el componente $A$ depende de $B$, y $B$ depende de $C$, entonces $A$ depende indirectamente de $C$.
+    - Eliminando los archivos CSS.
+    - border-radius.
+    - Aumentar el número de errores 404.
+  correct:
+    - 0
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Crea una pirámide de dependencias jerárquicas. Aunque el desarrollador de $A$ no sepa qué es $C$, su software está condicionado por la estabilidad de esa pieza oculta de bajo nivel.
+- id: q199
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el pilar fundamental de una arquitectura de software basada en componentes?
+  options:
+    - Monolítico sin capas.
+    - Exclusiva para Windows.
+    - El color final del diseño.
+    - La descomposición del sistema en unidades de software modulares, independientes, débilmente acopladas y reutilizables que...
+  correct:
+    - 3
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: "Busca un modelo similar al de la fabricación industrial: ensamblar aplicaciones combinando bloques prefabricados e independientes que se comunican mediante interfaces estándar."
+- id: q200
+  asignatura: dar
+  type: single
+  question: ¿Cómo se realiza la distribución física de los componentes para que puedan ser integrados en diferentes aplicaciones?
+  options:
+    - Se distribuyen en formato de binarios empaquetados o archivos comprimidos estandarizados que contienen el código ejecutable y sus...
+    - GET y POST.
+    - Mayor eficiencia.
+    - Frameworks de Java para MVC.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El desarrollador que los usa no necesita el código fuente original para hacerlos funcionar; simplemente descarga el paquete cerrado y consume sus servicios.
+- id: q201
+  asignatura: dar
+  type: single
+  question: ¿Qué diferencia la distribución y el flujo de control de un framework frente al de un componente ordinario?
+  options:
+    - Definir estilos de presentación CSS.
+    - <script-blocked>
+    - El framework se distribuye como una infraestructura base que aplica la Inversión de Control (IoC);
+    - Elimina la necesidad de usar CSS.
+  correct:
+    - 2
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Un componente es una librería que tú llamas cuando quieres. Un framework es el entorno completo donde tu código pasa a ser un invitado que se ejecuta cuando el framework lo decide.
+- id: q202
+  asignatura: dar
+  type: single
+  question: ¿Cuál de las siguientes tecnologías se menciona como entorno para el desarrollo de componentes?
+  options:
+    - Presentación y lógica de negocio.
+    - La compilación automática de CSS a HTML.
+    - El router de red.
+    - .NET
+  correct:
+    - 3
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: La plataforma de ejecución y el ecosistema de .NET de Microsoft están nativamente estructurados para el empaquetado, diseño y compilación de componentes de software.
+- id: q203
+  asignatura: dar
+  type: single
+  question: ¿A través de qué técnica de diseño permite un framework ser extendido por los programadores sin alterar su código fuente original?
+  options:
+    - Mediante puntos de extensión predefinidos en su arquitectura, conocidos como hooks, callbacks, interfaces o clases abstractas.
+    - Basado en arquitectura cliente-servidor, para intercambio de información y carente de estado.
+    - Un cifrado de red.
+    - Realizar consultas SQL en remoto.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: El framework define el flujo de la aplicación pero deja "huecos" estratégicos listos para que los desarrolladores inyecten ahí su propia lógica de negocio personalizada.
+- id: q204
+  asignatura: dar
+  type: single
+  question: ¿De qué manera la independencia de los componentes optimiza los procesos de control de calidad (testing)?
+  options:
+    - Selector.
+    - <article>.
+    - El acceso directo a memoria y punteros.
+    - Permite realizar pruebas unitarias completamente aisladas de cada pieza de software de forma independiente antes de que se...
+  correct:
+    - 3
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Como los componentes están aislados, los analistas de pruebas pueden sustituir sus dependencias externas por simuladores (mocks), garantizando que la pieza funciona a la perfección por sí misma.
+- id: q205
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el objetivo final que justifica la implantación de una arquitectura de componentes en una organización?
+  options:
+    - <style src='estilo.css'>\/style>
+    - Maximizar la reutilización de software, reducir los tiempos y costes de desarrollo (Time-to-Market) y facilitar el mantenimiento...
+    - La aplicación AXIS y el servidor Apache.
+    - El tipo de navegador obligatorio.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Al tener un catálogo de piezas ya probadas y seguras, crear una nueva aplicación se convierte en un proceso rápido de ensamblaje en lugar de tener que programar todo desde cero.
+- id: q206
+  asignatura: dar
+  type: single
+  question: ¿Qué rol cumplen los repositorios centralizados en una infraestructura basada en componentes?
+  options:
+    - Actúan como un catálogo y almacén indexado donde se publican, controlan las versiones y se descargan los componentes de forma...
+    - Sombrear textos.
+    - Coordinación de recursos, protocolos estándar y QoS.
+    - Solo el ancho de banda de red.
+  correct:
+    - 0
+  tema: "Tema 5: Arquitectura de componentes"
+  explicacion: Plataformas como npm, Maven o NuGet resuelven el problema de la distribución, permitiendo que los proyectos importen componentes y resuelvan sus dependencias automáticamente con una sola línea de comandos.
+- id: q207
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el requisito indispensable que debe cumplir un componente de software para poder ser importado con éxito en una aplicación?
+  options:
+    - Un navegador integrado para pruebas.
+    - Debe adherirse estrictamente al modelo de componentes (component model) que dicta la plataforma o el framework de ejecución de...
+    - Acceso a datos y seguridad.
+    - Describir las interfaces de los servicios web.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Un componente no es un trozo de código cualquiera; debe respetar las reglas de ciclo de vida, empaquetado, seguridad y comunicación específicas de la tecnología receptora para poder acoplarse de forma transparente.
+- id: q208
+  asignatura: dar
+  type: single
+  question: Entre las tecnologías citadas, ¿cuál se caracteriza por buscar transparencia para el desarrollador?
+  options:
+    - .NET
+    - Solo devuelve las cabeceras, no el mensaje.
+    - Sí, únicamente funciona con HTTP/3.
+    - Todas las respuestas son falsas.
+  correct:
+    - 0
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: El ecosistema de .NET abstrae de forma nativa e integrada la infraestructura técnica compleja de bajo nivel (como la administración de memoria distribuciones y procesos concurrentes).
+- id: q209
+  asignatura: dar
+  type: single
+  question: Al especificar e implementar un componente, ¿qué aspectos deben indicarse como mínimo?
+  options:
+    - La ausencia total de contratos.
+    - Características, tipo de componente e implementación
+    - Solo si el componente usa CSS3.
+    - El nexo de unión entre el cliente y la implementación.
+  correct:
+    - 1
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Son los tres parámetros técnicos obligatorios para catalogar y estructurar una pieza de software modular de forma que sea reutilizable.
+- id: q210
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la afirmación correcta sobre las interfaces de exportación e importación de un componente?
+  options:
+    - La interfaz de exportación es la que ofrece el componente y la de importación la que necesita
+    - El navegador del cliente.
+    - La petición se ha procesado correctamente sin contenido.
+    - Permite recargar áreas de la web sin recargar la página completa.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: "Los componentes especifican sus conexiones: las de exportación determinan los servicios y métodos públicos que brindan hacia afuera, y las de importación detallan los recursos que requieren de otros bloques para operar."
+- id: q211
+  asignatura: dar
+  type: single
+  question: ¿Qué clasificación de tipos de componentes se menciona al especificar e implementar componentes?
+  options:
+    - Componentes de despliegue y componentes producto de trabajo
+    - Columnas sin filas.
+    - El servidor ha fallado completamente (error 5xx).
+    - De scripting e interpretado.
+  correct:
+    - 0
+  tema: "Tema 4: Concepto de la programación orientada a componentes"
+  explicacion: Es la categorización formal que agrupa las piezas según si están listas para su ejecución física o si forman parte de entregables intermedios del ciclo de desarrollo.
+- id: q212
+  asignatura: dar
+  type: single
+  question: En una aplicación Java estructurada con el patrón MVC, ¿qué patrón o componente específico se utiliza para abstraer y encapsular el acceso a la base de datos?
+  options:
+    - xs (móviles), sm (tablets), md (PC), lg (PC gran pantalla).
+    - Computación sin red.
+    - La ciencia realizada sin herramientas digitales.
+    - El patrón DAO (Data Access Object), operando dentro de la capa del Modelo.
+  correct:
+    - 3
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: El Modelo gestiona los datos y la lógica de negocio. Para evitar mezclar código SQL directo en las clases de negocio, se delega en el patrón DAO, que centraliza todas las operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre el sistema de almacenamiento.
+- id: q213
+  asignatura: dar
+  type: single
+  question: ¿Cuáles son los tres modelos o ámbitos esenciales que propone la metodología UWE (UML-based Web Engineering) para el diseño de aplicaciones web?
+  options:
+    - GET solo funciona en HTTPS y POST solo en HTTP.
+    - El Modelo Conceptual, el Modelo de Navegación y el Modelo de Presentación.
+    - <h1>.
+    - <css link='estilo.css'>
+  correct:
+    - 1
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: "UWE extiende el estándar UML aplicando una separación de conceptos: el modelo conceptual define los datos; el de navegación determina cómo se enlazan las páginas; y el de presentación diseña la interfaz de usuario final de forma independiente."
+- id: q214
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el beneficio primordial de utilizar patrones de diseño establecidos en el desarrollo de software?
+  options:
+    - Tareas secuenciales que pueden dividirse y componerse.
+    - Un protocolo de red para intercambiar archivos.
+    - Sirve de base al protocolo TCP.
+    - Ofrecer soluciones probadas, estandarizadas y reutilizables a problemas comunes de diseño arquitectónico, mejorando la...
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Evitan "reinventar la rueda". Al utilizar estructuras cuya eficiencia ya ha sido validada por la industria, se reduce la aparición de errores de diseño y se facilita la comunicación entre los desarrolladores al usar un vocabulario común.
+- id: q215
+  asignatura: dar
+  type: single
+  question: ¿Cómo se define el flujo estándar de comunicación y colaboración entre las tres capas del patrón MVC?
+  options:
+    - El usuario interactúa con la Vista, que envía la petición al Controlador;
+    - Obliga a usar tablas HTML para maquetar.
+    - Un metamodelo basado en CSS3.
+    - Es la tecnología utilizada para invocar servicios descubiertos y comunicarse con el proveedor.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: El objetivo clave es que la Vista (interfaz) y el Modelo (datos/lógica) no se conozcan ni dependan directamente entre sí, utilizando al Controlador como el intermediario que coordina todo el ciclo de vida de la petición.
+- id: q216
+  asignatura: dar
+  type: single
+  question: En una implementación típica de MVC con Java, ¿qué componente se usa para la capa controladora?
+  options:
+    - Un navegador especializado en HPC.
+    - Debe comunicar con una capa de sockets de aplicación.
+    - Un Servlet.
+    - Un archivo HTML con estilos embebidos.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: En la arquitectura web nativa de Java (Jakarta EE), el Servlet actúa como el "cerebro" o punto de entrada. Se encarga de interceptar las peticiones HTTP del cliente, extraer sus parámetros, invocar la lógica de negocio correspondiente (Modelo) y redirigir el flujo hacia la página de respuesta adecuada (Vista, como un JSP).
+- id: q217
+  asignatura: dar
+  type: single
+  question: ¿Qué es WebML (Web Modeling Language) y cuál es su enfoque metodológico?
+  options:
+    - Es un lenguaje de modelado visual específico de dominio que permite diseñar aplicaciones web complejas de forma abstracta e...
+    - "Validación: comprueba reglas de negocio."
+    - Crear bordes redondeados en el texto.
+    - Solo cifrado asimétrico.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Utiliza diagramas gráficos para definir tanto la estructura de los datos como la composición hipermedia de las páginas (enlaces, unidades de contenido y operaciones), permitiendo generar código de manera automatizada a partir de los modelos visuales.
+- id: q218
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la filosofía o enfoque distintivo que diferencia a la metodología WSDM (Web Site Design Method) de otros métodos de ingeniería web?
+  options:
+    - No, se usan elementos heterogéneos.
+    - Locales y remotas.
+    - Gestión de sesiones y cookies.
+    - Es un enfoque estrictamente centrado en el usuario (User-Centered Design), estructurado a partir de los requisitos de las...
+  correct:
+    - 3
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Mientras que otros métodos inician el diseño desde la estructura de la base de datos, WSDM comienza clasificando a los futuros usuarios en "clases de audiencia" y define el sitio web basándose en las necesidades y tareas específicas de cada grupo.
+- id: q219
+  asignatura: dar
+  type: single
+  question: ¿Qué modelos principales se obtienen como resultado durante la fase de diseño conceptual al aplicar la metodología WSDM?
+  options:
+    - align-web
+    - <aside>.
+    - Un alto nivel de abstracción sin considerar detalles técnicos iniciales.
+    - El Modelo de Estructura de Objetos y el Modelo de Objeto de Tarea (TOM).
+  correct:
+    - 3
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Durante esta fase se formalizan conceptualmente los datos que requiere el sistema y los pasos o tareas que cada tipo de usuario debe ser capaz de ejecutar en la aplicación web, sirviendo de base para los posteriores diseños estructurales y arquitectónicos.
+- id: q220
+  asignatura: dar
+  type: single
+  question: ¿Qué metodologías se centran en la personalización y en un alto nivel de abstracción para el desarrollo web?
+  options:
+    - WSDM y UWE
+    - <meta http-equiv='refresh' content='30'>
+    - TCP y UDP.
+    - Sí, pero solo si se usa React.
+  correct:
+    - 0
+  tema: "Tema 7: Modelo vista controlador"
+  explicacion: Tanto Web Site Design Method como UML-based Web Engineering recurren al modelado formal conceptual y de navegación para abstraer el diseño del software independientemente de la tecnología.
+- id: q221
+  asignatura: dar
+  type: single
+  question: ¿Por qué la gestión de recursos en un entorno Grid se considera una "característica dependiente"?
+  options:
+    - Porque la disponibilidad y el rendimiento de los recursos dependen directamente de factores externos dinámicos, como las...
+    - Uso exclusivo de variables globales.
+    - <style src='estilo.css'>\/style>
+    - La eliminación de interfaces para simplificar.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Un Grid no tiene el control absoluto del hardware; los nodos están distribuidos en diferentes universidades o empresas. Si un centro necesita sus servidores para uso propio, el Grid pierde prioridad en ese nodo, haciendo que el rendimiento dependa de la voluntad y carga local de terceros.
+- id: q222
+  asignatura: dar
+  type: single
+  question: ¿Qué significa que la computación Grid tenga una naturaleza "penetrante" o ubicua?
+  options:
+    - Significa que la capacidad de cómputo se ofrece al usuario de forma totalmente transparente, disponible desde cualquier lugar y...
+    - El primer párrafo se muestra en negrita y el segundo en cursiva.
+    - La funcionalidad a través de su interfaz.
+    - La unión de varios superordenadores.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Sigue el modelo de la red eléctrica (Power Grid). El usuario solo "conecta" su petición a la red y consume la potencia de cálculo que necesita sin preocuparse por saber en qué servidor, ciudad o país se está ejecutando físicamente su tarea.
+- id: q223
+  asignatura: dar
+  type: single
+  question: ¿Cuáles son las propiedades de diseño que definen a los entornos de computación de alto rendimiento (HPC)?
+  options:
+    - Sustituir los clusters locales por un único PC.
+    - Uso de supercomputadores o clústeres de hardware homogéneo, fuertemente acoplados en una red local de bajísima latencia y...
+    - Un componente que solo funciona en local.
+    - La ausencia total de contratos.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: HPC está diseñado para resolver un único problema masivo y muy complejo (como la predicción meteorológica o simulaciones nucleares) que requiere que miles de procesadores idénticos trabajen en paralelo e intercambien datos de forma ultra rápida en el mismo centro de datos.
+- id: q224
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la diferencia principal en cuanto a administración y arquitectura entre un Clúster y un entorno Grid?
+  options:
+    - Un Clúster es un sistema homogéneo, centralizado y fuertemente acoplado bajo una única administración;
+    - De sesión y persistentes.
+    - Física.
+    - CSS3.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: En el clúster, todas las máquinas son iguales y las gestiona el mismo administrador en una red local. El Grid, en cambio, interconecta a través de Internet ordenadores de distintas marcas, potencias y sistemas operativos pertenecientes a diferentes organizaciones.
+- id: q225
+  asignatura: dar
+  type: single
+  question: ¿Qué conjunto de condiciones identifica correctamente un sistema como Grid?
+  options:
+    - Sustituir XML por CSS3.
+    - Coordinación de recursos, uso de protocolos e interfaces estándar y provisión de calidad de servicio (QoS)
+    - "Conector: une capas de persistencia."
+    - Optimización y claridad.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Estos pilares (siguiendo las tres reglas de Ian Foster) diferencian a un verdadero Grid de otros entornos distribuidos convencionales.
+- id: q226
+  asignatura: dar
+  type: single
+  question: ¿Qué factor histórico y científico impulsó de forma directa el nacimiento de la computación Grid?
+  options:
+    - "No existe diferencia: son sinónimos."
+    - "El símbolo #"
+    - Monolitismo, acoplamiento fuerte y baja latencia.
+    - El crecimiento exponencial de los volúmenes de datos experimentales y la complejidad de las simulaciones, que superaban la...
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Proyectos de gran envergadura (como el análisis de partículas del CERN o la secuenciación del genoma humano) generaban tal cantidad de información que era imposible y astronómicamente caro construir un solo ordenador capaz de procesarlo. La solución fue unir la potencia latente de miles de centros de todo el mundo.
+- id: q227
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la principal ventaja o justificación económica para implantar una arquitectura Grid?
+  options:
+    - "Modelo: Maneja datos y lógica de negocios."
+    - El aprovechamiento de recursos ociosos (resource harvesting) y la reducción drástica de costes en la adquisición de hardware...
+    - Sin interfaces y sin contratos.
+    - GET solo funciona en HTTPS y POST solo en HTTP.
+  correct:
+    - 1
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Permite reutilizar ciclos de procesamiento de CPU y espacio de almacenamiento de ordenadores que ya existen en universidades u oficinas y que se quedan libres por las noches o en horas de baja actividad, transformando infraestructura infrautilizada en potencia de cálculo útil a coste cero.
+- id: q228
+  asignatura: dar
+  type: single
+  question: ¿Cuál fue el cambio conceptual clave para evolucionar desde los experimentos de "meta-computación" hacia el concepto moderno de Grid?
+  options:
+    - URN identifica recursos en la red e indica cómo acceder a ellos.
+    - Compartir recursos (carga o computación) entre nodos.
+    - GET envía datos en la URL; POST los envía de forma 'oculta' en el cuerpo del mensaje.
+    - Pasar de conexiones temporales de supercomputadores para un ensayo específico a una infraestructura permanente, estandarizada y...
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: La meta-computación de principios de los 90 era un enlace provisional y artesanal de laboratorios. El Grid maduró el concepto creando un software intermedio estándar (middleware) que permite compartir recursos de manera continua, segura y estructurada como si fuera un servicio público.
+- id: q229
+  asignatura: dar
+  type: single
+  question: ¿Cómo se define el concepto de e-Ciencia (e-Science) en el ámbito de las tecnologías Grid?
+  options:
+    - <h1>.
+    - Repositorios de usuarios.
+    - 1col, 2col, 3col, 4col.
+    - Es la investigación científica caracterizada por colaboraciones distribuidas globalmente que requieren gestionar y procesar...
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: La e-Ciencia representa la nueva forma de hacer ciencia en el siglo XXI, donde laboratorios de diferentes países comparten recursos, telescopios o aceleradores de partículas en tiempo real gracias a la red de interconexión Grid.
+- id: q230
+  asignatura: dar
+  type: single
+  question: ¿Qué significan las siglas HTC en computación distribuida y en qué se diferencia su enfoque respecto a HPC?
+  options:
+    - Basado en redes P2P sin servidor.
+    - Apache Axis.
+    - Desarrollos más robustos, homogéneos y escalables.
+    - Significa High-Throughput Computing (Computación de Alto Rendimiento Continuo) y su enfoque es maximizar el número de tareas...
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Mientras que HPC busca resolver un único problema gigante lo más rápido posible mediante un paralelismo estrecho, HTC busca la eficiencia masiva a largo plazo, procesando millones de trabajos pequeños e independientes aprovechando de manera continua cualquier hueco libre en los procesadores del Grid.
+- id: q231
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la función del software de control (middleware) en una infraestructura Grid?
+  options:
+    - Programación local monousuario.
+    - Obligar a usar un único lenguaje de programación.
+    - Abstraer la heterogeneidad del hardware y gestionar de forma segura la autenticación, la asignación dinámica de tareas y la...
+    - <br>.
+  correct:
+    - 2
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Al ser un entorno descentralizado y con sistemas tan distintos, se necesita una capa de software común (como Globus Toolkit) que actúe como sistema operativo de la red, garantizando que los usuarios se autentiquen de forma segura y que las tareas se repartan eficientemente sin que el científico tenga que saber qué máquina las está procesando.
+- id: q232
+  asignatura: dar
+  type: single
+  question: ¿Qué proyecto es reconocido históricamente como la primera aproximación práctica y real de un entorno Grid?
+  options:
+    - Ejecutar componentes solo localmente.
+    - Son aplicaciones que requieren de gran capacidad de cómputo y no pueden ser tratadas por un único superordenador.
+    - El proyecto I-WAY (Information Wide-Area Year) desarrollado experimentalmente en 1995.
+    - Sustituye CSS por JavaScript para el layout.
+  correct:
+    - 2
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Durante una conferencia de computación, se logró interconectar con éxito mediante redes ATM de alta velocidad decenas de supercomputadores y bases de datos distribuidas por todo Estados Unidos, demostrando por primera vez que era viable unificar recursos masivos remotos en tiempo real.
+- id: q233
+  asignatura: dar
+  type: single
+  question: Respecto a la infraestructura de comunicación, ¿qué tipo de redes son habituales en un Grid?
+  options:
+    - Realizar cambios geométricos a los elementos.
+    - <css link='estilo.css'>
+    - Redes de interconexión de alta velocidad y baja latencia entre nodos.
+    - Tiene alta demanda de CPU pero no de memoria.
+  correct:
+    - 2
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: El rendimiento de un Grid depende críticamente de la comunicación. Al tener que mover petabytes de datos científicos entre supercomputadores lejanos, se emplean redes troncales de fibra óptica avanzadas y dedicadas que garantizan un ancho de banda masivo y tiempos de retardo mínimos.
+- id: q234
+  asignatura: dar
+  type: single
+  question: Cuando las necesidades computacionales superan la capacidad de un clúster local, ¿qué solución propone el tema?
+  options:
+    - TLS.
+    - Un lenguaje de marcado derivado de SGML.
+    - Proveedor, Consumidor, Registro y el Servicio.
+    - Unir diferentes clústeres y recursos geográficamente dispersos formando un Grid
+  correct:
+    - 3
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Un Grid permite federar y unir recursos distribuidos bajo distintas administraciones para aumentar de forma masiva la capacidad de cómputo total.
+- id: q235
+  asignatura: dar
+  type: single
+  question: ¿Cuál es una ventaja inmediata de construir clústeres con nodos estándar frente a mainframes?
+  options:
+    - Reduce costes, permite heterogeneidad y mejora la tolerancia a fallos
+    - El primer párrafo se muestra en negrita y el segundo en cursiva.
+    - Solo tareas interactivas de baja duración.
+    - Renderizado gráfico en tiempo real exclusivamente.
+  correct:
+    - 0
+  tema: "Tema 8: Tecnologías Grid de la información"
+  explicacion: Ensamblar hardware convencional estándar (COTS) abarata los costes iniciales y permite diseñar esquemas modulares redundantes con alta tolerancia ante caídas puntuales de nodos individuales.
+- id: q236
+  asignatura: dar
+  type: single
+  question: ¿Cuál de las siguientes afirmaciones sobre el acoplamiento en SOA es correcta?
+  options:
+    - FTP para todos los casos.
+    - SOA permite aplicaciones débilmente acopladas y distribuidas accesibles por la red
+    - Renderizado gráfico en tiempo real exclusivamente.
+    - La velocidad de descarga de la web.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: El objetivo clave de SOA es el acoplamiento débil (loose coupling) para garantizar la interoperabilidad y que los cambios en una pieza no rompan el resto.
+- id: q237
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la definición fundamental de la Arquitectura Orientada a Servicios (SOA)?
+  options:
+    - Obligar a adquirir hardware propietario.
+    - Es un enfoque de diseño de software que organiza las capacidades de negocio en servicios modulares, distribuidos, altamente...
+    - "No existe diferencia: son sinónimos."
+    - Un estándar de comunicación HTTP.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: SOA busca romper los sistemas monolíticos estructurando la lógica de la empresa en bloques de software independientes con interfaces estándar, alineando las capacidades técnicas de la infraestructura con los procesos reales de negocio.
+- id: q238
+  asignatura: dar
+  type: single
+  question: ¿Cuáles son los tres roles o componentes indispensables que conforman la topología básica de una infraestructura SOA?
+  options:
+    - Optimización y claridad.
+    - El Proveedor de servicios (Service Provider), el Consumidor/Cliente de servicios (Service Consumer) y el Registro de servicios...
+    - Compilación y ejecución.
+    - Menor reutilización.
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: "Estos tres elementos forman el triángulo operativo de SOA: el Proveedor publica el servicio en el directorio; el Consumidor interroga al Registro para localizar dicho servicio; y finalmente el Consumidor realiza la invocación (bind) directamente contra el Proveedor."
+- id: q239
+  asignatura: dar
+  type: single
+  question: ¿Cuál es la función principal del protocolo SOAP en el ámbito de los servicios web distribuidos?
+  options:
+    - Tareas secuenciales que pueden dividirse y componerse.
+    - Proporcionar un protocolo de mensajería estandarizado basado en XML para el intercambio de información estructurada entre...
+    - La transparencia.
+    - <js-off>
+  correct:
+    - 1
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: SOAP define reglas estrictas de comunicación (usando elementos como Envelope, Header y Body). Al ser un formato puramente textual e independiente de la plataforma, garantiza que aplicaciones escritas en cualquier lenguaje puedan enviarse datos de forma segura y tipada.
+- id: q240
+  asignatura: dar
+  type: single
+  question: ¿Qué rol crítico desempeña el registro de servicios en el ciclo de vida operativo de una arquitectura SOA?
+  options:
+    - Actúa como un directorio centralizado e indexado donde se almacenan las descripciones de los servicios para posibilitar su...
+    - TLS.
+    - Es un solo elemento que trabaja de manera individual.
+    - Filas sin columnas.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Permite la desvinculación física entre clientes y servidores. El cliente no necesita conocer la URL cableada de antemano; consulta el registro (históricamente implementado mediante el estándar UDDI) para descubrir qué servicios hay disponibles y cómo interactuar con ellos en tiempo de ejecución.
+- id: q241
+  asignatura: dar
+  type: single
+  question: ¿A través de qué mecanismo asegura SOA la total independencia tecnológica (neutralidad de plataforma) entre sus componentes?
+  options:
+    - Sirve de base al protocolo UDP.
+    - Cuando la ciencia depende de la computación (meteorología, bioinformática).
+    - Mediante el uso de interfaces públicas basadas en estándares abiertos universales (como HTTP, XML, SOAP o JSON).
+    - <span>.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: El emisor y el receptor no necesitan compartir sistema operativo ni lenguaje de programación. Un servidor corporativo Java ejecutado en un entorno UNIX puede comunicarse de forma transparente con un cliente móvil iOS porque el canal de comunicación utiliza texto plano estructurado bajo reglas comunes acordadas a nivel mundial.
+- id: q242
+  asignatura: dar
+  type: single
+  question: ¿Cuál es el protocolo citado como habitual para el intercambio de mensajes en servicios web dentro de SOA?
+  options:
+    - La herencia y el acoplamiento fuerte.
+    - Se usa únicamente para subir archivos.
+    - form-inline
+    - HTTP
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: HTTP es el protocolo de la capa de aplicación universalmente más común para transportar los mensajes y peticiones en servicios web distribuidos.
+- id: q243
+  asignatura: dar
+  type: single
+  question: Dentro de Web Services for Java Platform, ¿qué módulo se orienta a dotar de seguridad a los servicios web?
+  options:
+    - Crear un contenedor para imágenes como si fuera un <div>.
+    - Compilador.
+    - Mejorar la velocidad del servidor.
+    - Secure web services
+  correct:
+    - 3
+  tema: "Tema 1: Lenguaje de marcado HTML5"
+  explicacion: Este módulo agrupa las tecnologías encargadas de aplicar autenticación, firmas y cifrado (WS-Security) en las pilas de ejecución Java.
+- id: q244
+  asignatura: dar
+  type: single
+  question: ¿Qué componentes de software mínimos integran la plataforma requerida para la ejecución y despliegue de servicios web empresariales?
+  options:
+    - Un estándar de diseño gráfico para web.
+    - Un servidor de aplicaciones (o contenedor de servlets) equipado con un motor o pila de servicios web (como Apache CXF o Jakarta...
+    - Ejecutar Java dentro del navegador.
+    - Componer solo dentro del mismo lenguaje.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: "Esta infraestructura proporciona las funciones técnicas de bajo nivel: escucha el puerto de red, recibe la petición HTTP, procesa la seguridad, deserializa el XML/JSON entrante convirtiéndolo en objetos del lenguaje del servidor e invoca la función correspondiente."
+- id: q245
+  asignatura: dar
+  type: single
+  question: En el contexto de los servicios web, ¿qué especifica WSDL?
+  options:
+    - "La interfaz del servicio: operaciones, mensajes y tipos"
+    - El objeto window.ajax().
+    - Menor reutilización.
+    - TLS.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: WSDL funciona como el contrato formal en formato XML que detalla las operaciones públicas que expone un servicio basado en SOAP.
+- id: q246
+  asignatura: dar
+  type: single
+  question: Para que un servicio web opere correctamente en SOA, ¿qué requisito se menciona como indispensable en el temario?
+  options:
+    - Definir su interfaz mediante WSDL.
+    - Ejecutar lógica condicional en el navegador.
+    - El Controlador (recibe eventos).
+    - JavaScript.
+  correct:
+    - 0
+  tema: "Tema 9: Arquitectura orientada a servicios"
+  explicacion: Un servicio web dentro de la arquitectura SOA tradicional no puede ser una pieza de código aislada u opaca. Exige obligatoriamente un contrato público y legible por máquinas que describa de manera inequívoca cómo interactuar con él. El estándar encargado de proporcionar esta descripción estructurada de las operaciones y parámetros en servicios basados en SOAP es el documento WSDL.
+- id: q247
+  asignatura: dar
+  type: single
+  question: ¿En qué capa del modelo de referencia TCP/IP opera e interactúa el protocolo HTTP?
+  options:
+    - Mayor dependencia y menos flexibilidad.
+    - Un protocolo de cifrado de red.
+    - En la capa de Aplicación.
+    - Un objeto siempre se ejecuta en red y un componente no.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: La capa de aplicación contiene los protocolos de alto nivel que utilizan los programas informáticos (como un navegador web) para dar formato y estructura a los datos intercambiados, delegando en capas inferiores (como Transporte con TCP) para el envío físico de los paquetes.
+- id: q248
+  asignatura: dar
+  type: single
+  question: ¿Con qué dígito numérico comienzan los códigos de estado HTTP diseñados para indicar que el cliente debe realizar una redirección?
+  options:
+    - Sustituir Java por JavaScript.
+    - Locales y remotas.
+    - <article>.
+    - "Comienzan con el dígito 3 (Familia 3xx, ej: 301, 302)."
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Estos códigos avisan al navegador de que el recurso solicitado no se encuentra exactamente en la ubicación provista, obligándolo a leer la cabecera Location de la respuesta para dirigir de forma automática la navegación hacia la nueva URL válida.
+- id: q249
+  asignatura: dar
+  type: single
+  question: ¿Qué nombre reciben las cookies generadas y leídas exclusivamente por el dominio exacto que el usuario está visitando en ese instante?
+  options:
+    - <style>.
+    - Compilar programas en lenguaje ensamblador.
+    - Solo el ancho de banda de red.
+    - Cookies propias (o first-party cookies).
+  correct:
+    - 3
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Al estar vinculadas de forma directa al dominio de la barra de direcciones, se utilizan para recordar preferencias locales o mantener sesiones iniciadas de forma legítima, a diferencia de las cookies de terceros (third-party), empleadas habitualmente para rastreo publicitario entre distintas webs.
+- id: q250
+  asignatura: dar
+  type: single
+  question: ¿Cómo se clasifican las cookies encargadas de retener datos volátiles mientras la ventana de navegación web permanece abierta?
+  options:
+    - Crear un contenedor para imágenes como si fuera un <div>.
+    - La unión de varios superordenadores.
+    - Cookies de sesión.
+    - Solo en aplicaciones sin base de datos.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Estas cookies carecen de un atributo con fecha de expiración o tiempo de vida determinado en el disco duro. Se almacenan únicamente en la memoria RAM asignada al navegador, provocando su destrucción inmediata y automática en cuanto el usuario cierra el programa.
+- id: q251
+  asignatura: dar
+  type: single
+  question: Dentro del estándar global de identificadores URI, ¿cuál es la diferencia esencial de una URN respecto a una URL convencional?
+  options:
+    - La marca del navegador del usuario.
+    - Sustituir imágenes por texto automáticamente.
+    - La URN identifica un recurso de manera unívoca, global y permanente por su nombre, sin importar dónde esté alojado, mientras que...
+    - La Vista.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Si un archivo cambia de servidor web, su URL se rompe (da error 404). En cambio, su URN se mantiene idéntica e inmutable para siempre debido a que describe la identidad del objeto y no la ruta de acceso al servidor.
+- id: q252
+  asignatura: dar
+  type: single
+  question: En la forma general de una URL protocolo://usuario:contraseña@maquina:puerto/directorio/archivo, ¿qué elemento especifica el número donde el servicio escucha?
+  options:
+    - Insertar un vídeo en formato MP4.
+    - Solo en sistemas distribuidos.
+    - Puerto
+    - Aumentar el número de errores 404.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: El puerto indica el número numérico exacto donde un servicio escucha conexiones de red entrantes.
+- id: q253
+  asignatura: dar
+  type: single
+  question: En los algoritmos de criptografía asimétrica empleados para establecer conexiones HTTPS seguras, ¿qué elementos componen el par de claves matemático?
+  options:
+    - <ul>.
+    - Un lenguaje de programación para servidores.
+    - La clave pública y la clave privada.
+    - Un componente no tiene contratos ni interfaces.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: La clave pública puede ser distribuida de forma masiva a cualquier usuario para cifrar los datos entrantes. Sin embargo, debido al diseño del algoritmo matemático, la información solo puede ser descifrada por el poseedor de la clave privada correspondiente, que se custodia bajo estricto secreto en el servidor.
+- id: q254
+  asignatura: dar
+  type: single
+  question: Dado que el protocolo HTTP no guarda memoria entre conexiones independientes (stateless), ¿cuál es el mecanismo estándar para mantener el estado de un usuario?
+  options:
+    - Sustitución de pruebas por despliegue directo.
+    - El uso combinado de cookies en el cliente y un identificador de sesión (Session ID) almacenado en el servidor.
+    - center-blocks
+    - Solo la IP del servidor y nada más.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Al autenticarse, el servidor genera un identificador de sesión único y lo inyecta en el navegador mediante la cabecera Set-Cookie. En cada click subsecuente, el navegador adjunta automáticamente esa cookie, permitiendo al servidor reconocer al usuario y mantener su estado (como el carrito de la compra).
+- id: q255
+  asignatura: dar
+  type: single
+  question: En HTTP, ¿qué método de petición indica que los datos se envían en el cuerpo del mensaje y no en la URL?
+  options:
+    - La funcionalidad a través de su interfaz.
+    - POST.
+    - Compilación de Java en servidor.
+    - El uso exclusivo de variables globales.
+  correct:
+    - 1
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Al procesar envíos de formularios complejos o transferencias de archivos, el método POST empaqueta la información de manera estructurada en el cuerpo de la petición (payload). Esto evita las limitaciones de longitud que sufre el método GET y previene que datos sensibles queden expuestos a la vista en la barra de direcciones o en el historial del navegador.
+- id: q256
+  asignatura: dar
+  type: single
+  question: ¿Qué método de petición HTTP solicita al servidor web exactamente los mismos metadatos que una petición GET, pero descartando por completo el cuerpo de la respuesta?
+  options:
+    - El método HEAD.
+    - FTP y SMTP.
+    - No, requiere librerías externas obligatorias.
+    - Un ejemplo de URL es 'Protocolo://maquina:puerto/directorio/archivo'.
+  correct:
+    - 0
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: Se utiliza de forma prioritaria para realizar comprobaciones eficientes de red. Permite que un sistema verifique si un enlace sigue activo, consulte el tamaño de un recurso en la cabecera Content-Length o valide si un archivo local en caché está actualizado antes de iniciar una descarga pesada innecesaria.
+- id: q257
+  asignatura: dar
+  type: single
+  question: En la arquitectura de mensajes de HTTP, ¿cómo se denominan los dos tipos básicos de mensajes intercambiados entre navegador y servidor?
+  options:
+    - "Controlador: Enruta comandos a modelos y vistas."
+    - GET solo funciona en HTTPS y POST solo en HTTP.
+    - Petición y respuesta
+    - Pueden usarse en múltiples etiquetas.
+  correct:
+    - 2
+  tema: "Tema 10: Protocolo HTTP"
+  explicacion: HTTP es un protocolo clásico de tipo cliente-servidor cuya comunicación se basa estrictamente en solicitudes (requests) y contestaciones (responses).

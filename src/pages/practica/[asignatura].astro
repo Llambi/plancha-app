@@ -1,0 +1,200 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TestQuestion from '../../components/TestQuestion.astro';
+import DesarrolloQuestion from '../../components/DesarrolloQuestion.astro';
+import { meta } from '../../data/asignaturas';
+
+export async function getStaticPaths() {
+  const test = await getCollection('test');
+  const desarrollo = await getCollection('desarrollo');
+  const guia = await getCollection('guia');
+  // Las asignaturas con guía exponen su test como quiz dentro de la guía.
+  const guiaCodes = new Set(guia.map((g) => g.data.asignatura));
+  const codes = new Set<string>(
+    [
+      ...test.map((t) => t.data.asignatura),
+      ...desarrollo.map((d) => d.data.asignatura),
+    ].filter((c) => !guiaCodes.has(c)),
+  );
+
+  const byNum = (a: string, b: string) =>
+    a.localeCompare(b, 'es', { numeric: true });
+
+  return Array.from(codes).map((code) => {
+    const tests = test
+      .filter((t) => t.data.asignatura === code)
+      .sort((a, b) => byNum(a.data.id, b.data.id));
+    const devs = desarrollo
+      .filter((d) => d.data.asignatura === code)
+      .sort((a, b) => a.data.orden - b.data.orden);
+    return { params: { asignatura: code }, props: { code, tests, devs } };
+  });
+}
+
+const { code, tests, devs } = Astro.props;
+const m = meta(code);
+
+// Renderiza el cuerpo (respuesta modelo) de cada desarrollo.
+const devsRendered = await Promise.all(
+  devs.map(async (d) => ({ data: d.data, Content: (await render(d)).Content })),
+);
+---
+
+<BaseLayout
+  title={`${m.sigla} · Práctica de examen`}
+  accent={m.accent}
+  docTitle={`${m.sigla} · Práctica`}
+  home={true}
+>
+  <header class="ph">
+    <span class="ph-sigla">{m.sigla}</span>
+    <h1>{m.nombre}</h1>
+    <p class="ph-sub">
+      {tests.length > 0 && <span>{tests.length} preguntas tipo test</span>}
+      {tests.length > 0 && devs.length > 0 && <span> · </span>}
+      {devs.length > 0 && <span>{devs.length} de desarrollo</span>}
+    </p>
+  </header>
+
+  {
+    tests.length > 0 && (
+      <section class="block" aria-labelledby="h-test">
+        <h2 class="block-h" id="h-test">
+          <span class="block-idx">I</span> Preguntas tipo test
+        </h2>
+        <p class="block-desc">
+          Marca una opción (o varias en las de selección múltiple) y pulsa
+          «Corregir».
+        </p>
+        {tests.map((q, i) => (
+          <TestQuestion
+            id={q.data.id}
+            type={q.data.type}
+            question={q.data.question}
+            options={q.data.options}
+            correct={q.data.correct}
+            explicacion={q.data.explicacion}
+            tema={q.data.tema}
+            num={i + 1}
+          />
+        ))}
+        <div class="test-foot">
+          <button class="btn-grade" type="button" data-grade-trigger>
+            Corregir test
+          </button>
+          <span class="score" role="status" aria-live="polite" />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    devsRendered.length > 0 && (
+      <section class="block" aria-labelledby="h-dev">
+        <h2 class="block-h" id="h-dev">
+          <span class="block-idx">{tests.length > 0 ? 'II' : 'I'}</span>{' '}
+          Preguntas de desarrollo
+        </h2>
+        <p class="block-desc">
+          Escribe tu respuesta y contrástala con la respuesta modelo.
+        </p>
+        {devsRendered.map((d, i) => (
+          <DesarrolloQuestion
+            id={d.data.id}
+            enunciado={d.data.enunciado}
+            titulo={d.data.titulo}
+            kind={d.data.kind}
+            tema={d.data.tema}
+            num={i + 1}
+          >
+            <d.Content />
+          </DesarrolloQuestion>
+        ))}
+      </section>
+    )
+  }
+</BaseLayout>
+
+<script>
+  document.addEventListener('tq:graded', (e) => {
+    const { score, total } = (e as CustomEvent).detail;
+    const el = document.querySelector('.score');
+    if (el) el.textContent = `Aciertos: ${score} / ${total}`;
+  });
+</script>
+
+<style>
+  .ph {
+    margin-bottom: 1.8rem;
+  }
+  .ph-sigla {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: var(--site-accent);
+    border-radius: 7px;
+    padding: 0.25rem 0.55rem;
+    margin-bottom: 0.6rem;
+  }
+  .ph h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .ph-sub {
+    margin-top: 0.5rem;
+    color: var(--site-muted);
+    font-size: 0.9rem;
+  }
+  .block {
+    margin-top: 2rem;
+  }
+  .block-h {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+  }
+  .block-idx {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #fff;
+    background: var(--site-ink);
+    border-radius: 6px;
+    padding: 0.15rem 0.5rem;
+  }
+  .block-desc {
+    color: var(--site-muted);
+    font-size: 0.88rem;
+    margin-bottom: 1.1rem;
+  }
+  .test-foot {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .btn-grade {
+    cursor: pointer;
+    border: none;
+    background: var(--site-accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+  }
+  .btn-grade:hover {
+    filter: brightness(1.06);
+  }
+  .score {
+    font-weight: 700;
+  }
+</style>

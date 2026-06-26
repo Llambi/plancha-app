@@ -1,0 +1,962 @@
+# Banco de preguntas SOA (Test de Examen) — generado por scripts/migrate-soa.mjs
+# REGLA: contenido VERBATIM desde legacy/soa.html (QUIZ_DATA). No editar a mano.
+- id: q1
+  asignatura: soa
+  type: single
+  question: "Un script de PowerShell debe tener extensión:"
+  options:
+    - .bat
+    - .ps1
+    - .h
+    - .c
+  correct:
+    - 1
+  apariciones: 4
+- id: q2
+  asignatura: soa
+  type: single
+  question: "Podemos actualizar un repositorio mediante:"
+  options:
+    - sudo apt-get install
+    - sudo apt-get update
+    - sudo apt-get upgrade
+    - sudo apt-get
+  correct:
+    - 1
+  apariciones: 4
+- id: q3
+  asignatura: soa
+  type: single
+  question: "Respecto a Make es falso:"
+  options:
+    - Detecta qué librerías están modificadas y compila solo aquellas que lo necesitan
+    - No detecta qué librerías están modificadas y compila siempre todas las librerías
+    - Detecta qué librerías están modificadas
+    - Compila solo aquellas que lo necesitan
+  correct:
+    - 1
+  apariciones: 3
+- id: q4
+  asignatura: soa
+  type: single
+  question: "El monitor de referencia de seguridad:"
+  options:
+    - Establece por defecto la política de acceso a todos los objetos
+    - Forma parte del subsistema de seguridad del subsistema integral
+    - Indica cuando se puede acceder a un recurso u objeto
+    - Tiene un log de seguridad accesible desde terminal
+  correct:
+    - 2
+  apariciones: 3
+- id: q5
+  asignatura: soa
+  type: single
+  question: ¿Qué comando busca patrones en archivos en Linux?
+  options:
+    - find
+    - grep
+    - fdisk
+    - file
+  correct:
+    - 1
+  apariciones: 3
+- id: q6
+  asignatura: soa
+  type: single
+  question: "El sistema operativo controla los recursos a nivel de hardware mediante:"
+  options:
+    - Conjunto de registros que gobiernan el funcionamiento de hardware interno
+    - Lenguaje máquina que gobierna el funcionamiento de hardware interno
+    - El kernel, programa núcleo
+    - Ninguna de las anteriores
+  correct:
+    - 0
+  apariciones: 3
+- id: q7
+  asignatura: soa
+  type: single
+  question: "Cuando conoces el número de repeticiones es preferible utilizar el comando:"
+  options:
+    - While
+    - For
+    - If
+    - Case
+  correct:
+    - 1
+  apariciones: 3
+- id: q8
+  asignatura: soa
+  type: single
+  question: "La diferencia entre > y >> consiste en:"
+  options:
+    - No hay diferencia, tienen el mismo efecto
+    - "> Sobreescribe el fichero mientras que >> añade el contenido al final"
+    - "> Crea el fichero si no existe mientras que >> da error si el fichero existe"
+    - "> redirecciona la salida estándar y >> redirecciona la salida de error"
+  correct:
+    - 1
+  apariciones: 3
+- id: q9
+  asignatura: soa
+  type: single
+  question: "El comando Get-Command lista todos los cmdlets disponibles:"
+  options:
+    - Verdadero
+    - Falso
+    - Verdadero para cmdlets del usuario que lo ejecuta
+    - Verdadero para cmdlets del sistema
+  correct:
+    - 0
+  apariciones: 3
+- id: q10
+  asignatura: soa
+  type: single
+  question: "Los sockets TCP son:"
+  options:
+    - Unidireccional, confiable y orientada a la conexión
+    - Bidireccional, confiable y orientada a la conexión
+    - Bidireccional, confiable y no orientada a la conexión
+    - Unidireccional, confiable y no orientada a la conexión
+  correct:
+    - 1
+  apariciones: 3
+- id: q11
+  asignatura: soa
+  type: single
+  question: "Spooling es:"
+  options:
+    - Conocer el resultado de un programa antes de ejecutarlo
+    - Leer directamente los programas desde las tarjetas perforadas al disco para procesarlos
+    - Conjunto mínimo de llamadas al sistema
+    - Máquinas pequeñas con circuitos spools
+  correct:
+    - 1
+  apariciones: 3
+- id: q12
+  asignatura: soa
+  type: single
+  question: "La llamada TerminateProcess realiza lo siguiente:"
+  options:
+    - Finaliza un proceso y todos sus hijos
+    - Finaliza un proceso pero no sus hilos
+    - Finaliza un proceso y todos sus hilos
+    - Finaliza el resto de las copias de un proceso
+  correct:
+    - 2
+  apariciones: 2
+- id: q13
+  asignatura: soa
+  type: single
+  question: "Un fichero de tipo especial por bloques es por ejemplo:"
+  options:
+    - Un disco duro
+    - El teclado
+    - El ratón
+    - La conexión de red
+  correct:
+    - 0
+  apariciones: 2
+- id: q14
+  asignatura: soa
+  type: single
+  question: "Para buscar ficheros en un directorio se debe usar en Win32 la llamada:"
+  options:
+    - FindFirstFile
+    - FindFile
+    - SeekFile
+    - SearchFile
+  correct:
+    - 0
+  apariciones: 2
+- id: q15
+  asignatura: soa
+  type: single
+  question: "Se llama inodo en UNIX a:"
+  options:
+    - la estructura de datos que gestiona los procesos
+    - la estructura de datos que gestiona los ficheros
+    - la estructura de datos que gestiona solo los directorios
+    - la estructura de datos que gestiona solo los dispositivos externos
+  correct:
+    - 1
+  apariciones: 2
+- id: q16
+  asignatura: soa
+  type: single
+  question: "El subsistema integral se compone de:"
+  options:
+    - Subsistema de entorno, servicio de terminal y servicio de servidor
+    - Subsistema de terminal, servicio de seguridad y servicio de servidor
+    - Subsistema de seguridad, servicio de terminal y servidor cliente
+    - Subsistema de seguridad, servicio de terminal y servicio de servidor
+  correct:
+    - 2
+  apariciones: 2
+- id: q17
+  asignatura: soa
+  type: single
+  question: ¿Quién creó el Sistema Operativo OS/2?
+  options:
+    - Microsoft
+    - IBM
+    - Apple
+    - Microsoft e IBM
+  correct:
+    - 3
+  apariciones: 2
+- id: q18
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la diferencia principal entre las llamadas al sistema y las funciones de un lenguaje como C?
+  options:
+    - El número máximo de parámetros
+    - El valor que devuelve al código llamante
+    - El código de las llamadas al sistema está en el kernel
+    - Las funciones tardan más en ejecutarse
+  correct:
+    - 2
+  apariciones: 2
+- id: q19
+  asignatura: soa
+  type: single
+  question: "La mayoría de cmdlets están formados por:"
+  options:
+    - Verbo y nombre en inglés, separados por guion y primera letra en mayúscula
+    - Nombre y verbo en inglés, separados por guion y primera letra en mayúscula
+    - Verbo y nombre en inglés, separados por punto y primera letra en mayúscula
+    - Verbo y nombre en inglés, separados por punto
+  correct:
+    - 0
+  apariciones: 2
+- id: q20
+  asignatura: soa
+  type: single
+  question: ¿Cuántos hilos de ejecución posee por defecto un proceso en Windows?
+  options:
+    - Ninguno
+    - Uno
+    - Dos
+    - Depende del número de procesadores
+  correct:
+    - 1
+  apariciones: 2
+- id: q21
+  asignatura: soa
+  type: single
+  question: Si después de hacer asociaciones=(56 84 95 35 68 68 54 75), ¿echo ${asociaciones[3]} mostrará?
+  options:
+    - "95"
+    - "35"
+    - "68"
+    - "84"
+  correct:
+    - 1
+  apariciones: 2
+- id: q22
+  asignatura: soa
+  type: single
+  question: ¿Qué comando crea un proceso hijo?
+  options:
+    - exit
+    - wait
+    - fork
+    - exec
+  correct:
+    - 2
+  apariciones: 2
+- id: q23
+  asignatura: soa
+  type: single
+  question: ¿A qué procesos puede un proceso enviar señales?
+  options:
+    - A todos los procesos
+    - Sólo a sí mismo
+    - Sólo a sus procesos hijos
+    - Sólo a su proceso padre
+  correct:
+    - 0
+  apariciones: 2
+- id: q24
+  asignatura: soa
+  type: single
+  question: ¿Qué llamadas son homólogas en Windows y Linux?
+  options:
+    - CreateDirectory y rmdir
+    - RemoveDirectory y mkdir
+    - CreateHardLink y link
+    - CreateSymbolicLink y link
+  correct:
+    - 2
+  apariciones: 2
+- id: q25
+  asignatura: soa
+  type: single
+  question: Si introduces en la línea de comandos $(comando), ¿qué hace el intérprete?
+  options:
+    - Indica si el comando está ya en ejecución
+    - Vuelca la salida en un fichero de texto
+    - Da un error
+    - Ejecuta el comando que contenga la variable
+  correct:
+    - 3
+  apariciones: 2
+- id: q26
+  asignatura: soa
+  type: single
+  question: "Un alias de un cmdlet es:"
+  options:
+    - Un comando complementario
+    - Un comando paralelo sin privilegios
+    - Un nombre alternativo
+    - Un nombre más eficiente
+  correct:
+    - 2
+  apariciones: 2
+- id: q27
+  asignatura: soa
+  type: single
+  question: "Los operadores lógicos en programación Shell son:"
+  options:
+    - "&& or , || and y ! not"
+    - "&& and , || not y ! or"
+    - "& and , | or y ! not"
+    - "&& and , || or y ! not"
+  correct:
+    - 3
+  apariciones: 2
+- id: q28
+  asignatura: soa
+  type: single
+  question: ¿Cuál es el tipo de arquitectura que dirías que tiene Windows?
+  options:
+    - Sistema distribuido
+    - Microkernel
+    - Orientado a objetos
+    - Monolítico
+  correct:
+    - 1
+  apariciones: 2
+- id: q29
+  asignatura: soa
+  type: single
+  question: "El comando Write-Host sirve para:"
+  options:
+    - Mostrar el nombre hostname del equipo
+    - Escribir la palabra Host por pantalla
+    - Mostrar un texto por pantalla
+    - Escribir la ip del host
+  correct:
+    - 2
+  apariciones: 2
+- id: q30
+  asignatura: soa
+  type: single
+  question: "La capa HAL se ocupa de:"
+  options:
+    - Abstraer los detalles del hardware
+    - Mantener la seguridad
+    - Es la máquina virtual
+    - Implementa las llamadas al sistema
+  correct:
+    - 0
+  apariciones: 1
+- id: q31
+  asignatura: soa
+  type: single
+  question: "Un proceso en UNIX decimos que está dormido cuando:"
+  options:
+    - Está a la espera de que ocurra algún suceso
+    - Está en la cola de listos para ejecución
+    - Esté ejecutando una llamada al sistema
+    - Está ejecutando una interrupción
+  correct:
+    - 0
+  apariciones: 1
+- id: q32
+  asignatura: soa
+  type: single
+  question: ¿Qué sistema operativo dispone de una capa denominada HAL?
+  options:
+    - Windows
+    - Linux
+    - Fedora
+    - OS/2
+  correct:
+    - 0
+  apariciones: 1
+- id: q33
+  asignatura: soa
+  type: single
+  question: "El siguiente sistema operativo fue creado por Microsoft y por IBM:"
+  options:
+    - OS/2
+    - Android
+    - Minix
+    - Embeded Linux
+  correct:
+    - 0
+  apariciones: 1
+- id: q34
+  asignatura: soa
+  type: single
+  question: "Kernel es un programa que se ocupa de la tarea fundamental de:"
+  options:
+    - Gestionar todos los recursos del equipo, internos y externos
+    - Gestionar de forma dedicada y exclusiva la memoria RAM y la memoria física
+    - Gestionar tuberías, permisos y memoria virtual
+    - No realiza tareas fundamentales, solo inicia el sistema operativo
+  correct:
+    - 0
+  apariciones: 1
+- id: q35
+  asignatura: soa
+  type: single
+  question: "Los elementos mecánicos se sustituyen por válvulas de vacío en:"
+  options:
+    - La primera generación
+    - La segunda generación
+    - La tercera generación
+    - La cuarta generación
+  correct:
+    - 0
+  apariciones: 1
+- id: q36
+  asignatura: soa
+  type: single
+  question: "Ventaja del mecanismo en anillo (2022A / 2024F):"
+  options:
+    - Un mecanismo para controlar todos los periféricos
+    - Puede extenderse para estructurar los subsistemas de usuario
+    - Maneja THE, Venus y Multics
+    - Permite la virtualización independientemente de la plataforma
+  correct:
+    - 1
+  apariciones: 1
+- id: q37
+  asignatura: soa
+  type: single
+  question: "Las dos APIs más importantes son:"
+  options:
+    - API KERNEL y API Win32/Win64
+    - API POSIX y API Win8/Win10
+    - API POSIX y API Win32/Win64
+    - API MacOs y API Win32/Win64
+  correct:
+    - 2
+  apariciones: 1
+- id: q38
+  asignatura: soa
+  type: single
+  question: "Muestra los archivos ocultos en Linux:"
+  options:
+    - ls -l
+    - ls -a
+    - ls -j
+    - ls -show
+  correct:
+    - 1
+  apariciones: 1
+- id: q39
+  asignatura: soa
+  type: single
+  question: "El comando Write-Warning sirve para:"
+  options:
+    - Mostrar el nombre hostname del equipo
+    - Escribir la palabra Host por pantalla
+    - Mostrar un mensaje de advertencia en el host
+    - Mostrar un mensaje de error en el host
+  correct:
+    - 2
+  apariciones: 1
+- id: q40
+  asignatura: soa
+  type: single
+  question: "Mediante el comando ls -al | more conseguiremos:"
+  options:
+    - Listar el contenido de un directorio
+    - Listar los archivos con la extensión al
+    - Obtener el listado detallado del contenido de un directorio por páginas
+    - Listar los archivos que empiecen por more
+  correct:
+    - 2
+  apariciones: 1
+- id: q41
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la principal función del exokernel?
+  options:
+    - Comunicación asimétrica entre diferentes componentes
+    - Asignar recursos reales a la máquina virtual
+    - Gestionar canales de comunicación
+    - Gestionar los diferentes componentes distribuidos
+  correct:
+    - 1
+  apariciones: 1
+- id: q42
+  asignatura: soa
+  type: single
+  question: "Ventaja del mecanismo en anillo en un Sistema operativo:"
+  options:
+    - Es un mecanismo de protección jerárquica que proporciona diferentes niveles de acceso
+    - Puede extenderse para estructurar los subsistemas de usuario
+    - Es un mecanismo que simplifica la gestión de memoria
+    - Permite la virtualización independientemente de la plataforma
+  correct:
+    - 0
+  apariciones: 1
+- id: q43
+  asignatura: soa
+  type: single
+  question: "Los permisos -rw-rw-rw- se corresponden con:"
+  options:
+    - "644"
+    - "755"
+    - "600"
+    - "666"
+  correct:
+    - 3
+  apariciones: 1
+- id: q44
+  asignatura: soa
+  type: single
+  question: "El siguiente comando muestra los archivos ocultos:"
+  options:
+    - ls -l
+    - ls -a
+    - ls -j
+    - ls -show
+  correct:
+    - 1
+  apariciones: 1
+- id: q45
+  asignatura: soa
+  type: single
+  question: "Con el siguiente comando se pueden crear directorios en UNIX:"
+  options:
+    - sudo
+    - mcedit
+    - mkdir
+    - createdir
+  correct:
+    - 2
+  apariciones: 1
+- id: q46
+  asignatura: soa
+  type: single
+  question: "¿Qué significa #! /bin/bash?"
+  options:
+    - Que el script tiene que ser interpretado por bash
+    - Que el script no puede ser interpretado por bash
+    - Que la variable primera no es verdadera
+    - No es una expresión válida
+  correct:
+    - 0
+  apariciones: 1
+- id: q47
+  asignatura: soa
+  type: single
+  question: ¿Cuáles son los valores que toma $i en el siguiente código? for ($i = 0; $i -ile 7; $i += 2) {$a[$i]}
+  options:
+    - 0,1,2,3
+    - 0,1,2,3,4,5,6
+    - 0,2,4,6
+    - 0,2,4,6,7
+  correct:
+    - 2
+  apariciones: 1
+- id: q48
+  asignatura: soa
+  type: single
+  question: "Un módulo en PowerShell es:"
+  options:
+    - Una operación aritmética
+    - Un subconjunto de comandos
+    - Un script de nivel de administrador
+    - Fichero con funciones de PowerShell
+  correct:
+    - 1
+  apariciones: 1
+- id: q49
+  asignatura: soa
+  type: single
+  question: ¿Qué es DirectX?
+  options:
+    - Una distribución de Linux
+    - Una tecnología para directorios remotos
+    - Un acelerador de discos
+    - Una biblioteca gráfica
+  correct:
+    - 3
+  apariciones: 1
+- id: q50
+  asignatura: soa
+  type: single
+  question: "Uno de los siguientes no es objetivo de diseño de un sistema operativo:"
+  options:
+    - Elegancia
+    - Simplicidad
+    - Globalización
+    - Robustez
+  correct:
+    - 2
+  apariciones: 1
+- id: q51
+  asignatura: soa
+  type: single
+  question: ¿Cuál es el modelo de diseño de Linux?
+  options:
+    - Sistema distribuido
+    - Monolítico
+    - En capas
+    - Máquina Virtual
+  correct:
+    - 1
+  apariciones: 1
+- id: q52
+  asignatura: soa
+  type: single
+  question: "Un proceso es:"
+  options:
+    - Un programa en ejecución
+    - Un registro en ejecución
+    - Un puntero a un registro de una tabla
+    - Un puntero a un registro de un array
+  correct:
+    - 0
+  apariciones: 1
+- id: q53
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la función del comando mount?
+  options:
+    - Cambia la entrada de un directorio
+    - Cambia el directorio raíz
+    - Monta un sistema de ficheros
+    - Abre un sistema de ficheros
+  correct:
+    - 2
+  apariciones: 1
+- id: q54
+  asignatura: soa
+  type: single
+  question: "Indica qué versión de Windows contiene un núcleo NT5:"
+  options:
+    - Windows XP
+    - Windows 2000
+    - Windows Vista
+    - Windows 7
+  correct:
+    - 1
+  apariciones: 1
+- id: q55
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la diferencia entre comandos y trabajos (jobs) para el Shell?
+  options:
+    - Los trabajos necesitan más recursos que los comandos
+    - Los trabajos solamente puede ejecutarlos un superusuario
+    - Los trabajos son comandos ejecutándose en segundo plano
+    - Son dos conceptos completamente iguales
+  correct:
+    - 2
+  apariciones: 1
+- id: q56
+  asignatura: soa
+  type: single
+  question: ¿Qué contiene la variable automática $Home?
+  options:
+    - Array de parámetros o valores sin declarar
+    - Home
+    - Ruta completa al directorio actual
+    - Ruta completa al directorio inicial de un usuario
+  correct:
+    - 3
+  apariciones: 1
+- id: q57
+  asignatura: soa
+  type: single
+  question: "Siendo: Function operacion { param ([double]$n1, [double]$n2); ($n1 + $n2) /2; } ¿Cuál es la salida de: PS > $res = operacion -n1 10 -n2 20 / PS > $res"
+  options:
+    - "10"
+    - "15"
+    - "20"
+    - "25"
+  correct:
+    - 1
+  apariciones: 1
+- id: q58
+  asignatura: soa
+  type: single
+  question: "Queremos cambiar el nombre del directorio contabilidad por el nombre hipoteca, para ello ejecutaremos el comando:"
+  options:
+    - mv contabilidad hipoteca
+    - rm contabilidad hipoteca
+    - cp contabilidad hipoteca
+    - mv hipoteca contabilidad
+  correct:
+    - 0
+  apariciones: 1
+- id: q59
+  asignatura: soa
+  type: single
+  question: ¿Qué ocurre cuando al compilar un programa en C no se usa la opción -o?
+  options:
+    - Se genera un error y no compila
+    - Se genera un fichero .exe con el mismo nombre
+    - Se genera un fichero .o con el mismo nombre
+    - Se genera un fichero a.out ejecutable
+  correct:
+    - 3
+  apariciones: 1
+- id: q60
+  asignatura: soa
+  type: single
+  question: ¿Qué comando Linux ordena las líneas en un archivo de texto?
+  options:
+    - sort
+    - su
+    - tar
+    - who
+  correct:
+    - 0
+  apariciones: 1
+- id: q61
+  asignatura: soa
+  type: single
+  question: "En el modelo cliente-servidor:"
+  options:
+    - Todos los equipos tienen el mismo rol
+    - Un equipo servidor centraliza las peticiones y presta servicio a los demás
+    - Los equipos son virtualizados mediante hyper-v
+    - Los equipos son virtualizados mediante virtual-pc
+  correct:
+    - 1
+  apariciones: 1
+- id: q62
+  asignatura: soa
+  type: single
+  question: "Traduce los comandos de lectura y escritura del modo usuario a las señales enviadas a los dispositivos:"
+  options:
+    - Monitor de referencia de Seguridad
+    - Gestor Entrada/Salida
+    - Gestor memoria
+    - Monitor Entrada/Salida
+  correct:
+    - 1
+  apariciones: 1
+- id: q63
+  asignatura: soa
+  type: single
+  question: "Una tubería es un mecanismo que permite:"
+  options:
+    - Escribir más rápido en un disco
+    - Comunicar dos procesos
+    - Conectar dos regiones de la memoria
+    - Crear procesos idénticos
+  correct:
+    - 1
+  apariciones: 1
+- id: q64
+  asignatura: soa
+  type: single
+  question: Si al ejecutarse scanf ("%s", linea); escribimos «Esto es una línea de texto» y pulsamos Intro, ¿qué valor tendrá el array línea?
+  options:
+    - «Esto es una línea de texto\0»
+    - «Esto es una línea de texto\n»
+    - «Esto»
+    - La parte de la entrada que quepa en el array
+  correct:
+    - 2
+  apariciones: 1
+- id: q65
+  asignatura: soa
+  type: single
+  question: ¿El comando df en linux?
+  options:
+    - Encuentra diferencias entre dos archivos
+    - Se usa para cortar campos seleccionados de cada línea de un archivo
+    - Muestra el espacio libre en disco disponible para cada partición
+    - Volcar datos a otro archivo o dispositivo o partición
+  correct:
+    - 2
+  apariciones: 1
+- id: q66
+  asignatura: soa
+  type: single
+  question: "En UNIX los permisos -rwxr-xr-x se corresponden con:"
+  options:
+    - "644"
+    - "755"
+    - "600"
+    - "666"
+  correct:
+    - 1
+  apariciones: 1
+- id: q67
+  asignatura: soa
+  type: single
+  question: ¿Qué significa que el sistema operativo gestiona los recursos?
+  options:
+    - Todo depende de la versión del sistema operativo
+    - Solamente él puede organizar el uso de los recursos
+    - Lleva la contabilidad de los usuarios
+    - Modifica la fecha y la hora
+  correct:
+    - 1
+  apariciones: 1
+- id: q68
+  asignatura: soa
+  type: single
+  question: ¿Cómo se comunican las capas de un sistema operativo en anillo?
+  options:
+    - Por medio de llamadas o funciones definidas en interfaces
+    - Por medio de interrupciones
+    - Por medio de señales
+    - Por medio de tuberías
+  correct:
+    - 0
+  apariciones: 1
+- id: q69
+  asignatura: soa
+  type: single
+  question: "Para dar un valor a la variable booleano en shell script tendríamos que hacer:"
+  options:
+    - $booleano=true
+    - $$booleano=true
+    - booleano=true
+    - "&booleano=true"
+  correct:
+    - 2
+  apariciones: 1
+- id: q70
+  asignatura: soa
+  type: single
+  question: ¿Qué es una variable automática?
+  options:
+    - Una variable local
+    - Un parámetro de una función
+    - Una variable de tipo indefinido
+    - Una variable definida por el sistema
+  correct:
+    - 3
+  apariciones: 1
+- id: q71
+  asignatura: soa
+  type: single
+  question: "Para eliminar un proceso se utiliza el comando:"
+  options:
+    - mkdir
+    - chmod
+    - chown
+    - kill
+  correct:
+    - 3
+  apariciones: 1
+- id: q72
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la función del comando chown?
+  options:
+    - Abrir un directorio
+    - Cambio de propietario de un fichero
+    - Cambio de permisos de un fichero
+    - Lectura de un fichero
+  correct:
+    - 1
+  apariciones: 1
+- id: q73
+  asignatura: soa
+  type: single
+  question: ¿Cuál es la unidad de planificación en Windows?
+  options:
+    - Los procesos
+    - Los hilos
+    - Las funciones
+    - Las llamadas al sistema
+  correct:
+    - 1
+  apariciones: 1
+- id: q74
+  asignatura: soa
+  type: single
+  question: "Los sistemas distribuidos:"
+  options:
+    - Son virtualizados mediante hyper-v
+    - Son virtualizados mediante virtual-pc
+    - El procesamiento se comparte entre los ordenadores, las decisiones son descentralizadas y no conocen todo el sistema
+    - El procesamiento se comparte entre los ordenadores, las decisiones son centralizadas y conocen todo el sistema
+  correct:
+    - 3
+  apariciones: 1
+- id: q75
+  asignatura: soa
+  type: single
+  question: "La función que produce un mensaje con el último error producido es:"
+  options:
+    - Error()
+    - Perror()
+    - Errorp()
+    - Errore()
+  correct:
+    - 1
+  apariciones: 1
+- id: q76
+  asignatura: soa
+  type: single
+  question: "Los sockets de datagramas:"
+  options:
+    - No están orientados a la conexión y no son confiables
+    - Sí están orientados a la conexión y no son confiables
+    - Sí están orientados a la conexión y son confiables
+    - No están orientados a la conexión y son confiables
+  correct:
+    - 0
+  apariciones: 1
+- id: q77
+  asignatura: soa
+  type: single
+  question: "Primera versión de Windows de 64 bits:"
+  options:
+    - "2008"
+    - "3.1"
+    - XP
+    - "98"
+  correct:
+    - 2
+  apariciones: 1
+- id: q78
+  asignatura: soa
+  type: single
+  question: "Para obtener más información del comando usermod en Linux:"
+  options:
+    - man usermod
+    - usermod ?
+    - usermod -ayuda
+    - help usermod
+  correct:
+    - 0
+  apariciones: 1
+- id: q79
+  asignatura: soa
+  type: single
+  question: En PowerShell, ¿qué comando da información sobre las listas de control de acceso?
+  options:
+    - get-content
+    - get-service
+    - get-acl
+    - get-eventlog
+  correct:
+    - 2
+  apariciones: 1
+- id: q80
+  asignatura: soa
+  type: single
+  question: "Los circuitos integrados se empiezan a utilizar en:"
+  options:
+    - La primera generación
+    - La segunda generación
+    - La tercera generación
+    - La cuarta generación
+  correct:
+    - 2
+  apariciones: 1

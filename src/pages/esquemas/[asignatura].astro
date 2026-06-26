@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EsquemaTree from '../../components/EsquemaTree.astro';
+import { meta } from '../../data/asignaturas';
+
+export async function getStaticPaths() {
+  const esquemas = await getCollection('esquemas');
+  const codes = new Set<string>(esquemas.map((e) => e.data.asignatura));
+  return Array.from(codes).map((code) => {
+    const temas = esquemas
+      .filter((e) => e.data.asignatura === code)
+      .sort((a, b) => a.data.orden - b.data.orden);
+    return { params: { asignatura: code }, props: { code, temas } };
+  });
+}
+
+const { code, temas } = Astro.props;
+const m = meta(code);
+
+const temasRendered = await Promise.all(
+  temas.map(async (t) => ({ data: t.data, Content: (await render(t)).Content })),
+);
+---
+
+<BaseLayout
+  title={`${m.sigla} · Esquemas de estudio`}
+  accent={m.accent}
+  docTitle={`${m.sigla} · Esquemas`}
+  home={true}
+>
+  <header class="ph">
+    <span class="ph-sigla">{m.sigla}</span>
+    <h1>{m.nombre} · Esquemas</h1>
+    <p class="ph-sub">{temas.length} temas · esquemas jerárquicos con la idea fuerza de cada uno.</p>
+  </header>
+
+  <nav class="tema-nav" aria-label="Índice de temas">
+    {
+      temasRendered.map((t) => (
+        <a class="tema-chip" href={`#${t.data.tema}`}>
+          <b>{t.data.num}</b> {t.data.titulo}
+        </a>
+      ))
+    }
+  </nav>
+
+  {
+    temasRendered.map((t) => (
+      <EsquemaTree
+        num={t.data.num}
+        titulo={t.data.titulo}
+        clave={t.data.clave}
+        bloque={t.data.bloque}
+        tema={t.data.tema}
+      >
+        <t.Content />
+      </EsquemaTree>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .ph {
+    margin-bottom: 1.4rem;
+  }
+  .ph-sigla {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: var(--site-accent);
+    border-radius: 7px;
+    padding: 0.25rem 0.55rem;
+    margin-bottom: 0.6rem;
+  }
+  .ph h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .ph-sub {
+    margin-top: 0.5rem;
+    color: var(--site-muted);
+    font-size: 0.9rem;
+  }
+  .tema-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.8rem;
+  }
+  .tema-chip {
+    font-size: 0.8rem;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    text-decoration: none;
+    max-width: 22rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .tema-chip:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .tema-chip b {
+    color: var(--site-accent);
+  }
+</style>
