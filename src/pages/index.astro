@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { meta } from '../data/asignaturas';
+import { BASE, SITE_NAME } from '../data/site';
 
-const base = '';
+const base = BASE;
 
 const test = await getCollection('test');
 const desarrollo = await getCollection('desarrollo');
@@ -100,7 +101,7 @@ cards.sort((a, b) => a.subject.localeCompare(b.subject, 'es') || a.tipo.localeCo
 const nSubjects = new Set(cards.map((c) => c.subject)).size;
 ---
 
-<BaseLayout title="Exámenes UNIR · Índice">
+<BaseLayout title={`${SITE_NAME} · Índice`}>
   <header class="hero">
     <h1>Material de estudio</h1>
     <p>

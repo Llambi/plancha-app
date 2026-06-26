@@ -1,8 +1,8 @@
 {
-  "name": "exam-unir",
+  "name": "plancha-app",
   "type": "module",
   "version": "1.0.0",
-  "description": "Material de estudio de exámenes UNIR (esquemas y práctica), generado con Astro.",
+  "description": "PlanchaAPP — material de estudio por asignatura (esquemas y práctica de examen), generado con Astro.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

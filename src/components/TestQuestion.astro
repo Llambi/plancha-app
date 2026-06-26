@@ -36,7 +36,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
   <legend class="tq-head">
     {num != null && <span class="tq-num">{num}</span>}
     <span class="tq-q">
-      <span set:html={question} />
+      <span>{question}</span>
       {
         type === 'multi' && (
           <span class="tq-multi">selección múltiple</span>
@@ -58,7 +58,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
         <label class="tq-opt">
           <input type={inputType} name={`q-${id}`} value={i} />
           <span class="tq-letter">{LETTERS[i] ?? i + 1}</span>
-          <span class="tq-opt-text" set:html={opt} />
+          <span class="tq-opt-text">{opt}</span>
         </label>
       ))
     }
@@ -67,7 +67,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
   {
     explicacion && (
       <div class="tq-exp" hidden>
-        <strong>Explicación.</strong> <span set:html={explicacion} />
+        <strong>Explicación.</strong> <span>{explicacion}</span>
       </div>
     )
   }
