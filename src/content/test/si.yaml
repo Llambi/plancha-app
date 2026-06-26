@@ -1,5 +1,5 @@
-# Banco de preguntas SI — generado por scripts/migrate.mjs
-# REGLA: contenido VERBATIM desde legacy/si.html (const TEST). No editar a mano.
+# Banco de preguntas SI
+# REGLA: contenido VERBATIM. No editar a mano.
 - id: q1
   asignatura: si
   type: single

@@ -1,5 +1,5 @@
-# Banco de preguntas SOA (Test de Examen) — generado por scripts/migrate-soa.mjs
-# REGLA: contenido VERBATIM desde legacy/soa.html (QUIZ_DATA). No editar a mano.
+# Banco de preguntas SOA (Test de Examen)
+# REGLA: contenido VERBATIM. No editar a mano.
 - id: q1
   asignatura: soa
   type: single

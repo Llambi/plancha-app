@@ -1,5 +1,5 @@
-# Banco de preguntas DAR — generado por scripts/migrate-dar.mjs
-# REGLA: contenido transcrito VERBATIM desde legacy/dar.html. No editar a mano.
+# Banco de preguntas DAR
+# REGLA: contenido transcrito VERBATIM. No editar a mano.
 # 257 preguntas · tipo single · nota: el barajado (opciones/preguntas)
 # es responsabilidad del componente de render, no de los datos.
 - id: q1
