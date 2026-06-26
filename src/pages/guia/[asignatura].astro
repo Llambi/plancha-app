@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SoaGuide from '../../components/SoaGuide.astro';
+import { meta } from '../../data/asignaturas';
+
+export async function getStaticPaths() {
+  const guia = await getCollection('guia');
+  const test = await getCollection('test');
+  const codes = new Set<string>(guia.map((g) => g.data.asignatura));
+  return Array.from(codes).map((code) => {
+    const chapters = guia
+      .filter((g) => g.data.asignatura === code)
+      .sort((a, b) => a.data.orden - b.data.orden)
+      .map((g) => ({
+        num: g.data.num,
+        titulo: g.data.titulo,
+        badge: g.data.badge,
+        html: g.body ?? '',
+      }));
+    const quiz = test
+      .filter((t) => t.data.asignatura === code)
+      .sort((a, b) => a.data.id.localeCompare(b.data.id, 'es', { numeric: true }))
+      .map((t) => ({
+        id: t.data.id,
+        type: t.data.type,
+        question: t.data.question,
+        options: t.data.options,
+        correct: t.data.correct,
+        apariciones: t.data.apariciones,
+      }));
+    return { params: { asignatura: code }, props: { code, chapters, quiz } };
+  });
+}
+
+const { code, chapters, quiz } = Astro.props;
+const m = meta(code);
+---
+
+<BaseLayout
+  title={`${m.sigla} · Guía de estudio`}
+  accent={m.accent}
+  docTitle={`${m.sigla} · Guía`}
+  home={true}
+>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Code+Pro:wght@400;600&family=Open+Sans:wght@400;600;700&display=swap"
+  />
+
+  <header class="ph">
+    <span class="ph-sigla">{m.sigla}</span>
+    <h1>{m.nombre} · Guía</h1>
+    <p class="ph-sub">
+      {chapters.length} capítulos paginados + test de examen de {quiz.length} preguntas.
+    </p>
+  </header>
+
+  <SoaGuide chapters={chapters} quiz={quiz} />
+</BaseLayout>
+
+<style>
+  .ph {
+    margin-bottom: 1.4rem;
+  }
+  .ph-sigla {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: var(--site-accent);
+    border-radius: 7px;
+    padding: 0.25rem 0.55rem;
+    margin-bottom: 0.6rem;
+  }
+  .ph h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .ph-sub {
+    margin-top: 0.5rem;
+    color: var(--site-muted);
+    font-size: 0.9rem;
+  }
+</style>

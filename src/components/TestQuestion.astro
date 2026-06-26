@@ -1,0 +1,245 @@
+---
+/**
+ * TestQuestion — una pregunta de test (single o multi).
+ * El contenido (question, options, explicacion) se renderiza VERBATIM con
+ * `set:html` para respetar el HTML inline del origen. No transforma texto.
+ *
+ * La corrección la dispara un botón con [data-grade-trigger] en la página;
+ * el script (incluido una sola vez por Astro) marca aciertos/fallos, revela
+ * la explicación y emite un evento `tq:graded` con la puntuación.
+ */
+interface Props {
+  id: string;
+  type: 'single' | 'multi';
+  question: string;
+  options: string[];
+  correct: number[];
+  explicacion?: string;
+  tema?: string;
+  num?: number;
+  apariciones?: number;
+}
+
+const { id, type, question, options, correct, explicacion, tema, num, apariciones } =
+  Astro.props;
+
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const inputType = type === 'single' ? 'radio' : 'checkbox';
+---
+
+<fieldset
+  class="tq"
+  data-tq
+  data-correct={JSON.stringify(correct)}
+  data-type={type}
+>
+  <legend class="tq-head">
+    {num != null && <span class="tq-num">{num}</span>}
+    <span class="tq-q">
+      <span set:html={question} />
+      {
+        type === 'multi' && (
+          <span class="tq-multi">selección múltiple</span>
+        )
+      }
+      {
+        apariciones != null && apariciones > 1 && (
+          <span class="tq-aparic" title="Veces que apareció en exámenes anteriores">
+            ×{apariciones} en exámenes
+          </span>
+        )
+      }
+    </span>
+  </legend>
+
+  <div class="tq-opts">
+    {
+      options.map((opt, i) => (
+        <label class="tq-opt">
+          <input type={inputType} name={`q-${id}`} value={i} />
+          <span class="tq-letter">{LETTERS[i] ?? i + 1}</span>
+          <span class="tq-opt-text" set:html={opt} />
+        </label>
+      ))
+    }
+  </div>
+
+  {
+    explicacion && (
+      <div class="tq-exp" hidden>
+        <strong>Explicación.</strong> <span set:html={explicacion} />
+      </div>
+    )
+  }
+  {tema && <p class="tq-tema">{tema}</p>}
+</fieldset>
+
+<style>
+  .tq {
+    border: 1px solid var(--site-line);
+    border-radius: var(--site-radius);
+    background: var(--site-surface);
+    box-shadow: var(--site-shadow);
+    padding: 1.1rem 1.2rem 1.2rem;
+    margin: 0 0 1rem;
+  }
+  .tq-head {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0;
+    margin-bottom: 0.9rem;
+  }
+  .tq-num {
+    flex: none;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--site-accent);
+    color: #fff;
+  }
+  .tq-q {
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .tq-multi {
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--site-accent);
+    vertical-align: middle;
+  }
+  .tq-aparic {
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--site-muted);
+    background: var(--site-surface-2);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.05rem 0.45rem;
+    vertical-align: middle;
+  }
+  .tq-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .tq-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--site-line);
+    border-radius: 10px;
+    cursor: pointer;
+    background: var(--site-surface-2);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .tq-opt:hover {
+    border-color: var(--site-accent);
+  }
+  .tq-opt input {
+    accent-color: var(--site-accent);
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: none;
+  }
+  .tq-letter {
+    flex: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--site-muted);
+    width: 1.1rem;
+  }
+  .tq-opt-text {
+    line-height: 1.4;
+  }
+
+  /* Estados tras corregir */
+  .tq.graded .tq-opt {
+    cursor: default;
+  }
+  .tq-opt.correct {
+    border-color: var(--site-ok);
+    background: var(--site-ok-soft);
+  }
+  .tq-opt.correct .tq-letter {
+    color: var(--site-ok);
+  }
+  .tq-opt.incorrect {
+    border-color: var(--site-bad);
+    background: var(--site-bad-soft);
+  }
+  .tq-opt.incorrect .tq-letter {
+    color: var(--site-bad);
+  }
+
+  .tq-exp {
+    margin-top: 0.85rem;
+    padding: 0.7rem 0.85rem;
+    border-left: 3px solid var(--site-accent);
+    background: var(--site-surface-2);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--site-ink);
+  }
+  .tq-tema {
+    margin-top: 0.7rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--site-muted);
+  }
+</style>
+
+<script>
+  // Corrección delegada (incluido una sola vez por página).
+  function gradeAll(): { score: number; total: number } {
+    const qs = Array.from(document.querySelectorAll<HTMLElement>('[data-tq]'));
+    let score = 0;
+    for (const q of qs) {
+      const correct: number[] = JSON.parse(q.dataset.correct || '[]');
+      const inputs = Array.from(
+        q.querySelectorAll<HTMLInputElement>('input'),
+      );
+      const picked = inputs
+        .filter((i) => i.checked)
+        .map((i) => Number(i.value));
+      const ok =
+        picked.length === correct.length &&
+        picked.every((p) => correct.includes(p));
+      if (ok) score++;
+      q.classList.add('graded');
+      inputs.forEach((input) => {
+        const idx = Number(input.value);
+        const label = input.closest('.tq-opt');
+        if (!label) return;
+        input.disabled = true;
+        if (correct.includes(idx)) label.classList.add('correct');
+        else if (input.checked) label.classList.add('incorrect');
+      });
+      const exp = q.querySelector('.tq-exp');
+      if (exp) exp.removeAttribute('hidden');
+    }
+    return { score, total: qs.length };
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('[data-grade-trigger]')) return;
+    const result = gradeAll();
+    document.dispatchEvent(
+      new CustomEvent('tq:graded', { detail: result }),
+    );
+  });
+</script>

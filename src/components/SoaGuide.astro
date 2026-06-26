@@ -1,0 +1,786 @@
+---
+/**
+ * SoaGuide — guía paginada de SOA portada del HTML original (verbatim vía
+ * set:html) dentro del shell unificado. Reproduce la paginación por capítulos
+ * (showChapter/prev/next) y el acordeón de soluciones (toggleSol). El "Test de
+ * Examen" se renderiza como una página más con componentes TestQuestion.
+ *
+ * El CSS de contenido de SOA va scopeado bajo `.soa-guide` (is:global porque el
+ * HTML se inyecta con set:html). Solo se carga en la página de la guía SOA.
+ */
+import TestQuestion from './TestQuestion.astro';
+
+interface Chapter {
+  num: string;
+  titulo: string;
+  badge?: string;
+  html: string;
+}
+interface QuizQ {
+  id: string;
+  type: 'single' | 'multi';
+  question: string;
+  options: string[];
+  correct: number[];
+  apariciones?: number;
+}
+interface Props {
+  chapters: Chapter[];
+  quiz: QuizQ[];
+}
+const { chapters, quiz } = Astro.props;
+const quizIdx = chapters.length; // índice de la página del quiz
+---
+
+<div class="soa-guide">
+  <nav class="soa-nav" aria-label="Capítulos de la guía">
+    {
+      chapters.map((c, i) => (
+        <button
+          class={`soa-chip${i === 0 ? ' active' : ''}`}
+          type="button"
+          data-ch={i}
+        >
+          <span class="soa-chip-num">{c.num}</span>
+          <span class="soa-chip-title">{c.titulo}</span>
+          {c.badge && <span class="soa-chip-badge">{c.badge}</span>}
+        </button>
+      ))
+    }
+    <button class="soa-chip quiz" type="button" data-ch={quizIdx}>
+      <span class="soa-chip-num">🎯</span>
+      <span class="soa-chip-title">Test de Examen</span>
+      <span class="soa-chip-badge">{quiz.length} Qs</span>
+    </button>
+  </nav>
+
+  {
+    chapters.map((c, i) => (
+      <div class={`chapter-page${i === 0 ? ' active' : ''}`} set:html={c.html} />
+    ))
+  }
+
+  <div class={`chapter-page${chapters.length === 0 ? ' active' : ''}`} id="soa-quiz">
+    <div class="chapter-banner">
+      <div class="ch-label">Test de Examen</div>
+      <h1>80 preguntas tipo test</h1>
+      <p class="ch-desc">
+        Preguntas de exámenes anteriores. La etiqueta «× n en exámenes» indica
+        cuántas veces apareció cada una. Marca y pulsa «Corregir».
+      </p>
+    </div>
+    <div class="content-area">
+      {quiz.map((q, i) => (
+        <TestQuestion
+          id={q.id}
+          type={q.type}
+          question={q.question}
+          options={q.options}
+          correct={q.correct}
+          apariciones={q.apariciones}
+          num={i + 1}
+        />
+      ))}
+      <div class="soa-quiz-foot">
+        <button class="soa-grade" type="button" data-grade-trigger>
+          Corregir test
+        </button>
+        <span class="soa-score" role="status" aria-live="polite" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Paginación + acordeón de soluciones (funciones globales que usan los
+  // onclick incrustados en el HTML de los capítulos del original).
+  const pages = Array.from(document.querySelectorAll<HTMLElement>('.soa-guide .chapter-page'));
+  const chips = Array.from(document.querySelectorAll<HTMLElement>('.soa-guide .soa-chip'));
+
+  function showChapter(idx: number) {
+    if (idx < 0 || idx >= pages.length) return;
+    pages.forEach((p) => p.classList.remove('active'));
+    chips.forEach((c) => c.classList.remove('active'));
+    pages[idx].classList.add('active');
+    chips[idx]?.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function currentIdx() {
+    return pages.findIndex((p) => p.classList.contains('active'));
+  }
+  function nextChapter() {
+    showChapter(currentIdx() + 1);
+  }
+  function prevChapter() {
+    showChapter(currentIdx() - 1);
+  }
+  function toggleSol(el: HTMLElement) {
+    el.closest('.solucion')?.classList.toggle('open');
+  }
+  // Exponer para los onclick incrustados.
+  Object.assign(window, { showChapter, nextChapter, prevChapter, toggleSol });
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => showChapter(Number(chip.dataset.ch)));
+  });
+
+  document.addEventListener('tq:graded', (e) => {
+    const { score, total } = (e as CustomEvent).detail;
+    const el = document.querySelector('.soa-score');
+    if (el) el.textContent = `Aciertos: ${score} / ${total}`;
+  });
+</script>
+
+<style
+  is:global
+  define:vars={{}}
+>
+  /* === Fuentes (fallback de sistema si no cargan) === */
+
+  /* === Tokens SOA (scopeados) === */
+  .soa-guide {
+    --mcg-red: #c41230;
+    --mcg-red-dark: #9b0e24;
+    --mcg-red-light: #f5e6e9;
+    --mcg-blue: #1a3a6b;
+    --mcg-blue-mid: #2b5c9e;
+    --mcg-blue-light: #e8eef7;
+    --mcg-gold: #c8860a;
+    --mcg-gold-bg: #fef6e4;
+    --mcg-green: #1b6637;
+    --mcg-green-bg: #e8f5ee;
+    --mcg-gray: #4a4a4a;
+    --mcg-gray-light: #f5f5f5;
+    --mcg-border: #cacaca;
+    --text-body: #2d2d2d;
+    --text-head: #1a1a1a;
+    --content-max: 920px;
+    --serif: 'Merriweather', Georgia, 'Times New Roman', serif;
+    --mono: 'Source Code Pro', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-body);
+  }
+  :root[data-theme='dark'] .soa-guide {
+    --mcg-gray-light: #1d2430;
+    --mcg-border: #33404f;
+    --mcg-blue-light: #16243c;
+    --mcg-gold-bg: #2a2310;
+    --mcg-red-light: #2c1418;
+    --mcg-green-bg: #13271b;
+    --text-body: #dfe3e8;
+    --text-head: #f2f4f7;
+    --mcg-gray: #b8c2cc;
+  }
+
+  /* === Chip nav === */
+  .soa-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.6rem;
+  }
+  .soa-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.82rem;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .soa-chip:hover {
+    color: var(--site-ink);
+    border-color: var(--mcg-red);
+  }
+  .soa-chip.active {
+    color: #fff;
+    background: var(--mcg-red);
+    border-color: var(--mcg-red);
+  }
+  .soa-chip-num {
+    font-weight: 800;
+  }
+  .soa-chip.active .soa-chip-num {
+    color: #fff;
+  }
+  .soa-chip-badge {
+    font-size: 0.66rem;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+
+  /* === Páginas de capítulo === */
+  .soa-guide .chapter-page {
+    display: none;
+  }
+  .soa-guide .chapter-page.active {
+    display: block;
+  }
+  .soa-guide .chapter-banner {
+    background: linear-gradient(135deg, var(--mcg-blue) 0%, var(--mcg-blue-mid) 100%);
+    padding: 36px 32px 32px;
+    color: #fff;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .soa-guide .chapter-banner .ch-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 8px;
+  }
+  .soa-guide .chapter-banner h1 {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .soa-guide .chapter-banner .ch-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 680px;
+  }
+  .soa-guide .chapter-banner .objectives {
+    margin-top: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.88);
+  }
+  .soa-guide .chapter-banner .objectives strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .soa-guide .exam-alert {
+    background: var(--mcg-red);
+    color: #fff;
+    margin: 12px 0 0;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+  }
+  .soa-guide .exam-alert .stars {
+    letter-spacing: 2px;
+  }
+
+  /* === Contenido === */
+  .soa-guide .content-area {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 24px 0 0;
+  }
+  .soa-guide .section-heading {
+    border-left: 5px solid var(--mcg-red);
+    padding: 12px 16px;
+    margin: 32px 0 18px;
+    background: var(--mcg-gray-light);
+    border-radius: 0 6px 6px 0;
+  }
+  .soa-guide .section-heading h2 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--text-head);
+    font-weight: 700;
+  }
+  .soa-guide .section-heading .sec-num {
+    font-size: 11px;
+    color: var(--mcg-red);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .soa-guide .subsection-heading {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    color: var(--mcg-blue-mid);
+    font-weight: 700;
+    margin: 26px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--mcg-border);
+  }
+  .soa-guide .body-text {
+    margin: 12px 0;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* Callout boxes */
+  .soa-guide .def-box,
+  .soa-guide .key-box,
+  .soa-guide .exam-box,
+  .soa-guide .example-box {
+    border-radius: 0 4px 4px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .soa-guide .def-box {
+    border: 1px solid var(--mcg-blue-mid);
+    border-left: 5px solid var(--mcg-blue-mid);
+    background: var(--mcg-blue-light);
+  }
+  .soa-guide .key-box {
+    border: 1px solid var(--mcg-gold);
+    border-left: 5px solid var(--mcg-gold);
+    background: var(--mcg-gold-bg);
+  }
+  .soa-guide .exam-box {
+    border: 1px solid var(--mcg-red);
+    border-left: 5px solid var(--mcg-red);
+    background: var(--mcg-red-light);
+  }
+  .soa-guide .example-box {
+    border: 1px solid var(--mcg-green);
+    border-left: 5px solid var(--mcg-green);
+    background: var(--mcg-green-bg);
+  }
+  .soa-guide .box-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .soa-guide .def-box .box-label {
+    color: var(--mcg-blue-mid);
+  }
+  .soa-guide .key-box .box-label {
+    color: var(--mcg-gold);
+  }
+  .soa-guide .exam-box .box-label {
+    color: var(--mcg-red);
+  }
+  .soa-guide .example-box .box-label {
+    color: var(--mcg-green);
+  }
+  .soa-guide .def-box .box-term {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--mcg-blue-mid);
+    margin-bottom: 6px;
+  }
+  .soa-guide .def-box p,
+  .soa-guide .key-box p,
+  .soa-guide .exam-box p,
+  .soa-guide .example-box p {
+    font-size: 14px;
+  }
+
+  /* Tablas */
+  .soa-guide .mcg-table-wrap {
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .soa-guide .mcg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .soa-guide .mcg-table th {
+    background: var(--mcg-blue);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .soa-guide .mcg-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--mcg-border);
+    vertical-align: top;
+  }
+  .soa-guide .mcg-table tr:nth-child(even) td {
+    background: var(--mcg-gray-light);
+  }
+  .soa-guide .mcg-table .red-cell {
+    color: var(--mcg-red);
+    font-weight: 700;
+  }
+  .soa-guide .mcg-table .green-cell {
+    color: var(--mcg-green);
+    font-weight: 700;
+  }
+
+  /* Paso a paso */
+  .soa-guide .paso-card {
+    margin: 22px 0;
+    border-radius: 8px;
+    border: 1px solid var(--mcg-border);
+    background: var(--site-surface);
+    box-shadow: var(--site-shadow);
+    overflow: hidden;
+  }
+  .soa-guide .paso-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: var(--mcg-gray-light);
+    border-bottom: 1px solid var(--mcg-border);
+  }
+  .soa-guide .paso-num {
+    background: var(--mcg-red);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    font-family: var(--serif);
+  }
+  .soa-guide .paso-title {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--mcg-blue-mid);
+    line-height: 1.3;
+  }
+  .soa-guide .paso-subtitle {
+    font-size: 11px;
+    color: var(--site-muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .soa-guide .paso-body {
+    padding: 18px 20px;
+  }
+  .soa-guide .paso-theory {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+
+  /* Bloques de código */
+  .soa-guide .code-block,
+  .soa-guide .template-box {
+    background: #1e2235;
+    color: #e2e8f0;
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre;
+  }
+  .soa-guide .template-box {
+    background: #0f1729;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .soa-guide .template-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mcg-gold);
+    margin-bottom: 8px;
+  }
+  .soa-guide .code-block .kw { color: #bb86fc; }
+  .soa-guide .code-block .fn { color: #82aaff; }
+  .soa-guide .code-block .str { color: #c3e88d; }
+  .soa-guide .code-block .cm { color: #676e95; font-style: italic; }
+  .soa-guide .code-block .pp { color: #f78c6c; }
+  .soa-guide .code-block .num { color: #f78c6c; }
+  .soa-guide .code-block .ty { color: #ffcb6b; }
+  .soa-guide .code-block .ps-cmd { color: #82aaff; }
+  .soa-guide .code-block .ps-param { color: #89ddff; }
+  .soa-guide .code-block .ps-var { color: #f07178; }
+  .soa-guide .code-block .ps-str { color: #c3e88d; }
+  .soa-guide .code-block .bash-cmd { color: #82aaff; }
+  .soa-guide .code-block .bash-var { color: #f07178; }
+  .soa-guide .code-block .bash-str { color: #c3e88d; }
+
+  /* Ejercicio + solución acordeón */
+  .soa-guide .ejercicio {
+    background: var(--mcg-gold-bg);
+    border-left: 4px solid var(--mcg-gold);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 14px 0 8px;
+  }
+  .soa-guide .ejercicio .ej-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mcg-gold);
+    margin-bottom: 5px;
+  }
+  .soa-guide .ejercicio p {
+    font-size: 14px;
+    color: var(--text-body);
+  }
+  .soa-guide .solucion {
+    border-top: 1px dashed var(--mcg-border);
+    margin-top: 10px;
+    padding-top: 4px;
+  }
+  .soa-guide .sol-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 2px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mcg-blue-mid);
+    user-select: none;
+  }
+  .soa-guide .sol-toggle:hover {
+    color: var(--mcg-red);
+  }
+  .soa-guide .sol-arrow {
+    transition: transform 0.25s;
+    font-size: 11px;
+  }
+  .soa-guide .solucion.open .sol-arrow {
+    transform: rotate(180deg);
+  }
+  .soa-guide .sol-content {
+    display: none;
+  }
+  .soa-guide .solucion.open .sol-content {
+    display: block;
+  }
+
+  /* Integrador / summary */
+  .soa-guide .integrador-box,
+  .soa-guide .summary-card {
+    background: var(--mcg-blue);
+    color: #fff;
+    border-radius: 8px;
+    padding: 26px;
+    margin: 36px 0;
+  }
+  .soa-guide .integrador-box .int-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+  }
+  .soa-guide .integrador-box h3,
+  .soa-guide .summary-card h3 {
+    font-family: var(--serif);
+    color: #fff;
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .soa-guide .integrador-box p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 10px;
+  }
+  .soa-guide .integrador-box ol,
+  .soa-guide .integrador-box ul,
+  .soa-guide .summary-card ul {
+    padding-left: 22px;
+  }
+  .soa-guide .integrador-box li,
+  .soa-guide .summary-card li {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 5px 0;
+  }
+  .soa-guide .summary-card .solucion,
+  .soa-guide .integrador-box .solucion {
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+  .soa-guide .integrador-box .sol-toggle {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .soa-guide .integrador-box .sol-toggle:hover {
+    color: #fff;
+  }
+
+  /* Navegación interna entre capítulos del original */
+  .soa-guide .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 0 0;
+    border-top: 1px solid var(--mcg-border);
+    margin-top: 40px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .soa-guide .ch-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid var(--mcg-border);
+    background: var(--site-surface);
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    color: var(--mcg-blue-mid);
+    transition: background 0.15s;
+  }
+  .soa-guide .ch-nav-btn:hover {
+    background: var(--mcg-gray-light);
+  }
+  .soa-guide .ch-nav-btn.next {
+    background: var(--mcg-red);
+    color: #fff;
+    border-color: var(--mcg-red);
+  }
+  .soa-guide .sec-divider {
+    border: none;
+    border-top: 2px solid var(--mcg-border);
+    margin: 32px 0;
+  }
+
+  /* Exam-real cards */
+  .soa-guide .exam-real-section {
+    margin: 36px 0 0;
+  }
+  .soa-guide .exam-real-section .section-heading {
+    background: var(--mcg-red-light);
+    border-left-color: var(--mcg-red);
+  }
+  .soa-guide .exam-real-section .section-heading h2 {
+    color: var(--mcg-red-dark);
+  }
+  .soa-guide .exam-real-card {
+    margin: 20px 0;
+    border-radius: 8px;
+    border: 2px solid var(--mcg-red);
+    background: var(--site-surface);
+    overflow: hidden;
+  }
+  .soa-guide .erc-header {
+    background: var(--mcg-red);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+  }
+  .soa-guide .erc-year {
+    color: #fff;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .soa-guide .erc-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-style: italic;
+  }
+  .soa-guide .erc-body {
+    padding: 18px 20px;
+  }
+  .soa-guide .erc-enunciado {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.7;
+    padding: 0 0 14px;
+    border-bottom: 1px dashed var(--mcg-border);
+    margin-bottom: 4px;
+  }
+  .soa-guide .erc-enunciado strong {
+    color: var(--mcg-blue-mid);
+  }
+  .soa-guide .erc-enunciado em {
+    color: var(--mcg-red-dark);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* Inline code + listas */
+  .soa-guide code {
+    font-family: var(--mono);
+    background: var(--mcg-gray-light);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--mcg-red);
+  }
+  .soa-guide .code-block code,
+  .soa-guide .template-box code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+  .soa-guide .content-area ul,
+  .soa-guide .content-area ol,
+  .soa-guide .paso-body ul,
+  .soa-guide .paso-body ol {
+    padding-left: 24px;
+    margin: 8px 0;
+  }
+  .soa-guide .content-area li,
+  .soa-guide .paso-body li {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+
+  /* Quiz footer */
+  .soa-quiz-foot {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .soa-grade {
+    cursor: pointer;
+    border: none;
+    background: var(--mcg-red);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+  }
+  .soa-grade:hover {
+    background: var(--mcg-red-dark);
+  }
+  .soa-score {
+    font-weight: 700;
+  }
+
+  @media (max-width: 640px) {
+    .soa-guide .chapter-banner {
+      padding: 24px 18px 20px;
+    }
+    .soa-guide .chapter-banner h1 {
+      font-size: 1.4rem;
+    }
+    .soa-chip-title {
+      display: none;
+    }
+    .soa-chip.active .soa-chip-title,
+    .soa-chip.quiz .soa-chip-title {
+      display: inline;
+    }
+  }
+</style>

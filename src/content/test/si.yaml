@@ -1,0 +1,1215 @@
+# Banco de preguntas SI — generado por scripts/migrate.mjs
+# REGLA: contenido VERBATIM desde legacy/si.html (const TEST). No editar a mano.
+- id: q1
+  asignatura: si
+  type: single
+  question: ¿Cuándo se dice que un agente es racional?
+  options:
+    - Cuando toma la decisión que maximiza su rendimiento y lo acerca a su objetivo
+    - Cuando nunca se equivoca en sus decisiones
+    - Cuando funciona sin intervención humana
+    - Cuando dispone de sensores y actuadores físicos
+  correct:
+    - 0
+  tema: T1
+  explicacion: Un agente es racional cuando toma la decisión que más lo acerca a su objetivo, es decir, que maximiza su rendimiento esperado.
+- id: q2
+  asignatura: si
+  type: single
+  question: Según Franklin y Graesser (1997), ¿qué cuatro principios distinguen a un agente del resto de programas?
+  options:
+    - Autonomía, persistencia, reactividad y habilidad social
+    - Sensores, actuadores, memoria y aprendizaje
+    - Percepción, razonamiento, actuación y utilidad
+    - Creencias, deseos, intenciones y planes
+  correct:
+    - 0
+  tema: T1
+  explicacion: Franklin y Graesser señalan autonomía, persistencia del código, reactividad al contexto y habilidad social.
+- id: q3
+  asignatura: si
+  type: single
+  question: La racionalidad de un agente debe entenderse…
+  options:
+    - "Dentro de unos límites: se busca un resultado suficiente sujeto a un margen de error"
+    - Como la garantía de un resultado siempre perfecto
+    - Solo si el entorno es totalmente observable
+    - Únicamente con conocimiento aprendido
+  correct:
+    - 0
+  tema: T1
+  explicacion: "La racionalidad es limitada: la decisión es adecuada según la información disponible en ese momento, no un resultado perfecto."
+- id: q4
+  asignatura: si
+  type: single
+  question: ¿Qué significa que un agente es autónomo?
+  options:
+    - Que es capaz de adaptarse a cambios en su entorno
+    - Que puede funcionar sin sistema operativo
+    - Que puede funcionar en cualquier sistema operativo
+    - Ninguna de las anteriores
+  correct:
+    - 0
+  tema: T1
+  oficial: true
+  explicacion: La capacidad de aprender/adaptarse es lo que dota de autonomía; un agente que solo usa conocimiento a priori no es autónomo.
+- id: q5
+  asignatura: si
+  type: single
+  question: "El conocimiento de un agente sobre su entorno NO puede ser:"
+  options:
+    - A priori
+    - Aprendido
+    - A priori y además aprender dinámicamente
+    - Ninguna de las anteriores
+  correct:
+    - 3
+  tema: T1
+  oficial: true
+  explicacion: El conocimiento puede ser a priori, aprendido o mixto; por tanto ninguna de las opciones describe algo imposible.
+- id: q6
+  asignatura: si
+  type: single
+  question: Una bombilla que se activa al detectar movimiento, ¿es un agente racional?
+  options:
+    - Sí, porque lee su entorno y reacciona ante él
+    - No, porque no existen bombillas inteligentes
+    - "No, porque faltan elementos: aprendizaje, toma de decisiones, optimización de utilidad o base de conocimiento"
+    - No, porque es solo hardware y el hardware no es programable
+  correct:
+    - 2
+  tema: T1
+  oficial: true
+  explicacion: "Reaccionar a un estímulo no basta: falta aprendizaje, toma de decisiones y optimización de una función de utilidad o base de conocimiento."
+- id: q7
+  asignatura: si
+  type: single
+  question: "Indica la afirmación INCORRECTA:"
+  options:
+    - En POA cada agente tiene entidad propia, se ejecuta de forma autónoma y se relaciona con otros agentes
+    - El término «programación orientada a agentes» surgió en 1997
+    - La POA y la POO son, en realidad, lo mismo
+    - JADE es un framework específico de programación orientada a agentes
+  correct:
+    - 2
+  tema: T1
+  oficial: true
+  explicacion: "La POA se explica comparándola con la POO, pero NO son lo mismo: los agentes añaden autonomía fuerte, comportamiento flexible y multi-hilo."
+- id: q8
+  asignatura: si
+  type: single
+  question: "Frente a la visión tradicional de objeto, los agentes (Wooldridge) se diferencian en que:"
+  options:
+    - Tienen autonomía más fuerte, comportamiento flexible y son intrínsecamente multi-hilo
+    - Son siempre más rápidos de ejecutar
+    - No necesitan sensores ni actuadores
+    - Solo existen como entidades físicas
+  correct:
+    - 0
+  tema: T1
+  explicacion: Autonomía más fuerte (deciden si atienden peticiones), comportamiento flexible (reactivo/proactivo/social) y al menos un hilo de control por agente.
+- id: q9
+  asignatura: si
+  type: single
+  question: Las arquitecturas de agente vistas, ¿qué criterio de clasificación toman?
+  options:
+    - El lenguaje de programación en que está escrito el agente
+    - La ubicación de sensores y actuadores en el software
+    - La disposición de los elementos en el hardware
+    - Los criterios de decisión al elegir la acción del agente tras un estímulo
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: La clasificación atiende a cómo decide el agente la acción tras una percepción (reactivo, basado en modelos, objetivos, utilidad).
+- id: q10
+  asignatura: si
+  type: single
+  question: "Elige la afirmación INCORRECTA sobre los agentes reactivos simples:"
+  options:
+    - Siguen un esquema de acción-reacción basado en reglas predefinidas
+    - El modelo del entorno permite que las decisiones sean complejas
+    - No pueden tener memoria
+    - Una misma lectura de los sensores genera siempre la misma acción
+  correct:
+    - 1
+  tema: T2
+  oficial: true
+  explicacion: Los reactivos simples NO tienen modelo del entorno; deciden solo con la percepción actual.
+- id: q11
+  asignatura: si
+  type: single
+  question: "Al introducir un modelo de entorno en un agente reactivo, elige la opción INCORRECTA:"
+  options:
+    - Se simplifica el diseño de las reglas, ya que el modelo es simple por necesidad
+    - Se introduce la posibilidad de tener memoria de sucesos pasados
+    - "El diseño de las reglas se hace más complejo: aumenta la casuística"
+    - El modelo representa la creencia del agente sobre la situación del entorno
+  correct:
+    - 0
+  tema: T2
+  oficial: true
+  explicacion: "Añadir un modelo NO simplifica las reglas: las complica, al crecer la casuística que hay que contemplar."
+- id: q12
+  asignatura: si
+  type: single
+  question: "Un agente basado en modelos (marca la opción correcta):"
+  options:
+    - Mantiene un registro parcial del mundo
+    - El estado interno tiene en cuenta el historial de percepciones
+    - Refleja algunos aspectos que no han sido observados
+    - Todas las anteriores son correctas
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: Combina percepción actual con la anterior, usa estado interno e infiere partes no observadas del mundo.
+- id: q13
+  asignatura: si
+  type: single
+  question: "«Un agente basado en modelos determina con exactitud el estado actual de un entorno parcialmente observable». Esta afirmación es:"
+  options:
+    - Verdadera
+    - Dependiendo del enfoque, puede ser verdadera o falsa
+    - Es falsa en algunas ocasiones, pero generalmente verdadera
+    - Es falsa
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: Es difícil que un agente determine con exactitud el estado de un entorno parcialmente observable; la incertidumbre puede ser inevitable.
+- id: q14
+  asignatura: si
+  type: single
+  question: "En un agente basado en objetivos (BDI), marca la opción INCORRECTA:"
+  options:
+    - Las creencias equivalen al modelo del entorno
+    - Las intenciones se asemejan a las acciones más inmediatas a realizar
+    - Los deseos se asemejan a los objetivos a cumplir
+    - Ninguna de las anteriores es incorrecta
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: "En el modelo BDI: creencias = modelo del entorno, deseos = objetivos, intenciones = acciones/planes inmediatos. Las tres afirmaciones son correctas."
+- id: q15
+  asignatura: si
+  type: single
+  question: "El proceso de toma de decisión en un agente basado en objetivos:"
+  options:
+    - Se realiza valorando una estimación del resultado de las posibles acciones
+    - Un agente no es un sistema de toma de decisiones, no hay tal proceso
+    - Es igual que en los agentes híbridos
+    - "No es necesaria la toma de decisión: las acciones están preconfiguradas"
+  correct:
+    - 0
+  tema: T2
+  oficial: true
+  explicacion: El agente razona sobre qué acciones lograrán el objetivo (búsqueda y planificación), estimando resultados futuros.
+- id: q16
+  asignatura: si
+  type: single
+  question: "Un agente basado en objetivos se adapta mejor a situaciones dinámicas porque:"
+  options:
+    - Las reglas de los sensores se modifican sobre la marcha
+    - Al ser más lento, los cambios del entorno se perciben menos
+    - No es cierto, se adapta peor
+    - Al no basarse en acciones preconfiguradas, valora situaciones no previstas
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: Razona sobre acontecimientos futuros, por lo que puede afrontar situaciones inicialmente no previstas; permite además cambiar el objetivo sin renegociar reglas.
+- id: q17
+  asignatura: si
+  type: single
+  question: "Los agentes basados en utilidad son ideales para:"
+  options:
+    - Cuando existe una sola alternativa
+    - Cuando existen múltiples alternativas
+    - Cualquier situación, una o varias alternativas
+    - Depende de la programación del agente
+  correct:
+    - 1
+  tema: T2
+  oficial: true
+  explicacion: La función de utilidad es útil cuando hay varias alternativas y hay que elegir la mejor manera de alcanzar el objetivo.
+- id: q18
+  asignatura: si
+  type: single
+  question: "La diferencia entre agentes basados en objetivos y en utilidad es:"
+  options:
+    - Que el basado en utilidad no suele cumplir los objetivos
+    - El uso de una función de utilidad que mapea las creencias del agente
+    - Que el basado en objetivos no tiene ninguna utilidad
+    - El uso de una función de utilidad que mapea a un número la «felicidad» del agente
+  correct:
+    - 3
+  tema: T2
+  oficial: true
+  explicacion: La utilidad internaliza la medida de rendimiento asignando a cada estado un número real (la «felicidad» del agente).
+- id: q19
+  asignatura: si
+  type: single
+  question: "La gobernanza de datos permite:"
+  options:
+    - La creación de un canal de comunicación
+    - Un diálogo constante para organizar los datos
+    - Documentar cada dato de la empresa
+    - Todas las anteriores
+  correct:
+    - 3
+  tema: T3
+  oficial: true
+  explicacion: El gobierno del dato abarca comunicación, organización y documentación de los datos de la organización.
+- id: q20
+  asignatura: si
+  type: single
+  question: "La gobernanza de datos NO contempla:"
+  options:
+    - Una estrategia de seguridad de los datos
+    - Una forma documentada de acceder a los datos/información
+    - La auditoría de los empleados
+    - Unificar fuentes de datos para tomar mejores decisiones
+  correct:
+    - 2
+  tema: T3
+  oficial: true
+  explicacion: El gobierno del dato no consiste en auditar a los empleados, sino en seguridad, acceso documentado y unificación de fuentes.
+- id: q21
+  asignatura: si
+  type: single
+  question: "La jerarquía del conocimiento, de más simple a más complejo, es:"
+  options:
+    - Información, datos y conocimiento
+    - Conocimiento, datos e información
+    - Datos, información y conocimiento
+    - Ninguna de las anteriores
+  correct:
+    - 2
+  tema: T3
+  oficial: true
+  explicacion: La pirámide DIKW va de datos (base) → información → conocimiento (cima).
+- id: q22
+  asignatura: si
+  type: single
+  question: "Un dato es:"
+  options:
+    - Una información inferida
+    - Un hecho conectado con un evento
+    - Un hecho concreto y discreto acerca de un evento
+    - Todas las anteriores
+  correct:
+    - 2
+  tema: T3
+  oficial: true
+  explicacion: Un dato es un hecho concreto y discreto sobre un evento; es la unidad mínima que puede comunicarse o almacenarse.
+- id: q23
+  asignatura: si
+  type: single
+  question: "La administración del conocimiento contempla:"
+  options:
+    - La detección, selección y organización de la información
+    - Acceder a los datos/información de manera libre
+    - La auditoría de los empleados
+    - Unificar fuentes de datos para tomar mejores decisiones
+  correct:
+    - 0
+  tema: T3
+  oficial: true
+  explicacion: Gestionar el conocimiento implica detectar, seleccionar y organizar la información.
+- id: q24
+  asignatura: si
+  type: single
+  question: "Un dato estructurado es aquel que:"
+  options:
+    - Es una agrupación de datos
+    - No tiene orden y se guarda en matrices o vectores
+    - Es una cadena de texto
+    - Tiene definida su organización, estructura, posición, tamaño y longitud
+  correct:
+    - 3
+  tema: T3
+  oficial: true
+  explicacion: El dato estructurado tiene definidos organización, estructura, posición, tamaño y longitud (p. ej. campos de una tabla).
+- id: q25
+  asignatura: si
+  type: single
+  question: "NO es un dato semiestructurado:"
+  options:
+    - Un año de nacimiento
+    - Una página HTML
+    - Un archivo XML
+    - Un archivo JSON
+  correct:
+    - 0
+  tema: T3
+  oficial: true
+  explicacion: HTML, XML y JSON son semiestructurados; un año de nacimiento es un dato simple/estructurado.
+- id: q26
+  asignatura: si
+  type: single
+  question: "Es correcto decir que:"
+  options:
+    - Si hay más información, habrá más conocimiento
+    - Si hay más información, habrá menos conocimiento
+    - Si hay más conocimiento, es porque se tuvo acceso a información
+    - Más información genera más conocimiento
+  correct:
+    - 2
+  tema: T3
+  oficial: true
+  explicacion: El conocimiento se construye a partir de la información (es prerrequisito), pero más información NO implica necesariamente más conocimiento (puede ser redundante o no asimilada).
+- id: q27
+  asignatura: si
+  type: single
+  question: "Información es:"
+  options:
+    - Lo mismo que dato
+    - Datos sensibles
+    - Datos + significado
+    - Metadato
+  correct:
+    - 2
+  tema: T3
+  oficial: true
+  explicacion: "La información es un conjunto de datos provisto de una relación semántica entre ellos: datos + significado."
+- id: q28
+  asignatura: si
+  type: single
+  question: "En inteligencia artificial, una ontología es:"
+  options:
+    - Una especificación de una conceptualización (significados, símbolos y relaciones de un dominio)
+    - Una base de datos relacional optimizada
+    - Un lenguaje de programación declarativo
+    - Un algoritmo de aprendizaje supervisado
+  correct:
+    - 0
+  tema: T4
+  explicacion: "En IA, una ontología es una especificación de una conceptualización: define los símbolos, sus significados, relaciones y axiomas que restringen el vocabulario."
+- id: q29
+  asignatura: si
+  type: single
+  question: "Desde una perspectiva filosófica, la ontología (marca la INCORRECTA):"
+  options:
+    - Estudia la manera en que se relacionan las entidades
+    - Es una rama de la metafísica
+    - Se ocupa del estudio del ser
+    - Solamente trabaja con entidades abstractas
+  correct:
+    - 3
+  tema: T4
+  oficial: true
+  explicacion: La ontología filosófica clasifica las entidades como abstractas O concretas; no trabaja solo con abstractas.
+- id: q30
+  asignatura: si
+  type: single
+  question: "Desde el punto de vista computacional, una ontología (marca la INCORRECTA):"
+  options:
+    - Puede ser de ámbito general o de un dominio concreto
+    - Es una de las formas de representación del conocimiento
+    - Se usa únicamente como base de conocimiento en agentes
+    - Permite estructurar el conocimiento
+  correct:
+    - 2
+  tema: T4
+  oficial: true
+  explicacion: La ontología tiene múltiples usos (metadatos, web semántica, integración…), no solo como base de conocimiento de agentes.
+- id: q31
+  asignatura: si
+  type: single
+  question: "Los principales elementos de una ontología son:"
+  options:
+    - Mensajes, conceptos y entidades
+    - Conceptos, propiedades y restricciones
+    - Entidades, propiedades y conceptos
+    - Conceptos, propiedades e instancias
+  correct:
+    - 1
+  tema: T4
+  oficial: true
+  explicacion: Los tres componentes principales son los conceptos, las propiedades de los conceptos y las restricciones de dichas propiedades.
+- id: q32
+  asignatura: si
+  type: single
+  question: "La diferencia principal entre una ontología de dominio y una de nivel superior es que:"
+  options:
+    - La de dominio no tiene relaciones entre entidades
+    - La de nivel superior es necesaria para construir una de dominio, pero no a la inversa
+    - La de dominio no permite modelar conceptos abstractos
+    - Ninguna de las anteriores
+  correct:
+    - 1
+  tema: T4
+  oficial: true
+  explicacion: Las ontologías de nivel superior aportan los conceptos generales sobre los que se apoyan las de dominio; la relación no es simétrica.
+- id: q33
+  asignatura: si
+  type: single
+  question: "Las dos aproximaciones habituales para construir la jerarquía de conceptos son:"
+  options:
+    - Top-down y bottom-up
+    - Forward y backward
+    - Síncrona y asíncrona
+    - Estática y dinámica
+  correct:
+    - 0
+  tema: T4
+  explicacion: Top-down parte de los conceptos generales hacia los particulares; bottom-up hace lo contrario (y existe también la combinada).
+- id: q34
+  asignatura: si
+  type: single
+  question: En el proceso de construcción de una ontología, las instancias se crean…
+  options:
+    - En el último paso, asignando propiedades concretas a objetos concretos
+    - Antes de definir los conceptos
+    - Sustituyendo a las restricciones
+    - Solo si se usa la estrategia top-down
+  correct:
+    - 0
+  tema: T4
+  explicacion: Tras definir conceptos, propiedades y restricciones, el último paso crea las instancias concretas (p. ej. «Nexus 4» como instancia de Smartphone).
+- id: q35
+  asignatura: si
+  type: single
+  question: "RDF está relacionado con XML porque:"
+  options:
+    - XML es el lenguaje utilizado para la definición de RDF
+    - Una de las serializaciones de RDF utiliza el formato XML
+    - Las tripletas son una parte fundamental de XML
+    - Ninguna de las anteriores
+  correct:
+    - 1
+  tema: T5
+  oficial: true
+  explicacion: RDF es un modelo abstracto; RDF/XML es una de sus serializaciones (junto a Turtle, N-Triples, JSON-LD).
+- id: q36
+  asignatura: si
+  type: single
+  question: "La base estructural de RDF es:"
+  options:
+    - Las ontologías
+    - Una tripleta por cada línea de fichero
+    - Los recursos, identificados mediante URIs
+    - Los recursos, identificados mediante URLs
+  correct:
+    - 2
+  tema: T5
+  oficial: true
+  explicacion: RDF describe recursos (cualquier cosa) identificados de forma unívoca mediante URIs.
+- id: q37
+  asignatura: si
+  type: single
+  question: "RDF/XML, Turtle, N-Triples y JSON-LD son:"
+  options:
+    - Lenguajes de programación para generar ontologías
+    - Ontologías
+    - Entornos de programación para ontologías
+    - Diferentes serializaciones de RDF
+  correct:
+    - 3
+  tema: T5
+  oficial: true
+  explicacion: Son distintas formas de serializar (escribir/leer) el modelo abstracto RDF.
+- id: q38
+  asignatura: si
+  type: single
+  question: "Marca la respuesta INCORRECTA en relación con RDF Schema:"
+  options:
+    - Se construye sobre la base de RDF
+    - Es necesario para la generación de RDF
+    - Es el lenguaje más avanzado que existe para crear ontologías
+    - Se puede serializar en formatos distintos de RDF/XML
+  correct:
+    - 2
+  tema: T5
+  oficial: true
+  explicacion: "RDFS no es el más avanzado (OWL lo supera) y NO es necesario para generar RDF: es una capa opcional sobre RDF."
+- id: q39
+  asignatura: si
+  type: single
+  question: "En RDFS, el predicado «rdf:type» indica que:"
+  options:
+    - El sujeto es una instancia del objeto
+    - El objeto es una instancia del sujeto
+    - El predicado es del tipo indicado
+    - No existe tal predicado
+  correct:
+    - 0
+  tema: T5
+  oficial: true
+  explicacion: rdf:type indica que el sujeto es una instancia del objeto; rdfs:subClassOf indica subclase.
+- id: q40
+  asignatura: si
+  type: single
+  question: "OWL añade (indica la opción INCORRECTA):"
+  options:
+    - Restricciones bidireccionales sobre las tripletas
+    - Jerarquía entre clases y subclases
+    - La posibilidad de indicar que dos recursos son la misma cosa
+    - Ontologías más ricas en metadatos
+  correct:
+    - 1
+  tema: T5
+  oficial: true
+  explicacion: La jerarquía de clases/subclases ya la aporta RDFS, no es una novedad de OWL. OWL sí añade restricciones bidireccionales, owl:sameAs y mayor expresividad.
+- id: q41
+  asignatura: si
+  type: single
+  question: "Uno de los elementos introducidos por OWL es:"
+  options:
+    - Las tripletas
+    - Las clases
+    - Las URIs
+    - Los axiomas
+  correct:
+    - 3
+  tema: T5
+  oficial: true
+  explicacion: Tripletas y URIs son de RDF y las clases de RDFS; OWL aporta axiomas para un procesado semántico más rico.
+- id: q42
+  asignatura: si
+  type: single
+  question: "El lenguaje SPARQL:"
+  options:
+    - Permite consultas sobre OWL pero no sobre RDF
+    - Es un lenguaje de programación para crear software basado en ontologías
+    - Es un lenguaje de búsqueda para bases de datos relacionales
+    - Es un lenguaje de búsqueda para ontologías basadas en RDF
+  correct:
+    - 3
+  tema: T5
+  oficial: true
+  explicacion: SPARQL es el lenguaje de consulta especializado en tripletas RDF; su sintaxis recuerda a SQL.
+- id: q43
+  asignatura: si
+  type: single
+  question: "Los SPARQL Endpoints:"
+  options:
+    - Solo ofrecen interfaz para comunicación automatizada
+    - Se comunican con almacenes de tripletas y hacen búsquedas en ellos
+    - Permiten búsquedas basadas en el paradigma relacional tradicional
+    - Solo permiten búsquedas manuales
+  correct:
+    - 1
+  tema: T5
+  oficial: true
+  explicacion: Un endpoint SPARQL permite consultar almacenes de tripletas (triple stores), tanto manual como automatizadamente.
+- id: q44
+  asignatura: si
+  type: single
+  question: "«Linked Data» es un término que se utiliza para indicar:"
+  options:
+    - Las tripletas RDF cuando están basadas en recursos
+    - El lenguaje de hipertexto basado en enlaces
+    - Datos enlazados mediante bases de datos relacionales cruzadas
+    - Un paradigma con OWL como formato base
+  correct:
+    - 0
+  tema: T5
+  oficial: true
+  explicacion: Linked Data designa datos enlazados publicados como tripletas RDF basadas en recursos (URIs), no en bases relacionales ni con OWL como base.
+- id: q45
+  asignatura: si
+  type: single
+  question: "Marca la afirmación INCORRECTA sobre los editores de ontologías:"
+  options:
+    - Sirven para generar una representación RDF de una ontología previamente diseñada
+    - Permiten exportar una ontología en diferentes serializaciones
+    - Pueden ser de escritorio o web
+    - Son capaces de importar ontologías escritas con LaTeX
+  correct:
+    - 3
+  tema: T6
+  oficial: true
+  explicacion: LaTeX es un formato de salida/documentación; no se importan ontologías escritas en LaTeX.
+- id: q46
+  asignatura: si
+  type: single
+  question: ¿Cuál NO es un editor de ontologías?
+  options:
+    - Toptology
+    - NeOn Toolkit
+    - SWOOP
+    - WebProtégé
+  correct:
+    - 0
+  tema: T6
+  oficial: true
+  explicacion: «Toptology» no existe; el editor real es TopBraid Composer. NeOn Toolkit, SWOOP y WebProtégé sí son editores.
+- id: q47
+  asignatura: si
+  type: single
+  question: "Es una característica de Protégé:"
+  options:
+    - Que es open source
+    - Es compatible con OWL 2, RDF/XML, Turtle, OWL/XML y OBO
+    - Compartir y editar ontologías
+    - Todas las anteriores
+  correct:
+    - 3
+  tema: T6
+  oficial: true
+  explicacion: Protégé es gratuito y de código abierto, compatible con OWL 2 y múltiples formatos, y permite compartir/editar ontologías.
+- id: q48
+  asignatura: si
+  type: single
+  question: "Para ejecutar Protégé:"
+  options:
+    - Se utiliza run.bat en Windows y run.sh en Linux
+    - Se utiliza run.sh en Windows y run.bat en Linux
+    - Es mejor ejecutarlo directamente con el archivo JAR
+    - Es necesario instalar algunos plugins
+  correct:
+    - 0
+  tema: T6
+  oficial: true
+  explicacion: En Windows se lanza con run.bat y en Linux con run.sh.
+- id: q49
+  asignatura: si
+  type: single
+  question: "La interfaz de Protégé se compone de pestañas y vistas, de modo que:"
+  options:
+    - Las pestañas son configurables pero las vistas son fijas
+    - Las vistas son configurables pero las pestañas son fijas
+    - Tanto pestañas como vistas son configurables
+    - Ninguna de las anteriores
+  correct:
+    - 2
+  tema: T6
+  oficial: true
+  explicacion: Tanto las pestañas como las vistas de Protégé son configurables.
+- id: q50
+  asignatura: si
+  type: single
+  question: "En Protégé, cuando guardas una ontología en un fichero:"
+  options:
+    - Puedes escoger una de las serializaciones disponibles como formato
+    - Se guarda siempre en RDF/XML
+    - Se guarda siempre en OWL/XML
+    - Se guarda en un formato propio que luego conviertes
+  correct:
+    - 0
+  tema: T6
+  oficial: true
+  explicacion: Protégé pregunta qué serialización usar al guardar (RDF/XML, Turtle, OWL/XML, OBO, incluso LaTeX para documentación).
+- id: q51
+  asignatura: si
+  type: single
+  question: "Al crear clases con Protégé hay que tener en cuenta que:"
+  options:
+    - Se pueden gestionar manualmente
+    - Todas las clases heredan de Thing
+    - Se pueden generar clases, subclases y clases hermanas
+    - Todas son verdaderas
+  correct:
+    - 3
+  tema: T6
+  oficial: true
+  explicacion: En Protégé toda clase hereda de Thing y pueden gestionarse manualmente clases, subclases y hermanas.
+- id: q52
+  asignatura: si
+  type: single
+  question: "En Protégé, las propiedades pueden ser:"
+  options:
+    - Transitivas, simétricas, asimétricas o reflexivas
+    - No transitiva, no simétrica, no asimétrica o no reflexiva
+    - Solo transitiva o reflexiva
+    - Solo simétrica o asimétrica
+  correct:
+    - 0
+  tema: T6
+  oficial: true
+  explicacion: Las propiedades de objeto pueden caracterizarse como transitivas, simétricas, asimétricas, reflexivas, etc.
+- id: q53
+  asignatura: si
+  type: single
+  question: "Owlready2 (ontologías en Python) permite:"
+  options:
+    - Importar/exportar ontologías en NTriples y RDF/XML
+    - Manipular ontologías, instancias y propiedades como objetos de Python
+    - Cargar ontologías de DBpedia
+    - Todas las anteriores
+  correct:
+    - 3
+  tema: T6
+  oficial: true
+  explicacion: Owlready2 importa/exporta NTriples y RDF/XML, manipula la ontología como objetos Python, carga DBpedia y usa HermiT/Pellet.
+- id: q54
+  asignatura: si
+  type: single
+  question: "El razonador de Protégé (marca la afirmación INCORRECTA):"
+  options:
+    - Se pueden configurar diferentes razonadores
+    - El razonador analiza la ontología y busca inconsistencias
+    - El razonador de Protégé solo permite comprobar la consistencia, no inferir axiomas
+    - Protégé integra el razonador en su interfaz gráfica
+  correct:
+    - 2
+  tema: T6
+  oficial: true
+  explicacion: El razonador incluido (HermiT) sí infiere nuevos axiomas además de comprobar la consistencia; pueden usarse también Pellet o FaCT++.
+- id: q55
+  asignatura: si
+  type: single
+  question: "Son aplicaciones de la web semántica:"
+  options:
+    - Todas las opciones de abajo son posibles aplicaciones
+    - Motores de búsqueda más inteligentes
+    - Sistemas de soporte a la decisión integrados
+    - Aplicaciones empresariales integradas
+  correct:
+    - 0
+  tema: T7
+  oficial: true
+  explicacion: Buscadores semánticos, sistemas de soporte a la decisión y aplicaciones empresariales son todas aplicaciones de la web semántica.
+- id: q56
+  asignatura: si
+  type: single
+  question: "El lenguaje estándar para representar la información en la web semántica es:"
+  options:
+    - XML
+    - AJAX
+    - Existen muchos lenguajes que pueden ser estándar
+    - RDF y sus diferentes serializaciones
+  correct:
+    - 3
+  tema: T7
+  oficial: true
+  explicacion: RDF es la base de la web semántica (es a la web semántica lo que HTML a la web tradicional).
+- id: q57
+  asignatura: si
+  type: single
+  question: "Marca la respuesta INCORRECTA sobre RDF Schema:"
+  options:
+    - Se construye sobre la base de RDF
+    - Es necesario para la generación de RDF
+    - Es el lenguaje más avanzado que existe para crear ontologías
+    - Se puede serializar en formatos distintos de RDF/XML
+  correct:
+    - 2
+  tema: T7
+  oficial: true
+  explicacion: RDFS no es el más avanzado (OWL lo supera) ni es imprescindible para generar RDF.
+- id: q58
+  asignatura: si
+  type: single
+  question: "El sistema de estrellas que califica la apertura y usabilidad de un dataset considera que:"
+  options:
+    - Los datos deben estar enlazados con datos de otros proveedores
+    - Los datos deben usar estándares web como HTTP, RDF y SPARQL
+    - A y B son verdaderas
+    - A y B son falsas
+  correct:
+    - 2
+  tema: T7
+  oficial: true
+  explicacion: El esquema de 5 estrellas exige uso de estándares web (HTTP, RDF, SPARQL) y enlace con datos de otros proveedores.
+- id: q59
+  asignatura: si
+  type: single
+  question: "NO es una aplicación de la web semántica:"
+  options:
+    - Buscadores semánticos
+    - Administración de documentos digitales
+    - Web scraping
+    - Páginas web estáticas
+  correct:
+    - 3
+  tema: T7
+  oficial: true
+  explicacion: Las páginas web estáticas son la antítesis de la web semántica, cuyo objetivo es que la información sea entendible por las máquinas.
+- id: q60
+  asignatura: si
+  type: single
+  question: "El lenguaje SPARQL:"
+  options:
+    - Permite consultas sobre OWL pero no sobre RDF
+    - Es un lenguaje de programación para software basado en ontologías
+    - Es un lenguaje de búsqueda para bases de datos relacionales
+    - Es un lenguaje de búsqueda para ontologías basadas en RDF
+  correct:
+    - 3
+  tema: T7
+  oficial: true
+  explicacion: SPARQL es el lenguaje de consulta para ontologías y datos en RDF.
+- id: q61
+  asignatura: si
+  type: single
+  question: "Una característica que diferencia la Web 3.0 de la 2.0 y la 1.0 es:"
+  options:
+    - Brinda información con poca interactividad
+    - Es la web actual pero más bonita
+    - Es una web descentralizada que aporta confianza, privacidad y seguridad
+    - Solo permite búsquedas manuales
+  correct:
+    - 2
+  tema: T7
+  oficial: true
+  explicacion: La Web 3.0 se asocia a infraestructura descentralizada con mayor confianza, privacidad y seguridad, apoyada en ontologías.
+- id: q62
+  asignatura: si
+  type: single
+  question: "Los cuatro principios de Linked Data propuestos por Tim Berners-Lee incluyen:"
+  options:
+    - Usar URIs para identificar recursos y HTTP URIs para acceder a ellos
+    - Usar exclusivamente bases de datos relacionales
+    - Prohibir los enlaces entre recursos
+    - Almacenar los datos en formato propietario
+  correct:
+    - 0
+  tema: T7
+  explicacion: "Linked Data: usar URIs para nombrar recursos, HTTP URIs para acceder, ofrecer información con RDF/SPARQL y enlazar las URIs entre sí."
+- id: q63
+  asignatura: si
+  type: single
+  question: "La lógica de orden cero es sinónimo de:"
+  options:
+    - Lógica proposicional
+    - Lógica de predicados
+    - Lógica difusa
+    - Lógica modal
+  correct:
+    - 0
+  tema: T8
+  explicacion: La lógica de orden cero es otro nombre para la lógica proposicional, fundamento de las lógicas de orden superior.
+- id: q64
+  asignatura: si
+  type: single
+  question: ¿Qué diferencia principal hay entre la lógica de orden cero y la de primer orden?
+  options:
+    - La de orden cero pone el énfasis en las proposiciones; la de primer orden, en los predicados
+    - La de primer orden no usa conectivos lógicos
+    - La de orden cero permite cuantificadores y la de primer orden no
+    - No existe ninguna diferencia
+  correct:
+    - 0
+  tema: T8
+  explicacion: La de orden cero trabaja con proposiciones; la de primer orden enfatiza el predicado (verbo) y añade variables y cuantificadores.
+- id: q65
+  asignatura: si
+  type: single
+  question: "La programación lógica (p. ej. Prolog) es atractiva porque es:"
+  options:
+    - "Declarativa: se indica QUÉ se quiere, no cómo calcularlo"
+    - "Imperativa: hay que detallar cada paso"
+    - Orientada a objetos por naturaleza
+    - Incapaz de razonar con predicados
+  correct:
+    - 0
+  tema: T8
+  explicacion: "La programación lógica es declarativa: se escribe qué se quiere del cálculo, a diferencia de los lenguajes imperativos clásicos."
+- id: q66
+  asignatura: si
+  type: single
+  question: "Sabemos que (p ∧ (q ↔ r)) tiene valor falso. Entonces se puede deducir que:"
+  options:
+    - p tiene valor verdadero
+    - p tiene valor falso
+    - Si p es verdadero, entonces q es necesariamente falso
+    - No se puede deducir nada
+  correct:
+    - 3
+  tema: T8
+  oficial: true
+  explicacion: "Que la conjunción sea falsa solo exige que falle p o (q↔r). No determina el valor de p ni de q: no se puede deducir nada con certeza."
+- id: q67
+  asignatura: si
+  type: single
+  question: "Los cuantificadores en lógica de primer orden son:"
+  options:
+    - Los numerales y cardinales
+    - El existencial y el universal
+    - De disyunción y de conjunción
+    - Ninguna de las anteriores
+  correct:
+    - 1
+  tema: T8
+  oficial: true
+  explicacion: Son el cuantificador universal (∀, «para todo») y el existencial (∃, «existe al menos uno»).
+- id: q68
+  asignatura: si
+  type: single
+  question: "En el lenguaje de primer orden, las propiedades son:"
+  options:
+    - Relaciones unitarias aplicadas sobre objetos
+    - Axiomas que son siempre ciertos
+    - Particularizaciones de objetos mediante literales
+    - Axiomas que necesitan ser verificados
+  correct:
+    - 0
+  tema: T8
+  oficial: true
+  explicacion: Las relaciones de un solo argumento (unitarias) se denominan propiedades.
+- id: q69
+  asignatura: si
+  type: single
+  question: "En lógica descriptiva, el cometido principal de un razonador es:"
+  options:
+    - "La subsunción: comprobar si una categoría es subconjunto de otra"
+    - La compilación del código fuente
+    - El barajado de fórmulas
+    - La eliminación de cuantificadores
+  correct:
+    - 0
+  tema: T8
+  explicacion: La subsunción comprueba si una categoría es subconjunto de otra comparando definiciones; también clasifica individuos y verifica consistencia.
+- id: q70
+  asignatura: si
+  type: single
+  question: ¿Por qué se usan lógicas descriptivas en lugar de la lógica de primer orden, más general?
+  options:
+    - Porque suelen ser fragmentos decidibles y más manejables
+    - Porque permiten siempre la negación y la disyunción sin límites
+    - Porque son más expresivas que la lógica de primer orden
+    - Porque no necesitan razonador
+  correct:
+    - 0
+  tema: T8
+  explicacion: "Las lógicas descriptivas son un subconjunto decidible de la LPO: existen procedimientos para decidir la inferencia, lo que no siempre ocurre en LPO."
+- id: q71
+  asignatura: si
+  type: single
+  question: "Son ámbitos en los que el aprendizaje automático puede ayudar:"
+  options:
+    - Detección de fraudes
+    - Previsión financiera y empresarial
+    - Diagnóstico médico
+    - Todas las anteriores
+  correct:
+    - 3
+  tema: T9
+  oficial: true
+  explicacion: El ML se aplica a detección de fraude, previsión financiera, diagnóstico médico y muchos otros ámbitos.
+- id: q72
+  asignatura: si
+  type: single
+  question: "NO es un método de aprendizaje supervisado:"
+  options:
+    - Árboles de decisión
+    - Redes neuronales
+    - Clúster aplicando k-medias
+    - Máquina de soporte vectorial
+  correct:
+    - 2
+  tema: T9
+  oficial: true
+  explicacion: El clustering con k-medias (k-means) es aprendizaje NO supervisado; el resto son supervisados.
+- id: q73
+  asignatura: si
+  type: single
+  question: "Algoritmo que utiliza el aprendizaje basado en instancias cercanas:"
+  options:
+    - K-vecinos más cercanos (KNN)
+    - Árboles de decisión
+    - Máquina de vectores de soporte
+    - Random Forest
+  correct:
+    - 0
+  tema: T9
+  oficial: true
+  explicacion: "KNN es aprendizaje basado en instancias («lazy learning»): no entrena, busca las instancias más cercanas."
+- id: q74
+  asignatura: si
+  type: single
+  question: "Es una afirmación FALSA sobre las máquinas de soporte vectorial (SVM):"
+  options:
+    - Pertenecen a la familia de clasificadores lineales
+    - Transforman el conjunto de datos a un espacio de dimensión superior
+    - Son una extensión del perceptrón
+    - Su objetivo es minimizar los errores
+  correct:
+    - 3
+  tema: T9
+  oficial: true
+  explicacion: El objetivo de una SVM es maximizar el margen entre clases (no «minimizar los errores»). Es un clasificador lineal, extiende el perceptrón y usa el truco del kernel para subir de dimensión.
+- id: q75
+  asignatura: si
+  type: single
+  question: "El propósito del aprendizaje supervisado es:"
+  options:
+    - Aprender un modelo a partir de datos etiquetados para predecir sobre datos nuevos
+    - Agrupar datos sin etiquetas en clústeres
+    - Eliminar datos duplicados
+    - Generar gráficos automáticamente
+  correct:
+    - 0
+  tema: T9
+  explicacion: El aprendizaje supervisado construye un «modelo» a partir de datos etiquetados para hacer predicciones sobre nuevos datos.
+- id: q76
+  asignatura: si
+  type: single
+  question: "Los dos problemas básicos del aprendizaje supervisado son:"
+  options:
+    - Clasificación (salidas discretas) y regresión (salidas continuas)
+    - Compresión y cifrado
+    - Indexación y ordenación
+    - Normalización y escalado
+  correct:
+    - 0
+  tema: T9
+  explicacion: Si las salidas son discretas la función es un clasificador; si son continuas, una función de regresión.
+- id: q77
+  asignatura: si
+  type: single
+  question: "Las redes bayesianas se caracterizan por:"
+  options:
+    - Representar dependencias entre variables aleatorias en un grafo dirigido acíclico
+    - Ser siempre clasificadores lineales
+    - No usar probabilidad
+    - Ser un tipo de árbol de decisión
+  correct:
+    - 0
+  tema: T9
+  explicacion: Emplean teoría de probabilidad bayesiana sobre un grafo dirigido acíclico; el método más simple es Naive Bayes, que asume independencia entre atributos.
+- id: q78
+  asignatura: si
+  type: single
+  question: "Tras construir el modelo con los datos de entrenamiento, la precisión se calcula:"
+  options:
+    - Con un conjunto de prueba distinto, comparando etiquetas reales con predichas
+    - Con los mismos datos de entrenamiento
+    - Sin necesidad de validación
+    - Solo con datos no etiquetados
+  correct:
+    - 0
+  tema: T9
+  explicacion: La validación usa un conjunto de prueba independiente y compara las etiquetas verdaderas con las predichas.
+- id: q79
+  asignatura: si
+  type: single
+  question: "La característica principal de un sistema experto es:"
+  options:
+    - Su capacidad para resolver problemas genéricos
+    - Su motor de inferencia
+    - Su capacidad para emular el comportamiento de un humano experto en un área
+    - Su capacidad de relación con el entorno
+  correct:
+    - 2
+  tema: T10
+  oficial: true
+  explicacion: Un sistema experto se define por emular el comportamiento de un experto humano en un dominio concreto.
+- id: q80
+  asignatura: si
+  type: single
+  question: "La tecnología que define a los sistemas expertos:"
+  options:
+    - Está siempre basada en árboles de regresión y reglas
+    - "Está unívocamente unida a su definición: requiere una tecnología concreta"
+    - Está siempre basada en redes neuronales y bayesianas
+    - Puede ir desde una simple heurística hasta un complejo motor de inferencia
+  correct:
+    - 3
+  tema: T10
+  oficial: true
+  explicacion: "Un sistema experto se define por su funcionalidad, no por su tecnología: puede ser una heurística simple o un motor de inferencia complejo."
+- id: q81
+  asignatura: si
+  type: single
+  question: "Los sistemas expertos presentan la siguiente característica:"
+  options:
+    - Son baratos y fácilmente generalizables a otros entornos
+    - Resuelven rápido problemas concretos, replicando con menor coste una tarea cara antes solo humana
+    - Reaccionan al entorno y actualizan su base de conocimiento automáticamente
+    - Todas las anteriores son ciertas
+  correct:
+    - 1
+  tema: T10
+  oficial: true
+  explicacion: No son baratos ni se generalizan con facilidad ni aprenden solos; su valor es resolver rápido problemas muy concretos y replicar conocimiento experto a menor coste.
+- id: q82
+  asignatura: si
+  type: single
+  question: "Características comunes a sistemas expertos y agentes (marca la INCORRECTA):"
+  options:
+    - Tratan de emular el comportamiento humano
+    - Trabajan con base de conocimiento y motor de inferencia
+    - Son capaces de resolver problemas de propósito general
+    - Se definen por su funcionalidad, no por su tecnología subyacente
+  correct:
+    - 2
+  tema: T10
+  oficial: true
+  explicacion: "Ni los sistemas expertos ni los agentes resuelven problemas de propósito general: actúan sobre dominios o tareas específicas."
+- id: q83
+  asignatura: si
+  type: single
+  question: "Motivo del uso masivo de los sistemas expertos (marca la INCORRECTA):"
+  options:
+    - Combinan el conocimiento de varios expertos en un único sistema
+    - Su creación es simple, así que se ponen en marcha rápido
+    - Trabajan en circunstancias en que un humano no podría
+    - Son más rápidos que los humanos al decidir
+  correct:
+    - 1
+  tema: T10
+  oficial: true
+  explicacion: "Su creación NO es simple: la dificultad está en capturar el conocimiento y trasladarlo a un modelo comprensible por la máquina."
+- id: q84
+  asignatura: si
+  type: single
+  question: "MYCIN es uno de los sistemas expertos más estudiados porque (marca la INCORRECTA):"
+  options:
+    - Fue el primer sistema experto
+    - Separaba por primera vez el motor de inferencia y la base de conocimiento
+    - Su tasa de acierto era comparable a la de expertos humanos
+    - Tenía buena capacidad de interacción con el usuario
+  correct:
+    - 0
+  tema: T10
+  oficial: true
+  explicacion: MYCIN fue uno de los primeros y más exitosos, pero no EL primero (DENDRAL es anterior). Su gran aporte fue separar motor de inferencia y base de conocimiento.
+- id: q85
+  asignatura: si
+  type: single
+  question: "La funcionalidad principal del sistema experto MYCIN era:"
+  options:
+    - Resolver problemas como las Torres de Hanói
+    - Diagnosticar enfermedades a partir de un conjunto de síntomas
+    - Ayudar a inferir modelos moleculares
+    - Ninguna de las anteriores
+  correct:
+    - 1
+  tema: T10
+  oficial: true
+  explicacion: MYCIN diagnosticaba enfermedades infecciosas de la sangre a partir de síntomas y resultados de laboratorio, con una tasa de acierto ~70%.
+- id: q86
+  asignatura: si
+  type: single
+  question: "Los módulos típicos que se repiten en la mayoría de sistemas expertos son:"
+  options:
+    - Motor de aprendizaje, base de conocimiento, motor de inferencia e interfaz de usuario
+    - Base de conocimiento, motor de inferencia, módulo de explicación, interfaz de usuario e interfaz de adquisición
+    - Base de conocimiento, motor de inferencia, módulo de explicación y base de hechos
+    - Base de conocimiento, motor de inferencia, interfaz de usuario e interfaz de adquisición
+  correct:
+    - 1
+  tema: T10
+  oficial: true
+  explicacion: Base de conocimiento, motor de inferencia, módulo de explicación, interfaz de usuario e interfaz de adquisición son los módulos típicos.
+- id: q87
+  asignatura: si
+  type: single
+  question: "En el motor de inferencia, el encadenamiento «hacia adelante» se caracteriza por:"
+  options:
+    - Estar conducido por los datos hasta alcanzar un objetivo
+    - Partir de una hipótesis y pedir información para confirmarla
+    - No usar reglas
+    - Ser equivalente a un árbol de regresión
+  correct:
+    - 0
+  tema: T10
+  explicacion: El encadenamiento hacia adelante está guiado por los datos; el de hacia atrás parte de una hipótesis (objetivo) y busca confirmarla.
+- id: q88
+  asignatura: si
+  type: single
+  question: "El ciclo de vida del razonamiento basado en casos (CBR) consta de las etapas:"
+  options:
+    - Recuperar, reutilizar, revisar y retener
+    - Percibir, pensar, actuar y aprender
+    - Definir, diseñar, desarrollar y desplegar
+    - Entrenar, validar, probar y desplegar
+  correct:
+    - 0
+  tema: T10
+  explicacion: "El CBR sigue el ciclo de las 4R: recuperar, reutilizar, revisar y retener, apoyándose en una base de casos."

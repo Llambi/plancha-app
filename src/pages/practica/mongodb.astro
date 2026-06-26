@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MongoPractica from '../../components/MongoPractica.astro';
+import { meta } from '../../data/asignaturas';
+
+const m = meta('mongodb');
+---
+
+<BaseLayout
+  title="MongoDB · Práctica de examen"
+  accent={m.accent}
+  docTitle="MongoDB · Práctica"
+  home={true}
+>
+  <MongoPractica />
+</BaseLayout>
