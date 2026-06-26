@@ -7,8 +7,14 @@ node_modules/
 # generated types
 .astro/
 
-# migration scratch output (regenerable)
-scripts/out/
+# Versionar la config de Claude del proyecto (skills, settings, CLAUDE.md):
+# sobrescribe el ignore global de .claude y CLAUDE.md SOLO en este repositorio.
+!.claude/
+!.claude/**
+!CLAUDE.md
+# pero no el duplicado de MCP (ya está el .mcp.json de raíz) ni config local
+.claude/.mcp.json
+.claude/settings.local.json
 
 # logs
 npm-debug.log*
