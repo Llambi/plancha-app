@@ -104,10 +104,7 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
 <BaseLayout title={`${SITE_NAME} · Índice`}>
   <header class="hero">
     <h1>Material de estudio</h1>
-    <p>
-      Práctica tipo examen y esquemas por asignatura. Elige un documento para
-      empezar.
-    </p>
+    <p>Práctica tipo examen y esquemas por asignatura. Elige un documento para empezar.</p>
     <span class="count">
       <b>{nSubjects}</b> asignaturas · <b>{cards.length}</b> documentos
     </span>
@@ -115,8 +112,12 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
 
   <div class="filters" role="group" aria-label="Filtrar por tipo">
     <button class="filter-btn on" type="button" data-filter="all" aria-pressed="true">Todos</button>
-    <button class="filter-btn" type="button" data-filter="practica" aria-pressed="false">Práctica</button>
-    <button class="filter-btn" type="button" data-filter="teoria" aria-pressed="false">Esquemas</button>
+    <button class="filter-btn" type="button" data-filter="practica" aria-pressed="false"
+      >Práctica</button
+    >
+    <button class="filter-btn" type="button" data-filter="teoria" aria-pressed="false"
+      >Esquemas</button
+    >
   </div>
 
   <section class="grid" aria-label="Documentos disponibles">
@@ -124,7 +125,9 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
       cards.map((c) => (
         <a class="doc-card" href={c.href} data-tipo={c.tipo} style={`--c:${c.accent}`}>
           <div class="doc-head">
-            <span class="doc-badge" aria-hidden="true">{c.sigla}</span>
+            <span class="doc-badge" aria-hidden="true">
+              {c.sigla}
+            </span>
             <span class="doc-headtext">
               <span class="doc-subject">{c.subject}</span>
               <span class="doc-title">{c.title}</span>
@@ -212,7 +215,10 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     border: 1px solid var(--site-line);
     border-radius: 999px;
     padding: 0.5rem 0.95rem;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
   }
   .filter-btn:hover {
     color: var(--site-ink);
@@ -241,7 +247,10 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     text-decoration: none;
     color: inherit;
     box-shadow: var(--site-shadow);
-    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.16s ease,
+      border-color 0.16s ease;
   }
   .doc-card:hover {
     transform: translateY(-2px);

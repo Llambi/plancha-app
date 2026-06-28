@@ -34,14 +34,10 @@ const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
 
   <p class="dq-enun" set:html={enunciado} />
 
-  <textarea
-    class="dq-text"
-    placeholder="Escribe aquí tu respuesta…"
-    aria-label="Tu respuesta"></textarea>
+  <textarea class="dq-text" placeholder="Escribe aquí tu respuesta…" aria-label="Tu respuesta"
+  ></textarea>
 
-  <button class="dq-reveal" type="button" aria-expanded="false">
-    Ver respuesta modelo
-  </button>
+  <button class="dq-reveal" type="button" aria-expanded="false"> Ver respuesta modelo </button>
 
   <div class="dq-model" hidden>
     <h4 class="dq-model-h">Respuesta modelo</h4>

@@ -43,11 +43,10 @@ const accentStyle = accent ? `--site-accent:${accent}` : undefined;
       /* Tema: inicializa antes de pintar para evitar parpadeo */
       (function () {
         try {
-          var t = localStorage.getItem('site-theme');
+          let t = localStorage.getItem('site-theme');
           if (!t) {
             t =
-              window.matchMedia &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches
+              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light';
           }
@@ -90,11 +89,11 @@ const accentStyle = accent ? `--site-accent:${accent}` : undefined;
     <script is:inline>
       /* Toggle de tema (común) */
       (function () {
-        var b = document.querySelector('.site-theme-toggle');
+        const b = document.querySelector('.site-theme-toggle');
         if (!b) return;
         b.addEventListener('click', function () {
-          var d = document.documentElement;
-          var n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          const d = document.documentElement;
+          const n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
           d.setAttribute('data-theme', n);
           try {
             localStorage.setItem('site-theme', n);
