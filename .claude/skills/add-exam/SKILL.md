@@ -16,6 +16,10 @@ carácter: enunciados, opciones, respuestas correctas, justificaciones y
 respuestas modelo. No corrijas ortografía, no reordenes opciones, no reformules.
 Si algo parece un error, consérvalo igual y coméntalo aparte (nunca lo edites).
 
+Versión normativa completa de estas reglas (verbatim, respuesta correcta,
+integridad estructural, doble lectura):
+[`.claude/rules/contenido-examenes-y-temarios.md`](../../rules/contenido-examenes-y-temarios.md).
+
 ## 1. Preguntas que debes hacer al usuario (antes de escribir nada)
 
 Reúne lo que falte (pregunta solo lo que no esté claro en el material aportado):
@@ -33,13 +37,15 @@ Reúne lo que falte (pregunta solo lo que no esté claro en el material aportado
 ## 2. Dónde y cómo escribir
 
 ### Test → `src/content/test/<asignatura>.yaml`
+
 Añade al array (o crea el fichero). Por pregunta:
+
 ```yaml
-- id: q<N>                 # único dentro del banco
+- id: q<N> # único dentro del banco
   asignatura: <código>
   type: single | multi
   question: <enunciado VERBATIM>
-  options:                 # ORDEN ORIGINAL, sin reordenar
+  options: # ORDEN ORIGINAL, sin reordenar
     - <opción 1 VERBATIM>
     - <opción 2 VERBATIM>
   correct: [<índices 0-based de las correctas>]
@@ -47,6 +53,7 @@ Añade al array (o crea el fichero). Por pregunta:
   oficial: <true si procede>
   explicacion: <opcional, VERBATIM>
 ```
+
 - `correct` es un array de índices 0-based sobre `options`: un elemento para
   `single`, varios para `multi`.
 - **El test se renderiza como texto escapado**: si una opción contiene código o
@@ -54,6 +61,7 @@ Añade al array (o crea el fichero). Por pregunta:
   HTML de formato en test.
 
 ### Desarrollo → `src/content/desarrollo/<asignatura>-q<N>.md`
+
 ```markdown
 ---
 asignatura: <código>
