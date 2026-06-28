@@ -7,6 +7,10 @@ node_modules/
 # generated types
 .astro/
 
+# test artifacts
+test-results/
+playwright-report/
+
 # Versionar la config de Claude del proyecto (skills, settings, CLAUDE.md):
 # sobrescribe el ignore global de .claude y CLAUDE.md SOLO en este repositorio.
 !.claude/
