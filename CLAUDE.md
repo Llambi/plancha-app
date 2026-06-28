@@ -50,11 +50,24 @@ orden`) + body = nested Markdown lists (the tree). Rendered by `EsquemaTree`.
   - `guia/` — Markdown; body = raw chapter HTML rendered with `set:html`
     (paginated guide). Rendered by `SoaGuide`.
 - **Pages** (`src/pages/`): `index.astro` (listado filtrable), `esquemas/[asignatura]`,
-  `practica/[asignatura]`, `guia/[asignatura]`, and `practica/mongodb.astro`
-  (custom interactive validator, component `MongoPractica`).
+  `practica/[asignatura]`, `guia/[asignatura]`, `practica/mongodb.astro`
+  (custom interactive validator, component `MongoPractica`) and `buscar.astro`
+  (página de resultados de búsqueda).
 - **Routing/base**: internal links use `BASE` from `src/data/site.ts` so they
   don't break under the `/plancha-app` subpath; `astro.config.mjs` imports the
   same `BASE`/`SITE`. Don't hardcode absolute `/...` links.
+- **Buscador global** (client-side, sitio estático): núcleo puro y testeable en
+  `src/lib/search.ts` (`buildSearchRecords` → un registro por ítem con su
+  deep-link; `createSearcher` envuelve **Fuse.js**, insensible a tildes/erratas).
+  El índice se genera en build vía el endpoint `src/pages/search-index.json.ts`
+  (`/plancha-app/search-index.json`) y se carga de forma perezosa. UI:
+  `SearchBox.astro` (en la topbar del `BaseLayout`, combobox ARIA con teclado
+  ↑/↓/Enter/Esc y modo móvil) + página `buscar.astro` (resultados agrupados por
+  asignatura). Los resultados deep-linkan a anclas derivadas de campos existentes:
+  `#q-<id>` (test), `#d-<id>` (desarrollo), `#<tema>` (esquema), `#<chapter>` o
+  `#soa-quiz` (guía). Los componentes solo añaden `id`/`scroll-margin-top`; no se
+  toca el contenido. Las opciones se crean por JS, así que sus estilos van en
+  bloques `is:global` namespaced (Astro no scopea elementos creados en runtime).
 
 ## Workflow (Spec-Driven Development)
 
