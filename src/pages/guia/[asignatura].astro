@@ -13,6 +13,7 @@ export async function getStaticPaths() {
       .filter((g) => g.data.asignatura === code)
       .sort((a, b) => a.data.orden - b.data.orden)
       .map((g) => ({
+        chapter: g.data.chapter,
         num: g.data.num,
         titulo: g.data.titulo,
         badge: g.data.badge,

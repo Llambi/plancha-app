@@ -11,6 +11,7 @@
 import TestQuestion from './TestQuestion.astro';
 
 interface Chapter {
+  chapter: string;
   num: string;
   titulo: string;
   badge?: string;
@@ -52,7 +53,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
 
   {
     chapters.map((c, i) => (
-      <div class={`chapter-page${i === 0 ? ' active' : ''}`} set:html={c.html} />
+      <div id={c.chapter} class={`chapter-page${i === 0 ? ' active' : ''}`} set:html={c.html} />
     ))
   }
 
@@ -119,6 +120,19 @@ const quizIdx = chapters.length; // índice de la página del quiz
   chips.forEach((chip) => {
     chip.addEventListener('click', () => showChapter(Number(chip.dataset.ch)));
   });
+
+  // Deep-link: abre el capítulo cuyo id coincide con location.hash (#chN, #soa-quiz)
+  // antes de hacer scroll, porque los capítulos están display:none hasta activarse.
+  function showFromHash() {
+    const id = decodeURIComponent(location.hash.replace(/^#/, ''));
+    if (!id) return;
+    const idx = pages.findIndex((p) => p.id === id);
+    if (idx >= 0) {
+      showChapter(idx);
+    }
+  }
+  showFromHash();
+  window.addEventListener('hashchange', showFromHash);
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
