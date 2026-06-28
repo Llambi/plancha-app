@@ -1,0 +1,296 @@
+---
+/**
+ * /buscar — página de resultados completos.
+ * Lee `?q=` de la URL, carga el índice (`search-index.json`) y busca con Fuse.js
+ * (`src/lib/search.ts`), mostrando TODOS los resultados agrupados por asignatura.
+ * El campo se sincroniza con la URL (history.replaceState) para que la búsqueda
+ * sea compartible y recargable.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BASE, SITE_NAME } from '../data/site';
+
+const indexUrl = `${BASE}/search-index.json`;
+---
+
+<BaseLayout title={`Buscar · ${SITE_NAME}`} home={true}>
+  <div class="buscar-page" data-index={indexUrl}>
+    <header class="bp-head">
+      <h1>Buscar</h1>
+      <form class="bp-form" role="search" data-bp-form>
+        <span class="bp-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" focusable="false">
+            <path
+              d="M21 21l-4.3-4.3M11 18a7 7 0 100-14 7 7 0 000 14z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"></path>
+          </svg>
+        </span>
+        <input
+          class="bp-input"
+          type="search"
+          aria-label="Buscar en PlanchaAPP"
+          placeholder="Buscar por nombre, descripción o contenido…"
+          autocomplete="off"
+          enterkeyhint="search"
+          data-bp-input
+        />
+      </form>
+      <p class="bp-count" role="status" aria-live="polite" data-bp-count></p>
+    </header>
+
+    <div class="bp-results" data-bp-results></div>
+    <p class="bp-empty" hidden data-bp-empty>
+      No hay resultados para tu búsqueda. Prueba con otras palabras.
+    </p>
+    <p class="bp-hint" data-bp-hint>
+      Escribe en el campo de arriba para buscar en todo el material.
+    </p>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .buscar-page {
+    max-width: 760px;
+  }
+  .buscar-page .bp-head h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .buscar-page .bp-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 1rem 0 0.5rem;
+  }
+  .buscar-page .bp-ic {
+    position: absolute;
+    left: 14px;
+    display: inline-flex;
+    color: var(--site-muted);
+    pointer-events: none;
+  }
+  .buscar-page .bp-input {
+    font: inherit;
+    font-size: 1rem;
+    width: 100%;
+    color: var(--site-ink);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 12px;
+    padding: 0.8rem 0.9rem 0.8rem 2.7rem;
+    box-shadow: var(--site-shadow);
+  }
+  .buscar-page .bp-input:focus {
+    outline: none;
+    border-color: var(--site-accent);
+  }
+  .buscar-page .bp-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+  .buscar-page .bp-count {
+    font-size: 0.82rem;
+    color: var(--site-muted);
+    min-height: 1.2em;
+  }
+  .buscar-page .bp-hint,
+  .buscar-page .bp-empty {
+    margin-top: 1.5rem;
+    color: var(--site-muted);
+    font-size: 0.92rem;
+  }
+
+  .buscar-page .bp-group {
+    margin-top: 1.6rem;
+  }
+  .buscar-page .bp-group-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.7rem;
+  }
+  .buscar-page .bp-group-badge {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.66rem;
+    background: var(--c, var(--site-accent));
+  }
+  .buscar-page .bp-group-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .buscar-page .bp-group-count {
+    font-size: 0.74rem;
+    color: var(--site-muted);
+    font-weight: 600;
+  }
+  .buscar-page .bp-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .buscar-page .bp-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.7rem 0.85rem;
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 11px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--site-shadow);
+    transition:
+      border-color 0.15s,
+      transform 0.15s;
+  }
+  .buscar-page .bp-item:hover {
+    border-color: var(--c, var(--site-accent));
+    transform: translateX(2px);
+  }
+  .buscar-page .bp-item-body {
+    min-width: 0;
+    flex: 1;
+  }
+  .buscar-page .bp-item-tipo {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--c, var(--site-accent)) 70%, var(--site-ink));
+    margin-bottom: 2px;
+  }
+  .buscar-page .bp-item-title {
+    font-size: 0.92rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .buscar-page .bp-item-go {
+    flex: none;
+    color: var(--site-muted);
+    font-size: 1.1rem;
+  }
+</style>
+
+<script>
+  import { createSearcher, type SearchRecord } from '../lib/search';
+
+  const root = document.querySelector<HTMLElement>('.buscar-page');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-bp-input]')!;
+    const form = root.querySelector<HTMLFormElement>('[data-bp-form]')!;
+    const results = root.querySelector<HTMLElement>('[data-bp-results]')!;
+    const count = root.querySelector<HTMLElement>('[data-bp-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-bp-empty]')!;
+    const hint = root.querySelector<HTMLElement>('[data-bp-hint]')!;
+    const indexUrl = root.dataset.index!;
+    const MAX = 200;
+
+    let records: SearchRecord[] = [];
+    let searcher: ReturnType<typeof createSearcher> | null = null;
+
+    function esc(s: string): string {
+      return s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function render(q: string) {
+      const query = q.trim();
+      results.innerHTML = '';
+      if (!query) {
+        count.textContent = '';
+        empty.hidden = true;
+        hint.hidden = false;
+        return;
+      }
+      hint.hidden = true;
+      const hits = searcher ? searcher.search(query, MAX) : [];
+      count.textContent = hits.length
+        ? `${hits.length} resultado${hits.length === 1 ? '' : 's'} para «${query}»`
+        : '';
+      empty.hidden = hits.length > 0;
+      if (!hits.length) return;
+
+      // Agrupar por asignatura, conservando el orden de relevancia de aparición.
+      const groups = new Map<string, SearchRecord[]>();
+      for (const r of hits) {
+        if (!groups.has(r.asignatura)) groups.set(r.asignatura, []);
+        groups.get(r.asignatura)!.push(r);
+      }
+
+      for (const [, items] of groups) {
+        const first = items[0];
+        const section = document.createElement('section');
+        section.className = 'bp-group';
+        section.style.setProperty('--c', first.accent);
+        const list = items
+          .map(
+            (r) =>
+              `<li><a class="bp-item" href="${esc(r.url)}" style="--c:${esc(r.accent)}">` +
+              `<span class="bp-item-body">` +
+              `<span class="bp-item-tipo">${esc(r.tipoLabel)}</span>` +
+              `<span class="bp-item-title">${esc(r.titulo)}</span></span>` +
+              `<span class="bp-item-go" aria-hidden="true">→</span></a></li>`,
+          )
+          .join('');
+        section.innerHTML =
+          `<div class="bp-group-head">` +
+          `<span class="bp-group-badge">${esc(first.sigla)}</span>` +
+          `<span class="bp-group-name">${esc(first.asignaturaNombre)}</span>` +
+          `<span class="bp-group-count">${items.length}</span></div>` +
+          `<ul class="bp-list">${list}</ul>`;
+        results.appendChild(section);
+      }
+    }
+
+    function syncUrl(q: string) {
+      const u = new URL(window.location.href);
+      if (q.trim()) u.searchParams.set('q', q.trim());
+      else u.searchParams.delete('q');
+      history.replaceState(null, '', u);
+    }
+
+    let debounce: ReturnType<typeof setTimeout>;
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        render(input.value);
+        syncUrl(input.value);
+      }, 150);
+    });
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    // Carga inicial: query desde la URL.
+    const initial = new URLSearchParams(window.location.search).get('q') ?? '';
+    input.value = initial;
+    fetch(indexUrl)
+      .then((r) => r.json())
+      .then((data: SearchRecord[]) => {
+        records = data;
+        searcher = createSearcher(records);
+        render(initial);
+      })
+      .catch(() => {
+        count.textContent = 'No se pudo cargar el índice de búsqueda.';
+      });
+
+    input.focus();
+  }
+</script>
