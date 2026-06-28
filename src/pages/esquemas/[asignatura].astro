@@ -32,7 +32,9 @@ const temasRendered = await Promise.all(
   <header class="ph">
     <span class="ph-sigla">{m.sigla}</span>
     <h1>{m.nombre} · Esquemas</h1>
-    <p class="ph-sub">{temas.length} temas · esquemas jerárquicos con la idea fuerza de cada uno.</p>
+    <p class="ph-sub">
+      {temas.length} temas · esquemas jerárquicos con la idea fuerza de cada uno.
+    </p>
   </header>
 
   <nav class="tema-nav" aria-label="Índice de temas">
@@ -104,7 +106,9 @@ const temasRendered = await Promise.all(
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
   }
   .tema-chip:hover {
     color: var(--site-ink);

@@ -12,14 +12,12 @@ export async function getStaticPaths() {
   // Las asignaturas con guía exponen su test como quiz dentro de la guía.
   const guiaCodes = new Set(guia.map((g) => g.data.asignatura));
   const codes = new Set<string>(
-    [
-      ...test.map((t) => t.data.asignatura),
-      ...desarrollo.map((d) => d.data.asignatura),
-    ].filter((c) => !guiaCodes.has(c)),
+    [...test.map((t) => t.data.asignatura), ...desarrollo.map((d) => d.data.asignatura)].filter(
+      (c) => !guiaCodes.has(c),
+    ),
   );
 
-  const byNum = (a: string, b: string) =>
-    a.localeCompare(b, 'es', { numeric: true });
+  const byNum = (a: string, b: string) => a.localeCompare(b, 'es', { numeric: true });
 
   return Array.from(codes).map((code) => {
     const tests = test
@@ -64,8 +62,7 @@ const devsRendered = await Promise.all(
           <span class="block-idx">I</span> Preguntas tipo test
         </h2>
         <p class="block-desc">
-          Marca una opción (o varias en las de selección múltiple) y pulsa
-          «Corregir».
+          Marca una opción (o varias en las de selección múltiple) y pulsa «Corregir».
         </p>
         {tests.map((q, i) => (
           <TestQuestion
@@ -93,12 +90,9 @@ const devsRendered = await Promise.all(
     devsRendered.length > 0 && (
       <section class="block" aria-labelledby="h-dev">
         <h2 class="block-h" id="h-dev">
-          <span class="block-idx">{tests.length > 0 ? 'II' : 'I'}</span>{' '}
-          Preguntas de desarrollo
+          <span class="block-idx">{tests.length > 0 ? 'II' : 'I'}</span> Preguntas de desarrollo
         </h2>
-        <p class="block-desc">
-          Escribe tu respuesta y contrástala con la respuesta modelo.
-        </p>
+        <p class="block-desc">Escribe tu respuesta y contrástala con la respuesta modelo.</p>
         {devsRendered.map((d, i) => (
           <DesarrolloQuestion
             id={d.data.id}

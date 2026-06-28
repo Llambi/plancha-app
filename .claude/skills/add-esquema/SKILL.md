@@ -9,9 +9,14 @@ Turn one or more source documents (apuntes, temario, PDFs, notes) into
 **esquemas de estudio** for PlanchaAPP: hierarchical outlines per tema under
 `src/content/esquemas/`, following `src/content/config.ts`.
 
+> Reglas de contenido del repo (qué se puede y qué no al transcribir material):
+> [`.claude/rules/contenido-examenes-y-temarios.md`](../../rules/contenido-examenes-y-temarios.md).
+> Un esquema reelabora la estructura, pero los datos no se inventan ni se alteran.
+
 ## Qué es un esquema aquí
 
 Un fichero Markdown por **tema**, con:
+
 - Frontmatter: `asignatura, tema, num, bloque?, titulo, clave, orden`.
 - `clave` = la **idea fuerza** del tema (1–2 frases que resumen lo esencial).
 - Cuerpo = el **árbol** de conceptos como **listas Markdown anidadas**
@@ -39,7 +44,7 @@ Por cada tema, crea `src/content/esquemas/<asignatura>-t<N>.md`:
 ---
 asignatura: <código>
 tema: T<N>
-num: "<N>"
+num: '<N>'
 bloque: <opcional>
 titulo: <título del tema>
 clave: La <b>idea fuerza</b> del tema en 1–2 frases.
@@ -56,6 +61,7 @@ orden: <N>
 ```
 
 Pautas de calidad del esquema:
+
 - Sintetiza y jerarquiza: agrupa por ideas, no transcribas párrafos enteros.
 - Resalta lo evaluable con `<b>` y los términos técnicos/comandos con `<code>`.
 - Una `clave` por tema que capture "lo que no se puede olvidar".

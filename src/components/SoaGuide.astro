@@ -36,11 +36,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
   <nav class="soa-nav" aria-label="Capítulos de la guía">
     {
       chapters.map((c, i) => (
-        <button
-          class={`soa-chip${i === 0 ? ' active' : ''}`}
-          type="button"
-          data-ch={i}
-        >
+        <button class={`soa-chip${i === 0 ? ' active' : ''}`} type="button" data-ch={i}>
           <span class="soa-chip-num">{c.num}</span>
           <span class="soa-chip-title">{c.titulo}</span>
           {c.badge && <span class="soa-chip-badge">{c.badge}</span>}
@@ -65,27 +61,27 @@ const quizIdx = chapters.length; // índice de la página del quiz
       <div class="ch-label">Test de Examen</div>
       <h1>80 preguntas tipo test</h1>
       <p class="ch-desc">
-        Preguntas de exámenes anteriores. La etiqueta «× n en exámenes» indica
-        cuántas veces apareció cada una. Marca y pulsa «Corregir».
+        Preguntas de exámenes anteriores. La etiqueta «× n en exámenes» indica cuántas veces
+        apareció cada una. Marca y pulsa «Corregir».
       </p>
     </div>
     <div class="content-area">
-      {quiz.map((q, i) => (
-        <TestQuestion
-          id={q.id}
-          type={q.type}
-          question={q.question}
-          options={q.options}
-          correct={q.correct}
-          apariciones={q.apariciones}
-          num={i + 1}
-        />
-      ))}
+      {
+        quiz.map((q, i) => (
+          <TestQuestion
+            id={q.id}
+            type={q.type}
+            question={q.question}
+            options={q.options}
+            correct={q.correct}
+            apariciones={q.apariciones}
+            num={i + 1}
+          />
+        ))
+      }
       <div class="soa-quiz-foot">
-        <button class="soa-grade" type="button" data-grade-trigger>
-          Corregir test
-        </button>
-        <span class="soa-score" role="status" aria-live="polite" />
+        <button class="soa-grade" type="button" data-grade-trigger> Corregir test </button>
+        <span class="soa-score" role="status" aria-live="polite"></span>
       </div>
     </div>
   </div>
@@ -131,10 +127,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
   });
 </script>
 
-<style
-  is:global
-  define:vars={{}}
->
+<style is:global define:vars={{}}>
   /* === Fuentes (fallback de sistema si no cargan) === */
 
   /* === Tokens SOA (scopeados) === */
@@ -192,7 +185,9 @@ const quizIdx = chapters.length; // índice de la página del quiz
     border: 1px solid var(--site-line);
     border-radius: 999px;
     padding: 0.4rem 0.85rem;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
   }
   .soa-chip:hover {
     color: var(--site-ink);
@@ -500,20 +495,49 @@ const quizIdx = chapters.length; // índice de la página del quiz
     color: var(--mcg-gold);
     margin-bottom: 8px;
   }
-  .soa-guide .code-block .kw { color: #bb86fc; }
-  .soa-guide .code-block .fn { color: #82aaff; }
-  .soa-guide .code-block .str { color: #c3e88d; }
-  .soa-guide .code-block .cm { color: #676e95; font-style: italic; }
-  .soa-guide .code-block .pp { color: #f78c6c; }
-  .soa-guide .code-block .num { color: #f78c6c; }
-  .soa-guide .code-block .ty { color: #ffcb6b; }
-  .soa-guide .code-block .ps-cmd { color: #82aaff; }
-  .soa-guide .code-block .ps-param { color: #89ddff; }
-  .soa-guide .code-block .ps-var { color: #f07178; }
-  .soa-guide .code-block .ps-str { color: #c3e88d; }
-  .soa-guide .code-block .bash-cmd { color: #82aaff; }
-  .soa-guide .code-block .bash-var { color: #f07178; }
-  .soa-guide .code-block .bash-str { color: #c3e88d; }
+  .soa-guide .code-block .kw {
+    color: #bb86fc;
+  }
+  .soa-guide .code-block .fn {
+    color: #82aaff;
+  }
+  .soa-guide .code-block .str {
+    color: #c3e88d;
+  }
+  .soa-guide .code-block .cm {
+    color: #676e95;
+    font-style: italic;
+  }
+  .soa-guide .code-block .pp {
+    color: #f78c6c;
+  }
+  .soa-guide .code-block .num {
+    color: #f78c6c;
+  }
+  .soa-guide .code-block .ty {
+    color: #ffcb6b;
+  }
+  .soa-guide .code-block .ps-cmd {
+    color: #82aaff;
+  }
+  .soa-guide .code-block .ps-param {
+    color: #89ddff;
+  }
+  .soa-guide .code-block .ps-var {
+    color: #f07178;
+  }
+  .soa-guide .code-block .ps-str {
+    color: #c3e88d;
+  }
+  .soa-guide .code-block .bash-cmd {
+    color: #82aaff;
+  }
+  .soa-guide .code-block .bash-var {
+    color: #f07178;
+  }
+  .soa-guide .code-block .bash-str {
+    color: #c3e88d;
+  }
 
   /* Ejercicio + solución acordeón */
   .soa-guide .ejercicio {

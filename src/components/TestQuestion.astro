@@ -20,28 +20,18 @@ interface Props {
   apariciones?: number;
 }
 
-const { id, type, question, options, correct, explicacion, tema, num, apariciones } =
-  Astro.props;
+const { id, type, question, options, correct, explicacion, tema, num, apariciones } = Astro.props;
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const inputType = type === 'single' ? 'radio' : 'checkbox';
 ---
 
-<fieldset
-  class="tq"
-  data-tq
-  data-correct={JSON.stringify(correct)}
-  data-type={type}
->
+<fieldset class="tq" data-tq data-correct={JSON.stringify(correct)} data-type={type}>
   <legend class="tq-head">
     {num != null && <span class="tq-num">{num}</span>}
     <span class="tq-q">
       <span>{question}</span>
-      {
-        type === 'multi' && (
-          <span class="tq-multi">selección múltiple</span>
-        )
-      }
+      {type === 'multi' && <span class="tq-multi">selección múltiple</span>}
       {
         apariciones != null && apariciones > 1 && (
           <span class="tq-aparic" title="Veces que apareció en exámenes anteriores">
@@ -142,7 +132,9 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     border-radius: 10px;
     cursor: pointer;
     background: var(--site-surface-2);
-    transition: border-color 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
   }
   .tq-opt:hover {
     border-color: var(--site-accent);
@@ -209,15 +201,9 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     let score = 0;
     for (const q of qs) {
       const correct: number[] = JSON.parse(q.dataset.correct || '[]');
-      const inputs = Array.from(
-        q.querySelectorAll<HTMLInputElement>('input'),
-      );
-      const picked = inputs
-        .filter((i) => i.checked)
-        .map((i) => Number(i.value));
-      const ok =
-        picked.length === correct.length &&
-        picked.every((p) => correct.includes(p));
+      const inputs = Array.from(q.querySelectorAll<HTMLInputElement>('input'));
+      const picked = inputs.filter((i) => i.checked).map((i) => Number(i.value));
+      const ok = picked.length === correct.length && picked.every((p) => correct.includes(p));
       if (ok) score++;
       q.classList.add('graded');
       inputs.forEach((input) => {
@@ -238,8 +224,6 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     const target = e.target as HTMLElement;
     if (!target.closest('[data-grade-trigger]')) return;
     const result = gradeAll();
-    document.dispatchEvent(
-      new CustomEvent('tq:graded', { detail: result }),
-    );
+    document.dispatchEvent(new CustomEvent('tq:graded', { detail: result }));
   });
 </script>

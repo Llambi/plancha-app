@@ -64,11 +64,11 @@ Añadir material = crear **un fichero** en la colección adecuada; el inicio y l
 rutas se generan solos. Para una asignatura nueva, basta añadir su entrada en
 `src/data/asignaturas.ts`.
 
-| Tipo | Colección | Formato |
-|------|-----------|---------|
-| Test (práctica) | `src/content/test/<asig>.yaml` | array de `{id, asignatura, type: single\|multi, question, options, correct: [índices], …}` |
-| Desarrollo (práctica) | `src/content/desarrollo/<asig>-q<N>.md` | frontmatter (`enunciado`, `kind`, …) + cuerpo = respuesta modelo |
-| Esquema (teoría) | `src/content/esquemas/<asig>-t<N>.md` | frontmatter (`titulo`, `clave`, …) + cuerpo = listas Markdown anidadas |
+| Tipo                  | Colección                               | Formato                                                                                    |
+| --------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Test (práctica)       | `src/content/test/<asig>.yaml`          | array de `{id, asignatura, type: single\|multi, question, options, correct: [índices], …}` |
+| Desarrollo (práctica) | `src/content/desarrollo/<asig>-q<N>.md` | frontmatter (`enunciado`, `kind`, …) + cuerpo = respuesta modelo                           |
+| Esquema (teoría)      | `src/content/esquemas/<asig>-t<N>.md`   | frontmatter (`titulo`, `clave`, …) + cuerpo = listas Markdown anidadas                     |
 
 > **La regla:** las preguntas, respuestas y textos de examen **no se modifican
 > nunca** — se transcriben verbatim. Los bancos de test se muestran como texto
@@ -77,7 +77,7 @@ rutas se generan solos. Para una asignatura nueva, basta añadir su entrada en
 
 ## Añadir contenido con las skills
 
-El proyecto incluye dos *skills* de Claude Code (en `.claude/skills/`) que generan
+El proyecto incluye dos _skills_ de Claude Code (en `.claude/skills/`) que generan
 los ficheros con el formato correcto y haciendo las preguntas necesarias. Se
 invocan desde Claude Code aportando el material.
 

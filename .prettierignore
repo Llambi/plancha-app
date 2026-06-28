@@ -1,0 +1,10 @@
+# No formatear: salidas y dependencias
+dist/
+node_modules/
+.astro/
+playwright-report/
+test-results/
+package-lock.json
+
+# Contenido de examen y temarios: VERBATIM, nunca reformatear (ver .claude/rules)
+src/content/
