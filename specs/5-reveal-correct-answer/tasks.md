@@ -9,14 +9,14 @@
 
 ## Tareas
 
-- [ ] **T1 — E2E rojo: revelar/ocultar por pregunta**
+- [x] **T1 — E2E rojo: revelar/ocultar por pregunta**
   - Test (rojo): `tests/e2e/practica.spec.ts` (nuevo). Navega a `/practica/si`; pulsa
     «Ver respuesta» en la primera pregunta; afirma que la opción correcta tiene
     `.revealed` y la `.tq-exp` es visible; espera >5 s y afirma que `.revealed`
     desaparece y la `.tq-exp` queda oculta. Falla porque aún no existe el botón.
   - Commit: `test(practica): cover per-question reveal button (refs #5)`
 
-- [ ] **T2 — Botón + lógica de revelado con auto-ocultado a 5 s**
+- [x] **T2 — Botón + lógica de revelado con auto-ocultado a 5 s**
   - Implementación (verde): en `TestQuestion.astro` añade el `<button data-reveal-trigger>`
     en `.tq-actions`, los estilos scoped (`.tq-reveal`, `.tq-opt.revealed`,
     `.tq-exp.revealed`) y el handler delegado con `WeakMap` que resalta correcta(s) +
@@ -24,7 +24,7 @@
     (`clearTimeout`), sincronizando `aria-pressed`. Hace pasar T1 (criterios 1, 2, 3).
   - Commit: `feat(practica): add per-question reveal button auto-hiding after 5s (refs #5)`
 
-- [ ] **T3 — Ocultar el botón tras corregir en bloque (criterio 4)**
+- [x] **T3 — Ocultar el botón tras corregir en bloque (criterio 4)**
   - Test (rojo): amplía `practica.spec.ts` — tras pulsar «Corregir test», el
     `[data-reveal-trigger]` no está visible.
   - Implementación (verde): regla CSS `.tq.graded .tq-reveal { display: none; }` y
