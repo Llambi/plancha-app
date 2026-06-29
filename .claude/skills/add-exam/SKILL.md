@@ -25,7 +25,10 @@ integridad estructural, doble lectura):
 Reúne lo que falte (pregunta solo lo que no esté claro en el material aportado):
 
 - **Asignatura**: ¿código existente (`dar, soa, si, cl, mongodb`) o nueva? Si es
-  nueva, pide nombre, sigla y color de acento → añádela a `src/data/asignaturas.ts`.
+  nueva, **da el alta con la skill `add-asignatura`** (actualiza
+  `src/data/asignaturas.ts` **y** el enum Zod `asignatura` de
+  `src/content/config.ts`) antes de escribir contenido; si no, el build falla al
+  validar.
 - **Tipo de cada pregunta**:
   - **Test**: ¿una sola correcta (`single`) o varias (`multi`)?
   - **Desarrollo**: pregunta abierta con respuesta modelo.
@@ -88,6 +91,7 @@ orden: <número>
 
 ## 4. No olvides
 
-- Si es una asignatura nueva, su tarjeta en el home y su ruta `practica/<código>`
-  se generan solas desde las colecciones (no toques páginas).
+- Si es una asignatura nueva, dala de alta con `add-asignatura` (registro +
+  enum Zod); su tarjeta en el home y su ruta `practica/<código>` se generan solas
+  desde las colecciones (no toques páginas).
 - No inventes respuestas correctas ni justificaciones: si no vienen, pídelas.
