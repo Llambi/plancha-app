@@ -28,7 +28,9 @@ Lo renderiza el componente `EsquemaTree` (cabecera + idea fuerza + árbol).
 ## 1. Preguntas que debes hacer al usuario
 
 - **Asignatura**: ¿código existente (`dar, soa, si, cl, mongodb`) o nueva? Si es
-  nueva, pide nombre, sigla y acento → `src/data/asignaturas.ts`.
+  nueva, **dala de alta con la skill `add-asignatura`** (actualiza
+  `src/data/asignaturas.ts` **y** el enum Zod `asignatura` de
+  `src/content/config.ts`) antes de escribir esquemas.
 - **Mapa de temas**: ¿cómo se numeran (T1, T2…), hay bloques, qué `titulo` lleva
   cada uno? Si el documento ya trae estructura de temas, propón el mapeo y
   confírmalo.
@@ -83,4 +85,5 @@ Pautas de calidad del esquema:
 
 - La tarjeta del home y la ruta `esquemas/<código>` se generan solas desde la
   colección (no toques páginas).
-- Si la asignatura es nueva, añádela a `src/data/asignaturas.ts`.
+- Si la asignatura es nueva, dala de alta con `add-asignatura` (registro en
+  `src/data/asignaturas.ts` + enum Zod en `src/content/config.ts`).

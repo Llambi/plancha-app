@@ -40,8 +40,7 @@ docker compose down
   a11y). All pages extend it. Per-subject metadata (name, accent) in
   `src/data/asignaturas.ts`.
 - **Content Collections** (`src/content/config.ts`, Zod-validated):
-  - `esquemas/` — Markdown; frontmatter (`asignatura, tema, num, titulo, clave,
-orden`) + body = nested Markdown lists (the tree). Rendered by `EsquemaTree`.
+  - `esquemas/` — Markdown; frontmatter (`asignatura, tema, num, titulo, clave, orden`) + body = nested Markdown lists (the tree). Rendered by `EsquemaTree`.
   - `test/` — one YAML file per subject; array of questions
     (`type: single|multi`, `options`, `correct` as 0-based index array,
     `explicacion?`, `apariciones?`). Rendered by `TestQuestion`.
@@ -69,6 +68,46 @@ orden`) + body = nested Markdown lists (the tree). Rendered by `EsquemaTree`.
   toca el contenido. Las opciones se crean por JS, así que sus estilos van en
   bloques `is:global` namespaced (Astro no scopea elementos creados en runtime).
 
+### Patterns & gotchas
+
+- **Astro scopes `<style>`.** Scoped styles do **not** apply to elements created at
+  runtime via JS (`createElement`/`innerHTML`): they don't get the scope attribute.
+  Put their CSS in a `<style is:global>` block **namespaced** under a root class
+  (e.g. `.searchbox .sb-opt { … }`). The search dropdown is the reference.
+- **Deep-link anchors.** Derive anchors from fields the content already has; give
+  the target an `id` **and** `scroll-margin-top` so the sticky topbar doesn't cover
+  it. JS-paginated views (e.g. `SoaGuide`) must read `location.hash` on load and
+  **activate** the right section before scrolling (sections are `display:none`).
+- **Dynamic data on a static site.** Generate a JSON endpoint at build
+  (`src/pages/*.json.ts` with `export const GET`) and **lazy-fetch** it client-side.
+  The search index (`search-index.json.ts` + `src/lib/search.ts`) is the pattern.
+- **Internal links** always go through `BASE`/`url()` from `src/data/site.ts`; never
+  hardcode absolute `/...` paths (they break under the `/plancha-app` subpath).
+
+### Testing
+
+- **Unit (Vitest)** in `tests/unit/` — pure logic (`src/lib`, `src/data`, schemas).
+  `vitest.config.ts` uses `getViteConfig` so tests can import `astro:content`.
+- **E2E (Playwright)** in `tests/e2e/` — runs against `build && preview`. First run
+  on a machine needs `npx playwright install chromium`.
+- **UI changes**: verify with the `preview_*` tools (snapshot/click/screenshot) and
+  share the proof; don't ask the user to check manually.
+
+## Conventions
+
+Normativa completa en
+[`.claude/rules/convenciones-codigo-y-git.md`](.claude/rules/convenciones-codigo-y-git.md).
+En resumen:
+
+- **Idioma del código**: código nuevo y comentarios **en inglés**, **salvo el
+  vocabulario de dominio** (`asignatura, esquema, desarrollo, practica, guia, tema,
+clave, num, orden, oficial, apariciones`…), que se mantiene en **español** porque
+  define rutas, claves YAML y el esquema Zod. No se renombra lo existente.
+- **Contenido y UI**: en **español** (no se traduce texto visible).
+- **Git en inglés**: ramas ASCII kebab sin acentos (`<nº>-<english-slug>`),
+  mensajes de commit (Conventional Commits) y **PR (título + cuerpo)** en inglés.
+  Las issues pueden ir en español.
+
 ## Workflow (Spec-Driven Development)
 
 La forma de trabajar en este repo es **Spec-Driven Development (SDD)**: la
@@ -78,15 +117,20 @@ paradas obligatorias** para el usuario. Punto de entrada: el comando **`/workflo
 **id de issue** de GitHub.
 
 **Constitución** (de obligado cumplimiento en todas las fases): este `CLAUDE.md` +
-[`.claude/rules/contenido-examenes-y-temarios.md`](.claude/rules/contenido-examenes-y-temarios.md).
+[`.claude/rules/contenido-examenes-y-temarios.md`](.claude/rules/contenido-examenes-y-temarios.md)
+(contenido verbatim) +
+[`.claude/rules/convenciones-codigo-y-git.md`](.claude/rules/convenciones-codigo-y-git.md)
+(idioma, naming y Git).
 
 Fases (cada una tiene su comando de fase para reanudarla):
 
 1. **Specify** (`/spec`) — analiza el requerimiento/issue; si es texto, crea la
    issue (`gh issue create`); escribe `specs/<id>-<slug>/spec.md` (criterios de
    aceptación, alcance, no-objetivos).
-2. **Branch** (`/spec`) — actualiza `main` y crea la rama de la issue con
-   `gh issue develop` (convención nativa de GitHub `<nº>-<kebab>`, enlazada a la issue).
+2. **Branch** (`/spec`) — comprueba que `main` ya trae el tooling, actualízala y
+   crea la rama enlazada con `gh issue develop <id> --base main --name
+<id>-<english-slug> --checkout`. El **slug va en inglés ASCII** aunque el título
+   de la issue esté en español (ver `convenciones-codigo-y-git.md`).
 3. **Plan** (`/plan`) — escribe `plan.md` (CÓMO) y `tasks.md` (tareas TDD = commits
    atómicos). **⏸ GATE A**: espera aprobación del usuario; itera hasta conformidad.
 4. **Implement** (`/implement`) — TDD por tarea (test rojo → mínimo → refactor), un
@@ -94,8 +138,11 @@ Fases (cada una tiene su comando de fase para reanudarla):
    skills `add-exam`/`add-esquema`.
 5. **Verify** (`/deliver`) — `npm run check` + `npm test` + `npm run build` +
    `npm run test:e2e` + checklist de criterios. **⏸ GATE B**: espera confirmación.
-6. **Deliver** (`/deliver`) — `gh pr create --base main` con `Closes #id`; la rama
-   se elimina al mergear (`deleteBranchOnMerge` del repo).
+6. **Deliver** (`/deliver`) — `gh pr create --base main` (título y cuerpo **en
+   inglés**) con `Closes #id`; la rama se elimina al mergear
+   (`deleteBranchOnMerge` del repo). `main` tiene un **ruleset que exige 1 review**:
+   como admin/owner se mergea saltándolo con `gh pr merge <id> --admin --merge`
+   (solo se permite el método _merge_).
 
 Artefactos SDD: `specs/<id>-<slug>/{spec,plan,tasks}.md` (ver `specs/README.md`),
 versionados en la rama. Plantillas en `.claude/templates/`. Subagente de apoyo:
@@ -103,8 +150,11 @@ versionados en la rama. Plantillas en `.claude/templates/`. Subagente de apoyo:
 
 ## Adding content (use the skills)
 
-Two skills drive content authoring (and are the documented way to add material):
+Three skills drive content authoring (and are the documented way to add material):
 
+- **`add-asignatura`** — register a new subject: updates `src/data/asignaturas.ts`
+  **and** the `asignatura` Zod enum in `src/content/config.ts` (content for a code
+  missing from the enum fails the build). Run it before adding content for a new code.
 - **`add-exam`** — add a test bank or desarrollo question (práctica). Transcribes
   **verbatim**; never modifies questions or answers.
 - **`add-esquema`** — turn subject documents into study outlines (esquemas).
@@ -114,7 +164,8 @@ By hand, the conventions are:
 - **Test bank**: `src/content/test/<asignatura>.yaml` (array of questions).
 - **Esquema**: `src/content/esquemas/<asignatura>-tN.md`.
 - **Desarrollo**: `src/content/desarrollo/<asignatura>-q<N>.md`.
-- New subjects: add an entry to `src/data/asignaturas.ts`. Home and routes are
+- New subjects: use the `add-asignatura` skill (entry in `src/data/asignaturas.ts`
+  **+** the `asignatura` Zod enum in `src/content/config.ts`). Home and routes are
   generated from the collections — no page edits needed.
 
 > The **rule**: questions, answers and exam texts are never modified — content is

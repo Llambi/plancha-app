@@ -20,8 +20,9 @@ Requiere `tasks.md` aprobado (Gate A superado) y estar en la rama de la issue.
      respetan `.claude/rules/contenido-examenes-y-temarios.md`. Su "test" es que
      `astro check` + `astro build` pasen (Zod valida el contenido).
 3. **Refactor** — limpia sin cambiar comportamiento; los tests siguen en verde.
-4. **Commit atómico** — un commit por tarea, Conventional Commits:
-   `git commit -m "<tipo>(<scope>): <descripción> (refs #<id>)"`
+4. **Commit atómico** — un commit por tarea, Conventional Commits con la
+   **descripción en inglés**:
+   `git commit -m "<type>(<scope>): <english description> (refs #<id>)"`
    Marca la tarea como `[x]` en `tasks.md`.
 
 ## Reglas
@@ -30,5 +31,9 @@ Requiere `tasks.md` aprobado (Gate A superado) y estar en la rama de la issue.
 - No saltes el test rojo: el test se escribe **antes** que la implementación.
 - Nunca modifiques enunciados/respuestas de contenido (constitución).
 - Mantén `main` intacta; trabaja solo en la rama de la issue.
+- **Convenciones** (`.claude/rules/convenciones-codigo-y-git.md`): código y
+  comentarios nuevos **en inglés**, salvo el vocabulario de dominio en español
+  (`asignatura, esquema, practica, guia, tema, clave`…); no renombres lo existente.
+  Para añadir asignatura nueva, usa la skill `add-asignatura` (registro + enum Zod).
 
 Al terminar todas las tareas, continúa con `/deliver`.

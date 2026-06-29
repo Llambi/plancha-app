@@ -31,17 +31,30 @@ Entrada: `$ARGUMENTS` (texto de requerimiento **o** id de issue).
 ## 3. Actualizar main y crear la rama
 
 ```bash
+# 0) Árbol LIMPIO antes de cambiar de rama (si no, `git switch main` se aborta y
+#    acabarías ramificando desde donde estabas, no desde main).
+git status --short            # debe estar vacío
+# Si hay cambios sin commitear que no son de esta tarea: git stash push -u
 git fetch origin
 git switch main
 git pull --ff-only origin main
-gh issue develop <id> --base main --checkout
+# slug EN INGLÉS, ASCII, sin acentos (aunque la issue esté en español)
+gh issue develop <id> --base main --name <id>-<english-slug> --checkout
+# 1) Verifica que la rama nace de main:
+git merge-base --is-ancestor main HEAD && echo "OK: rama parte de main"
 ```
 
-- `gh issue develop` crea una rama con la **convención nativa de GitHub**
-  (`<nº>-<título-kebab>`) ya **enlazada** a la issue. Si necesitas forzar el nombre,
-  usa `--name <nº>-<slug>`.
-- Commitea la spec en la rama:
-  `git add specs/<id>-<slug>/ && git commit -m "docs(spec): especifica #<id> (refs #<id>)"`
+- **Árbol limpio primero.** Un `git switch main` con cambios sin commitear **se
+  aborta**, y `git switch -c` ramificaría desde la rama actual en vez de `main`.
+  Deja el árbol limpio (`git status --short` vacío) o `git stash push -u` antes.
+- **Comprueba antes** que `main` ya trae el tooling que vas a necesitar (tests,
+  lint, comandos SDD). Si falta porque otra rama no se ha mergeado, resuélvelo antes
+  de ramear (no ramees desde un `main` sin infraestructura).
+- **Usa siempre `--name <id>-<english-slug>`**: sin él, `gh issue develop` deriva el
+  nombre del título de la issue y arrastra acentos/`ñ`/longitud. El slug va en
+  **inglés ASCII kebab** (ver `.claude/rules/convenciones-codigo-y-git.md`).
+- Commitea la spec en la rama (mensaje en inglés):
+  `git add specs/<id>-<slug>/ && git commit -m "docs(spec): specify #<id> (refs #<id>)"`
 
 ## Salida
 
