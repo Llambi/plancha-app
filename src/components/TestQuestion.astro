@@ -54,6 +54,12 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     }
   </div>
 
+  <div class="tq-actions">
+    <button class="tq-reveal" type="button" data-reveal-trigger aria-pressed="false">
+      Ver respuesta
+    </button>
+  </div>
+
   {
     explicacion && (
       <div class="tq-exp" hidden>
@@ -181,6 +187,40 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     color: var(--site-bad);
   }
 
+  /* Temporary per-question reveal (the «Ver respuesta» button) */
+  .tq-actions {
+    margin-top: 0.85rem;
+  }
+  .tq-reveal {
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--site-accent);
+    background: none;
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .tq-reveal:hover {
+    border-color: var(--site-accent);
+    background: var(--site-surface-2);
+  }
+  /* Once graded in bulk the answer is already visible, so the button is redundant. */
+  .tq.graded .tq-reveal {
+    display: none;
+  }
+  .tq-opt.revealed {
+    border-color: var(--site-ok);
+    background: var(--site-ok-soft);
+  }
+  .tq-opt.revealed .tq-letter {
+    color: var(--site-ok);
+  }
+
   .tq-exp {
     margin-top: 0.85rem;
     padding: 0.7rem 0.85rem;
@@ -226,8 +266,48 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     return { score, total: qs.length };
   }
 
+  // Temporary per-question reveal (the «Ver respuesta» button). Highlights the
+  // correct option(s) and shows the explanation; auto-hides after 5 s. A new click
+  // restarts the countdown (timers don't stack).
+  const REVEAL_MS = 5000;
+  const revealTimers = new WeakMap<HTMLElement, number>();
+
+  function hideReveal(q: HTMLElement): void {
+    q.querySelectorAll('.tq-opt.revealed').forEach((el) => el.classList.remove('revealed'));
+    const exp = q.querySelector('.tq-exp');
+    // If it was graded in bulk meanwhile, keep the explanation visible (don't hide it).
+    if (exp && !q.classList.contains('graded')) exp.setAttribute('hidden', '');
+    q.querySelector('[data-reveal-trigger]')?.setAttribute('aria-pressed', 'false');
+  }
+
+  function revealAnswer(q: HTMLElement): void {
+    if (q.classList.contains('graded')) return; // already shown permanently
+    const correct: number[] = JSON.parse(q.dataset.correct || '[]');
+    q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+      if (correct.includes(Number(input.value)))
+        input.closest('.tq-opt')?.classList.add('revealed');
+    });
+    q.querySelector('.tq-exp')?.removeAttribute('hidden');
+    q.querySelector('[data-reveal-trigger]')?.setAttribute('aria-pressed', 'true');
+    const prev = revealTimers.get(q);
+    if (prev) clearTimeout(prev);
+    revealTimers.set(
+      q,
+      window.setTimeout(() => {
+        hideReveal(q);
+        revealTimers.delete(q);
+      }, REVEAL_MS),
+    );
+  }
+
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
+    const revealBtn = target.closest('[data-reveal-trigger]');
+    if (revealBtn) {
+      const q = revealBtn.closest<HTMLElement>('[data-tq]');
+      if (q) revealAnswer(q);
+      return;
+    }
     if (!target.closest('[data-grade-trigger]')) return;
     const result = gradeAll();
     document.dispatchEvent(new CustomEvent('tq:graded', { detail: result }));
