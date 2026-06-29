@@ -26,7 +26,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const inputType = type === 'single' ? 'radio' : 'checkbox';
 ---
 
-<fieldset class="tq" data-tq data-correct={JSON.stringify(correct)} data-type={type}>
+<fieldset id={`q-${id}`} class="tq" data-tq data-correct={JSON.stringify(correct)} data-type={type}>
   <legend class="tq-head">
     {num != null && <span class="tq-num">{num}</span>}
     <span class="tq-q">
@@ -72,6 +72,12 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     box-shadow: var(--site-shadow);
     padding: 1.1rem 1.2rem 1.2rem;
     margin: 0 0 1rem;
+    scroll-margin-top: 72px; /* deep-link: que la topbar sticky no tape la pregunta */
+  }
+  /* Resalta brevemente la pregunta al llegar por deep-link (#q-…). */
+  .tq:target {
+    border-color: var(--site-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--site-accent) 30%, transparent);
   }
   .tq-head {
     display: flex;

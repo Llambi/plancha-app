@@ -16,7 +16,7 @@ interface Props {
 const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
 ---
 
-<article class="dq" data-dq>
+<article id={`d-${id}`} class="dq" data-dq>
   <header class="dq-head">
     {num != null && <span class="dq-num">{num}</span>}
     <div class="dq-headtext">
@@ -53,6 +53,11 @@ const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
     box-shadow: var(--site-shadow);
     padding: 1.1rem 1.2rem 1.2rem;
     margin: 0 0 1rem;
+    scroll-margin-top: 72px; /* deep-link: que la topbar sticky no tape la pregunta */
+  }
+  .dq:target {
+    border-color: var(--site-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--site-accent) 30%, transparent);
   }
   .dq-head {
     display: flex;
