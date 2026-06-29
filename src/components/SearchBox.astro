@@ -211,8 +211,8 @@ const buscarUrl = `${BASE}/buscar`;
     color: var(--site-ink);
   }
 
-  /* ===== Móvil: colapsa en icono que despliega el campo ===== */
-  @media (max-width: 640px) {
+  /* ===== Móvil/tablet: colapsa en icono que despliega el campo ===== */
+  @media (max-width: 820px) {
     .sb-toggle {
       display: inline-flex;
     }
@@ -371,6 +371,13 @@ const buscarUrl = `${BASE}/buscar`;
       input.removeAttribute('aria-activedescendant');
       active = -1;
     }
+    // En móvil/tablet, recoge el campo desplegado y vuelve a dejar solo la lupa.
+    const collapseMobile = () => {
+      if (root.classList.contains('sb-open')) {
+        root.classList.remove('sb-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    };
 
     function render() {
       list.innerHTML = '';
@@ -462,6 +469,7 @@ const buscarUrl = `${BASE}/buscar`;
         else gotoAll();
       } else if (e.key === 'Escape') {
         close();
+        collapseMobile();
       }
     });
 
@@ -476,9 +484,22 @@ const buscarUrl = `${BASE}/buscar`;
       gotoAll();
     });
 
-    // Cerrar al hacer click fuera.
+    // Cerrar (y recoger en móvil) al hacer click/interactuar fuera.
     document.addEventListener('click', (e) => {
-      if (!root.contains(e.target as Node)) close();
+      if (!root.contains(e.target as Node)) {
+        close();
+        collapseMobile();
+      }
+    });
+
+    // Al perder el foco (tab fuera, tocar otra cosa): recoge el campo en móvil.
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        if (!root.contains(document.activeElement)) {
+          close();
+          collapseMobile();
+        }
+      }, 120);
     });
 
     // Móvil: desplegar/ocultar el campo con la lupa.
