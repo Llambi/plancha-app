@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
 
-// E2E del botón de revelar por pregunta en la práctica de test (issue #5),
-// sobre el sitio construido y servido bajo la subruta BASE (/plancha-app).
-// La primera pregunta de `si` (q1) es single, con `correct:[0]` y `explicacion`.
+// E2E for the per-question reveal button on the test practice (issue #5), against
+// the built site served under the BASE subpath (/plancha-app). The first `si`
+// question (q1) is single, with `correct:[0]` and an `explicacion`.
 
 test('revelar muestra la opción correcta + explicación y se oculta a los 5 s', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
@@ -13,16 +13,16 @@ test('revelar muestra la opción correcta + explicación y se oculta a los 5 s',
   const correctOpt = question.locator('.tq-opt').first(); // q1 → correct index 0
   const explanation = question.locator('.tq-exp');
 
-  // Estado inicial: ni resaltado ni explicación visibles.
+  // Initial state: neither highlight nor explanation visible.
   await expect(correctOpt).not.toHaveClass(/revealed/);
   await expect(explanation).toBeHidden();
 
-  // Al pulsar: opción correcta resaltada + explicación visible (criterio 1).
+  // On click: correct option highlighted + explanation visible (criterion 1).
   await revealBtn.click();
   await expect(correctOpt).toHaveClass(/revealed/);
   await expect(explanation).toBeVisible();
 
-  // Tras 5 s se oculta solo (criterio 2).
+  // After 5 s it hides on its own (criterion 2).
   await expect(correctOpt).not.toHaveClass(/revealed/, { timeout: 7000 });
   await expect(explanation).toBeHidden();
 });
@@ -35,6 +35,6 @@ test('tras corregir en bloque, el botón de revelar por pregunta desaparece', as
 
   await page.locator('[data-grade-trigger]').click();
 
-  // Ya corregido: la solución es permanente, el botón de revelar sobra (criterio 4).
+  // Once graded the answer is permanent, so the reveal button is redundant (criterion 4).
   await expect(revealBtn).toBeHidden();
 });

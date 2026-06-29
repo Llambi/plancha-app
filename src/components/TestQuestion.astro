@@ -187,7 +187,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     color: var(--site-bad);
   }
 
-  /* Revelado temporal por pregunta (botón «Ver respuesta») */
+  /* Temporary per-question reveal (the «Ver respuesta» button) */
   .tq-actions {
     margin-top: 0.85rem;
   }
@@ -209,7 +209,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     border-color: var(--site-accent);
     background: var(--site-surface-2);
   }
-  /* Tras corregir en bloque, la solución ya es visible: el botón sobra. */
+  /* Once graded in bulk the answer is already visible, so the button is redundant. */
   .tq.graded .tq-reveal {
     display: none;
   }
@@ -266,22 +266,22 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     return { score, total: qs.length };
   }
 
-  // Revelado temporal de una sola pregunta (botón «Ver respuesta»). Resalta la(s)
-  // opción(es) correcta(s) y muestra la explicación; se oculta solo a los 5 s. Un
-  // nuevo clic reinicia la cuenta (no acumula temporizadores).
+  // Temporary per-question reveal (the «Ver respuesta» button). Highlights the
+  // correct option(s) and shows the explanation; auto-hides after 5 s. A new click
+  // restarts the countdown (timers don't stack).
   const REVEAL_MS = 5000;
   const revealTimers = new WeakMap<HTMLElement, number>();
 
   function hideReveal(q: HTMLElement): void {
     q.querySelectorAll('.tq-opt.revealed').forEach((el) => el.classList.remove('revealed'));
     const exp = q.querySelector('.tq-exp');
-    // Si entretanto se corrigió en bloque, la explicación queda visible (no la ocultamos).
+    // If it was graded in bulk meanwhile, keep the explanation visible (don't hide it).
     if (exp && !q.classList.contains('graded')) exp.setAttribute('hidden', '');
     q.querySelector('[data-reveal-trigger]')?.setAttribute('aria-pressed', 'false');
   }
 
   function revealAnswer(q: HTMLElement): void {
-    if (q.classList.contains('graded')) return; // ya visible de forma permanente
+    if (q.classList.contains('graded')) return; // already shown permanently
     const correct: number[] = JSON.parse(q.dataset.correct || '[]');
     q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
       if (correct.includes(Number(input.value)))
