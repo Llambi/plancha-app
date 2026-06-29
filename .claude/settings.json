@@ -3,8 +3,30 @@
     "allow": [
       "Bash(docker compose up:*)",
       "Bash(docker compose down)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
       "Bash(npm run build)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(npm run check)",
+      "Bash(npm test)",
+      "Bash(npm run test:e2e)",
+      "Bash(npm run test:all)",
+      "Bash(npx astro check)",
+      "Bash(npx vitest run:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git switch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git branch:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue develop:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh api:*)"
     ]
   }
 }
