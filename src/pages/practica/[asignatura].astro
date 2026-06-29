@@ -62,7 +62,9 @@ const devsRendered = await Promise.all(
           <span class="block-idx">I</span> Preguntas tipo test
         </h2>
         <p class="block-desc">
-          Marca una opción (o varias en las de selección múltiple) y pulsa «Corregir».
+          Marca una opción (o varias en las de selección múltiple) y pulsa «Corregir». ¿Solo quieres
+          comprobar una? Pulsa «Ver respuesta» en esa pregunta: la solución se muestra unos segundos
+          y se oculta sola.
         </p>
         {tests.map((q, i) => (
           <TestQuestion
