@@ -73,6 +73,9 @@ const devsRendered = await Promise.all(
             <label class="stats-toggle">
               <input type="checkbox" data-failed-toggle /> Solo mis fallos
             </label>
+            <button class="btn-reset" type="button" data-stats-reset>
+              Reiniciar estadísticas
+            </button>
           </div>
         </div>
 
@@ -145,6 +148,13 @@ const devsRendered = await Promise.all(
       return null;
     }
   }
+  function safeRemove(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* no-op */
+    }
+  }
 
   const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -188,6 +198,14 @@ const devsRendered = await Promise.all(
   }
 
   failedToggle?.addEventListener('change', applyFailedFilter);
+
+  // Reset stats only (independent of the answers progress reset of #8).
+  document.querySelector('[data-stats-reset]')?.addEventListener('click', () => {
+    if (asignatura) safeRemove(statsKeyFor(asignatura));
+    if (failedToggle) failedToggle.checked = false;
+    applyFailedFilter();
+    renderStats();
+  });
 
   document.addEventListener('practica:stats-updated', renderStats);
   renderStats();

@@ -41,3 +41,16 @@ test('«solo mis fallos» shows only the failed questions', async ({ page }) => 
   await page.locator('[data-failed-toggle]').uncheck();
   await expect(visible).toHaveCount(before);
 });
+
+test('resetting stats clears the panel', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  await page.locator('[data-tq]').first().locator('input').first().check();
+  await page.locator('[data-grade-trigger]').click();
+
+  const summary = page.locator('[data-stats-summary]');
+  await expect(summary).toContainText('Respondidas:');
+
+  await page.locator('[data-stats-reset]').click();
+  await expect(summary).toContainText('Aún no has corregido');
+});
