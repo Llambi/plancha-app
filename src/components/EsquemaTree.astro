@@ -5,6 +5,9 @@
  * defecto, que la página rellena con el <Content /> de la colección: listas
  * Markdown anidadas con HTML inline preservado).
  */
+import PinButton from './PinButton.astro';
+import { truncateLabel } from '../lib/minimap';
+
 interface Props {
   num: string;
   titulo: string;
@@ -13,15 +16,23 @@ interface Props {
   tema?: string;
 }
 const { num, titulo, clave, bloque, tema } = Astro.props;
+const mmLabel = truncateLabel(`Tema ${num} · ${titulo}`);
 ---
 
-<section class="esq" id={tema ?? `t${num}`}>
+<section
+  class="esq mm-anchor"
+  id={tema ?? `t${num}`}
+  data-mm-type="tema"
+  data-mm-level="0"
+  data-mm-label={mmLabel}
+>
   <header class="esq-head">
     <span class="esq-num">{num}</span>
     <div class="esq-headtext">
       {bloque && <span class="esq-bloque">{bloque}</span>}
       <h2 class="esq-titulo">{titulo}</h2>
     </div>
+    <PinButton label="Fijar tema" />
   </header>
 
   <p class="esq-clave">
@@ -29,7 +40,7 @@ const { num, titulo, clave, bloque, tema } = Astro.props;
     <span set:html={clave} />
   </p>
 
-  <div class="esq-tree">
+  <div class="esq-tree" data-mm-tree>
     <slot />
   </div>
 </section>
@@ -61,6 +72,10 @@ const { num, titulo, clave, bloque, tema } = Astro.props;
     font-weight: 800;
     background: var(--site-accent);
     color: #fff;
+  }
+  .esq-headtext {
+    flex: 1;
+    min-width: 0;
   }
   .esq-bloque {
     display: block;

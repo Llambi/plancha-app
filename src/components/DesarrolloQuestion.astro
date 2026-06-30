@@ -5,6 +5,9 @@
  * del usuario y un botón que revela la respuesta modelo (slot por defecto, que
  * la página rellena con el <Content /> renderizado de la colección).
  */
+import PinButton from './PinButton.astro';
+import { stripTags, truncateLabel } from '../lib/minimap';
+
 interface Props {
   id: string;
   enunciado: string;
@@ -14,9 +17,17 @@ interface Props {
   num?: number;
 }
 const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
+const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}`.trim());
 ---
 
-<article id={`d-${id}`} class="dq" data-dq>
+<article
+  id={`d-${id}`}
+  class="dq mm-anchor"
+  data-dq
+  data-mm-type="dev"
+  data-mm-level="0"
+  data-mm-label={mmLabel}
+>
   <header class="dq-head">
     {num != null && <span class="dq-num">{num}</span>}
     <div class="dq-headtext">
@@ -30,6 +41,7 @@ const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
       }
       {titulo && <h3 class="dq-titulo">{titulo}</h3>}
     </div>
+    <PinButton label="Fijar pregunta" />
   </header>
 
   <p class="dq-enun" set:html={enunciado} />
@@ -76,6 +88,10 @@ const { id, enunciado, titulo, kind = 'desarrollo', tema, num } = Astro.props;
     font-weight: 700;
     background: var(--site-accent);
     color: #fff;
+  }
+  .dq-headtext {
+    flex: 1;
+    min-width: 0;
   }
   .dq-kind {
     display: block;
