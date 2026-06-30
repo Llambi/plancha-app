@@ -241,6 +241,8 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
 </style>
 
 <script>
+  import { keyFor, serialize, parse, pruneAnswers } from '../lib/practica-progress';
+
   // Corrección delegada (incluido una sola vez por página).
   function gradeAll(): { score: number; total: number } {
     const qs = Array.from(document.querySelectorAll<HTMLElement>('[data-tq]'));
@@ -300,6 +302,74 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     );
   }
 
+  // --- Progress persistence (localStorage, per asignatura) ------------------
+  // The asignatura code is exposed by the practica page on the test section.
+  const asignatura = document.querySelector('[data-practica]')?.getAttribute('data-practica') ?? '';
+
+  // localStorage may be unavailable (private mode, quota): degrade silently.
+  function safeGet(key: string): string | null {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+  function safeSet(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* no-op */
+    }
+  }
+  function safeRemove(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* no-op */
+    }
+  }
+
+  function questionIds(): string[] {
+    return Array.from(document.querySelectorAll<HTMLElement>('[data-tq]')).map((q) => q.id);
+  }
+
+  function collectAnswers(): Record<string, number[]> {
+    const out: Record<string, number[]> = {};
+    for (const q of document.querySelectorAll<HTMLElement>('[data-tq]')) {
+      const picked = Array.from(q.querySelectorAll<HTMLInputElement>('input'))
+        .filter((i) => i.checked)
+        .map((i) => Number(i.value));
+      if (picked.length) out[q.id] = picked;
+    }
+    return out;
+  }
+
+  function saveProgress(graded: boolean, score: number, total: number): void {
+    if (!asignatura) return;
+    safeSet(keyFor(asignatura), serialize({ answers: collectAnswers(), graded, score, total }));
+  }
+
+  function restoreProgress(): void {
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura)));
+    if (!state) return;
+    const answers = pruneAnswers(state.answers, questionIds());
+    for (const [id, picked] of Object.entries(answers)) {
+      const q = document.getElementById(id);
+      if (!q) continue;
+      q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+        if (picked.includes(Number(input.value))) input.checked = true;
+      });
+    }
+    if (state.graded) {
+      // Reuse the bulk grader to repaint the corrected state, then re-emit the
+      // score through the same event the page listens to. Deferred so the page's
+      // `tq:graded` listener is already registered regardless of script order.
+      const result = gradeAll();
+      setTimeout(() => document.dispatchEvent(new CustomEvent('tq:graded', { detail: result })), 0);
+    }
+  }
+
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const revealBtn = target.closest('[data-reveal-trigger]');
@@ -308,8 +378,21 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
       if (q) revealAnswer(q);
       return;
     }
+    if (target.closest('[data-reset-trigger]')) {
+      if (asignatura) safeRemove(keyFor(asignatura));
+      location.reload();
+      return;
+    }
     if (!target.closest('[data-grade-trigger]')) return;
     const result = gradeAll();
+    saveProgress(true, result.score, result.total);
     document.dispatchEvent(new CustomEvent('tq:graded', { detail: result }));
   });
+
+  // Autosave selections as they change (before grading).
+  document.addEventListener('change', (e) => {
+    if ((e.target as HTMLElement).closest('[data-tq]')) saveProgress(false, 0, 0);
+  });
+
+  restoreProgress();
 </script>

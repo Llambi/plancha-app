@@ -57,7 +57,7 @@ const devsRendered = await Promise.all(
 
   {
     tests.length > 0 && (
-      <section class="block" aria-labelledby="h-test">
+      <section class="block" aria-labelledby="h-test" data-practica={code}>
         <h2 class="block-h" id="h-test">
           <span class="block-idx">I</span> Preguntas tipo test
         </h2>
@@ -81,6 +81,9 @@ const devsRendered = await Promise.all(
         <div class="test-foot">
           <button class="btn-grade" type="button" data-grade-trigger>
             Corregir test
+          </button>
+          <button class="btn-reset" type="button" data-reset-trigger>
+            Reiniciar progreso
           </button>
           <span class="score" role="status" aria-live="polite" />
         </div>
@@ -189,6 +192,21 @@ const devsRendered = await Promise.all(
   }
   .btn-grade:hover {
     filter: brightness(1.06);
+  }
+  .btn-reset {
+    cursor: pointer;
+    background: none;
+    color: var(--site-muted);
+    border: 1px solid var(--site-line);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 10px;
+  }
+  .btn-reset:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
   }
   .score {
     font-weight: 700;
