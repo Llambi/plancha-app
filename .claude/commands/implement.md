@@ -7,6 +7,26 @@ argument-hint: [id de issue] (opcional; por defecto la rama actual)
 
 Requiere `tasks.md` aprobado (Gate A superado) y estar en la rama de la issue.
 
+Antes de empezar, invoca la skill `andrej-karpathy-skills:karpathy-guidelines`
+(es trabajo de código; ver `CLAUDE.md` → "Guía de codificación").
+
+## Modo loop (implementación autónoma)
+
+Esta fase se ejecuta como un **bucle de agente**: recorre las tareas pendientes de
+`tasks.md` **una tras otra sin pararte entre ellas**, aplicando el ciclo TDD de
+abajo a cada una, hasta que todas estén en `[x]`. No pidas confirmación para pasar
+de una tarea a la siguiente.
+
+- **Cierre del loop**: cuando no queden tareas pendientes, continúa con `/deliver`.
+  El **GATE B** (en `/deliver`) es la única parada obligatoria; el loop **nunca**
+  lo cruza solo.
+- **Para el loop y pregunta** (no sigas autónomamente) si: un test sigue en rojo
+  tras un intento razonable de arreglarlo, hay ambigüedad en una tarea, surge un
+  conflicto con la constitución (contenido verbatim, convenciones, gotchas de
+  Astro), o una tarea necesita una decisión del usuario.
+- Mantén `tasks.md` como estado del loop: marca `[x]` al cerrar cada tarea (commit
+  hecho) para que el bucle sea reanudable si se interrumpe.
+
 ## Ciclo por cada tarea de `tasks.md`
 
 1. **Rojo** — escribe el/los test que fallan:
