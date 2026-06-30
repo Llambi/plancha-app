@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo de persistencia (puro)**
+- [x] **T1 — Núcleo de persistencia (puro)**
   - Test (rojo): `tests/unit/practica-progress.test.ts` — `keyFor` namespacing;
     `serialize`/`parse` ida y vuelta; `parse` devuelve `null` ante JSON inválido /
     no-objeto / forma incompleta; `pruneAnswers` descarta ids ausentes y conserva
@@ -19,7 +19,7 @@
   - Refactor: comentario de cabecera al estilo de `search.ts`.
   - Commit: `feat(practica): add localStorage progress core (refs #8)`
 
-- [ ] **T2 — Restaurar y autosave en la práctica de test**
+- [x] **T2 — Restaurar y autosave en la práctica de test**
   - Test (rojo): `tests/e2e/practica-progress.spec.ts` — (a) marcar opciones en
     `/practica/si`, recargar y comprobar que las selecciones se restauran;
     (b) corregir, recargar y comprobar resaltado corregido + «Aciertos: X / N».
@@ -30,7 +30,7 @@
     test. Acceso a `localStorage` en `try/catch`.
   - Commit: `feat(practica): persist and restore test progress (refs #8)`
 
-- [ ] **T3 — Control de reinicio de progreso**
+- [x] **T3 — Control de reinicio de progreso**
   - Test (rojo): ampliar `tests/e2e/practica-progress.spec.ts` — corregir, pulsar
     «Reiniciar progreso», recargar y comprobar que no hay marcas ni puntuación.
   - Implementación (verde): botón `[data-reset-trigger]` en `.test-foot` de
