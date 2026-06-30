@@ -69,6 +69,11 @@ const devsRendered = await Promise.all(
 
         <div class="stats" data-stats>
           <p class="stats-summary" data-stats-summary />
+          <div class="stats-actions">
+            <label class="stats-toggle">
+              <input type="checkbox" data-failed-toggle /> Solo mis fallos
+            </label>
+          </div>
         </div>
 
         {tests.map((q, i) => (
@@ -121,7 +126,7 @@ const devsRendered = await Promise.all(
 </BaseLayout>
 
 <script>
-  import { statsKeyFor, parseStats, summarize } from '../../lib/practica-stats';
+  import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
@@ -168,6 +173,21 @@ const devsRendered = await Promise.all(
       `<strong>Acumulado:</strong> ${pct(sum.accuracyAll)}` +
       (top ? `<br /><strong>Más falladas:</strong> ${top}` : '');
   }
+
+  // «Solo mis fallos»: show only questions whose last attempt was wrong.
+  const failedToggle = document.querySelector<HTMLInputElement>('[data-failed-toggle]');
+
+  function applyFailedFilter(): void {
+    if (!asignatura) return;
+    const on = failedToggle?.checked ?? false;
+    const state = parseStats(safeGet(statsKeyFor(asignatura)));
+    const failed = new Set(state ? failedIds(state) : []);
+    document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
+      q.hidden = on && !failed.has(q.id);
+    });
+  }
+
+  failedToggle?.addEventListener('change', applyFailedFilter);
 
   document.addEventListener('practica:stats-updated', renderStats);
   renderStats();
@@ -276,5 +296,26 @@ const devsRendered = await Promise.all(
   .stats-summary a {
     color: color-mix(in srgb, var(--site-accent) 74%, var(--site-ink));
     font-weight: 700;
+  }
+  .stats-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.7rem;
+  }
+  .stats-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+  }
+  .stats-toggle input {
+    accent-color: var(--site-accent);
+    width: 1rem;
+    height: 1rem;
   }
 </style>

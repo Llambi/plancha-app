@@ -19,3 +19,25 @@ test('grading records stats and the panel shows both accuracies', async ({ page 
   await expect(summary).toContainText('Acierto último intento: 100%');
   await expect(summary).toContainText('Acumulado: 100%');
 });
+
+test('«solo mis fallos» shows only the failed questions', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  // Fail q1 (correct is index 0) by picking index 1, then grade.
+  await page.locator('[data-tq]').first().locator('input').nth(1).check();
+  await page.locator('[data-grade-trigger]').click();
+
+  const visible = page.locator('[data-tq]:visible');
+  const before = await visible.count();
+  expect(before).toBeGreaterThan(1);
+
+  await page.locator('[data-failed-toggle]').check();
+
+  // Only the failed question remains visible.
+  await expect(visible).toHaveCount(1);
+  await expect(visible.first()).toHaveAttribute('id', 'q-q1');
+
+  // Turning it off restores all questions.
+  await page.locator('[data-failed-toggle]').uncheck();
+  await expect(visible).toHaveCount(before);
+});
