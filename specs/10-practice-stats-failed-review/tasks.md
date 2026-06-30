@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo de agregación de estadísticas (puro)**
+- [x] **T1 — Núcleo de agregación de estadísticas (puro)**
   - Test (rojo): `tests/unit/practica-stats.test.ts` — `statsKeyFor` namespacing;
     `serializeStats`/`parseStats` ida y vuelta + parse defensivo; `recordGrading`
     (cuenta `attempts`/`wrong`, fija `lastWrong`, y `lastWrong=false` al acertar
@@ -20,7 +20,7 @@
     `StatsState` y esas funciones.
   - Commit: `feat(practica): add stats aggregation core (refs #10)`
 
-- [ ] **T2 — Registrar al corregir y mostrar el panel de resumen**
+- [x] **T2 — Registrar al corregir y mostrar el panel de resumen**
   - Test (rojo): `tests/e2e/practica-stats.spec.ts` — responder y corregir en
     `/practica/si`; el panel muestra «respondidas» y los dos porcentajes de acierto
     (último intento y acumulado).
@@ -30,7 +30,7 @@
     script que resume en carga y al recibir el evento. La restauración no registra.
   - Commit: `feat(practica): record and show practice stats (refs #10)`
 
-- [ ] **T3 — Filtro «solo mis fallos»**
+- [x] **T3 — Filtro «solo mis fallos»**
   - Test (rojo): ampliar el e2e — fallar una pregunta, corregir, activar «solo mis
     fallos» y comprobar que solo quedan visibles las falladas.
   - Implementación (verde): toggle `[data-failed-toggle]` en
@@ -38,7 +38,7 @@
     `failedIds`; al desactivarlo, se muestran todas.
   - Commit: `feat(practica): add "review failed" filter (refs #10)`
 
-- [ ] **T4 — Reinicio de estadísticas**
+- [x] **T4 — Reinicio de estadísticas**
   - Test (rojo): ampliar el e2e — con estadísticas, pulsar «Reiniciar
     estadísticas» y comprobar que el panel queda vacío.
   - Implementación (verde): botón `[data-stats-reset]` que borra
