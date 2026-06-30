@@ -66,6 +66,11 @@ const devsRendered = await Promise.all(
           comprobar una? Pulsa «Ver respuesta» en esa pregunta: la solución se muestra unos segundos
           y se oculta sola.
         </p>
+
+        <div class="stats" data-stats>
+          <p class="stats-summary" data-stats-summary />
+        </div>
+
         {tests.map((q, i) => (
           <TestQuestion
             id={q.data.id}
@@ -116,11 +121,56 @@ const devsRendered = await Promise.all(
 </BaseLayout>
 
 <script>
+  import { statsKeyFor, parseStats, summarize } from '../../lib/practica-stats';
+
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
     const el = document.querySelector('.score');
     if (el) el.textContent = `Aciertos: ${score} / ${total}`;
   });
+
+  // --- Stats summary panel (per asignatura) ---------------------------------
+  const asignatura = document.querySelector('[data-practica]')?.getAttribute('data-practica') ?? '';
+  const summaryEl = document.querySelector<HTMLElement>('[data-stats-summary]');
+
+  function safeGet(key: string): string | null {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+  // Maps a question id ("q-<id>") to its displayed number, read from the DOM.
+  function questionNum(id: string): string {
+    return document.getElementById(id)?.querySelector('.tq-num')?.textContent?.trim() ?? '?';
+  }
+
+  function renderStats(): void {
+    if (!asignatura || !summaryEl) return;
+    const total = document.querySelectorAll('[data-tq]').length;
+    const state = parseStats(safeGet(statsKeyFor(asignatura)));
+    const sum = state && summarize(state);
+    if (!sum || sum.answered === 0) {
+      summaryEl.textContent =
+        'Aún no has corregido preguntas. Corrige el test para ver tus estadísticas.';
+      return;
+    }
+    const top = sum.mostFailed
+      .slice(0, 5)
+      .map((m) => `<a href="#${m.id}">${questionNum(m.id)}</a> (×${m.wrong})`)
+      .join(' · ');
+    summaryEl.innerHTML =
+      `<strong>Respondidas:</strong> ${sum.answered} de ${total} · ` +
+      `<strong>Acierto último intento:</strong> ${pct(sum.accuracyLast)} · ` +
+      `<strong>Acumulado:</strong> ${pct(sum.accuracyAll)}` +
+      (top ? `<br /><strong>Más falladas:</strong> ${top}` : '');
+  }
+
+  document.addEventListener('practica:stats-updated', renderStats);
+  renderStats();
 </script>
 
 <style>
@@ -209,6 +259,22 @@ const devsRendered = await Promise.all(
     border-color: var(--site-accent);
   }
   .score {
+    font-weight: 700;
+  }
+  .stats {
+    margin-bottom: 1.4rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--site-line);
+    border-radius: 12px;
+    background: var(--site-surface-2);
+  }
+  .stats-summary {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--site-ink);
+  }
+  .stats-summary a {
+    color: color-mix(in srgb, var(--site-accent) 74%, var(--site-ink));
     font-weight: 700;
   }
 </style>

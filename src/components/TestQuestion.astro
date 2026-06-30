@@ -242,17 +242,23 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
 
 <script>
   import { keyFor, serialize, parse, pruneAnswers } from '../lib/practica-progress';
+  import { statsKeyFor, serializeStats, parseStats, recordGrading } from '../lib/practica-stats';
+
+  // Per-question grading outcome (used to feed the stats aggregation).
+  type GradeResult = { id: string; answered: boolean; correct: boolean };
 
   // Corrección delegada (incluido una sola vez por página).
-  function gradeAll(): { score: number; total: number } {
+  function gradeAll(): { score: number; total: number; results: GradeResult[] } {
     const qs = Array.from(document.querySelectorAll<HTMLElement>('[data-tq]'));
     let score = 0;
+    const results: GradeResult[] = [];
     for (const q of qs) {
       const correct: number[] = JSON.parse(q.dataset.correct || '[]');
       const inputs = Array.from(q.querySelectorAll<HTMLInputElement>('input'));
       const picked = inputs.filter((i) => i.checked).map((i) => Number(i.value));
       const ok = picked.length === correct.length && picked.every((p) => correct.includes(p));
       if (ok) score++;
+      results.push({ id: q.id, answered: picked.length > 0, correct: ok });
       q.classList.add('graded');
       inputs.forEach((input) => {
         const idx = Number(input.value);
@@ -265,7 +271,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
       const exp = q.querySelector('.tq-exp');
       if (exp) exp.removeAttribute('hidden');
     }
-    return { score, total: qs.length };
+    return { score, total: qs.length, results };
   }
 
   // Temporary per-question reveal (the «Ver respuesta» button). Highlights the
@@ -349,6 +355,19 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     safeSet(keyFor(asignatura), serialize({ answers: collectAnswers(), graded, score, total }));
   }
 
+  // Accumulate per-question stats. Called only on a real «Corregir» click — never
+  // on restore, so reloading a graded test does not inflate the counters.
+  function recordStats(results: GradeResult[]): void {
+    if (!asignatura) return;
+    const outcomes: Record<string, boolean> = {};
+    for (const r of results) if (r.answered) outcomes[r.id] = r.correct;
+    if (!Object.keys(outcomes).length) return;
+    const key = statsKeyFor(asignatura);
+    const state = parseStats(safeGet(key)) ?? { questions: {} };
+    safeSet(key, serializeStats(recordGrading(state, outcomes)));
+    document.dispatchEvent(new CustomEvent('practica:stats-updated'));
+  }
+
   function restoreProgress(): void {
     if (!asignatura) return;
     const state = parse(safeGet(keyFor(asignatura)));
@@ -365,8 +384,11 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
       // Reuse the bulk grader to repaint the corrected state, then re-emit the
       // score through the same event the page listens to. Deferred so the page's
       // `tq:graded` listener is already registered regardless of script order.
-      const result = gradeAll();
-      setTimeout(() => document.dispatchEvent(new CustomEvent('tq:graded', { detail: result })), 0);
+      const { score, total } = gradeAll();
+      setTimeout(
+        () => document.dispatchEvent(new CustomEvent('tq:graded', { detail: { score, total } })),
+        0,
+      );
     }
   }
 
@@ -386,7 +408,10 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     if (!target.closest('[data-grade-trigger]')) return;
     const result = gradeAll();
     saveProgress(true, result.score, result.total);
-    document.dispatchEvent(new CustomEvent('tq:graded', { detail: result }));
+    recordStats(result.results);
+    document.dispatchEvent(
+      new CustomEvent('tq:graded', { detail: { score: result.score, total: result.total } }),
+    );
   });
 
   // Autosave selections as they change (before grading).
