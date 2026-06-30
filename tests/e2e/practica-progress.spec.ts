@@ -33,3 +33,18 @@ test('graded state and score survive a reload', async ({ page }) => {
   await expect(page.locator('[data-tq]').first().locator('.tq-opt').first()).toHaveClass(/correct/);
   await expect(page.locator('.score')).toContainText('Aciertos:');
 });
+
+test('resetting clears progress', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  await page.locator('[data-tq]').first().locator('input').first().check();
+  await page.locator('[data-grade-trigger]').click();
+  await expect(page.locator('.score')).toContainText('Aciertos:');
+
+  await page.locator('[data-reset-trigger]').click();
+  await page.reload();
+
+  // Nothing marked, no score after reset.
+  await expect(page.locator('[data-tq]').first().locator('input').first()).not.toBeChecked();
+  await expect(page.locator('.score')).toHaveText('');
+});

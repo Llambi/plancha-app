@@ -321,6 +321,13 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
       /* no-op */
     }
   }
+  function safeRemove(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* no-op */
+    }
+  }
 
   function questionIds(): string[] {
     return Array.from(document.querySelectorAll<HTMLElement>('[data-tq]')).map((q) => q.id);
@@ -369,6 +376,11 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
     if (revealBtn) {
       const q = revealBtn.closest<HTMLElement>('[data-tq]');
       if (q) revealAnswer(q);
+      return;
+    }
+    if (target.closest('[data-reset-trigger]')) {
+      if (asignatura) safeRemove(keyFor(asignatura));
+      location.reload();
       return;
     }
     if (!target.closest('[data-grade-trigger]')) return;
