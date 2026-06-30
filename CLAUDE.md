@@ -108,6 +108,15 @@ clave, num, orden, oficial, apariciones`…), que se mantiene en **español** po
   mensajes de commit (Conventional Commits) y **PR (título + cuerpo)** en inglés.
   Las issues pueden ir en español.
 
+### Guía de codificación (siempre)
+
+Al **iniciar cualquier tarea de escribir, revisar o refactorizar código**, invoca
+primero la skill **`andrej-karpathy-skills:karpathy-guidelines`** y aplica sus
+directrices (cambios quirúrgicos, sin sobre-ingeniería, explicitar supuestos,
+criterios de éxito verificables). Aplica a todo el trabajo del repo, dentro y
+fuera del flujo SDD. No aplica a tareas que no tocan código (p. ej. solo contenido
+`src/content/` transcrito verbatim, donde mandan las reglas de contenido).
+
 ## Workflow (Spec-Driven Development)
 
 La forma de trabajar en este repo es **Spec-Driven Development (SDD)**: la
