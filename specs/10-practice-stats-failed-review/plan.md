@@ -40,8 +40,11 @@ interface StatsState {
 }
 ```
 
-- `% de acierto` = `(Σ attempts − Σ wrong) / Σ attempts` (sobre intentos
-  acumulados). `respondidas` = nº de preguntas con `attempts > 0`.
+- `respondidas` = nº de preguntas con `attempts > 0`.
+- `% acierto acumulado` = `(Σ attempts − Σ wrong) / Σ attempts` (sobre todos los
+  intentos; refleja el esfuerzo total).
+- `% acierto último intento` = `nº de respondidas con lastWrong === false / respondidas`
+  (estado actual de dominio; comparado con el acumulado, muestra la mejora).
 - `fallos` (filtro) = ids con `lastWrong === true`.
 
 ## Ficheros y áreas afectadas
@@ -76,7 +79,8 @@ interface StatsState {
     defensivo (`null`).
   - `recordGrading`: incrementa `attempts`/`wrong` y fija `lastWrong`; acertar tras
     fallar pone `lastWrong=false` (criterio 4).
-  - `summarize`: `respondidas`, `% acierto`, orden de «más falladas» por `wrong`.
+  - `summarize`: `respondidas`, `% acierto último intento` y `% acierto acumulado`
+    (distintos cuando hay reintentos), orden de «más falladas» por `wrong`.
   - `failedIds`: solo `lastWrong`. `pruneStats`: descarta ids obsoletos.
 - **E2E (Playwright)** `tests/e2e/practica-stats.spec.ts` (sobre el build):
   - Fallar una pregunta y corregir → el panel muestra respondidas y % acierto.
@@ -92,7 +96,8 @@ interface StatsState {
   toca el progreso de respuestas y viceversa (criterio 5).
 - **Ids obsoletos / `localStorage` ausente (criterio 6)**: `pruneStats` + accesos en
   `try/catch`; degrada como hoy.
-- **% acierto sobre intentos acumulados** (no sobre último estado): se documenta;
-  refleja el esfuerzo total, coherente con «historial».
+- **Dos porcentajes de acierto** (último intento vs acumulado): el primero refleja
+  el dominio actual y el segundo el esfuerzo total; mostrarlos juntos visibiliza la
+  mejora. Ambos derivan de los mismos contadores, sin estado extra.
 - **Alcance**: solo test de `/practica/<asignatura>`. Desarrollo (#12) y MongoDB
   fuera (no-objetivos).

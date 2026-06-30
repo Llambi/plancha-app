@@ -43,9 +43,11 @@ Cada criterio en formato Given / When / Then y verificable:
    (acierto/fallo) en estadísticas acumuladas en `localStorage`, namespaced por
    asignatura (p. ej. `plancha:stats:<asignatura>`).
 2. **Dado** que tengo estadísticas en una asignatura, **cuando** abro su página de
-   práctica, **entonces** veo un resumen con: nº de preguntas respondidas, % de
-   acierto global y la lista de preguntas más falladas (cada una enlazada a su
-   ancla `#q-<id>`).
+   práctica, **entonces** veo un resumen con: nº de preguntas respondidas, **dos**
+   porcentajes de acierto —el del **último intento** de cada pregunta (dominio
+   actual) y el **acumulado** sobre todos los intentos (esfuerzo total)— de modo
+   que se aprecia la mejora, y la lista de preguntas más falladas (cada una
+   enlazada a su ancla `#q-<id>`).
 3. **Dado** que activo el modo **«solo mis fallos»**, **cuando** se aplica,
    **entonces** solo se muestran las preguntas cuya última corrección fue
    incorrecta; al desactivarlo, se vuelven a mostrar todas.
@@ -68,8 +70,8 @@ Cada criterio en formato Given / When / Then y verificable:
 - Incluye:
   - Registro acumulado por pregunta al corregir: nº de intentos, nº de fallos y si
     el último intento fue fallo.
-  - Resumen en la página de práctica: respondidas, % de acierto, top de más
-    falladas con deep-link.
+  - Resumen en la página de práctica: respondidas, **% de acierto del último
+    intento y % acumulado**, top de más falladas con deep-link.
   - Toggle «solo mis fallos» que filtra las preguntas visibles.
   - Reinicio de estadísticas independiente del reinicio de progreso (#8).
   - Núcleo de agregación puro en `src/lib/`, testeado con Vitest; e2e del registro
@@ -95,3 +97,5 @@ Cada criterio en formato Given / When / Then y verificable:
 - Ninguna pendiente. Decisiones tomadas con el usuario:
   - **«Fallos» = última corrección incorrecta** (autolimpiable al acertar).
   - **Resumen como panel en la propia página de práctica** (sin ruta nueva).
+  - **Se muestran dos porcentajes de acierto**: el del **último intento** de cada
+    pregunta y el **acumulado** sobre todos los intentos, para ver la mejora.

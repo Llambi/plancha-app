@@ -13,15 +13,17 @@
   - Test (rojo): `tests/unit/practica-stats.test.ts` — `statsKeyFor` namespacing;
     `serializeStats`/`parseStats` ida y vuelta + parse defensivo; `recordGrading`
     (cuenta `attempts`/`wrong`, fija `lastWrong`, y `lastWrong=false` al acertar
-    tras fallar); `summarize` (respondidas, % acierto, orden de más falladas);
-    `failedIds` (solo `lastWrong`); `pruneStats` (descarta ids obsoletos).
+    tras fallar); `summarize` (respondidas, % acierto del último intento y % acierto
+    acumulado, orden de más falladas); `failedIds` (solo `lastWrong`); `pruneStats`
+    (descarta ids obsoletos).
   - Implementación (verde): `src/lib/practica-stats.ts` con `QuestionStat`,
     `StatsState` y esas funciones.
   - Commit: `feat(practica): add stats aggregation core (refs #10)`
 
 - [ ] **T2 — Registrar al corregir y mostrar el panel de resumen**
   - Test (rojo): `tests/e2e/practica-stats.spec.ts` — responder y corregir en
-    `/practica/si`; el panel muestra «respondidas» y «% acierto».
+    `/practica/si`; el panel muestra «respondidas» y los dos porcentajes de acierto
+    (último intento y acumulado).
   - Implementación (verde): en `TestQuestion.astro`, `gradeAll()` devuelve
     `results` y el handler de corregir registra estadísticas (solo respondidas) y
     emite `practica:stats-updated`; en `practica/[asignatura].astro`, panel shell +
