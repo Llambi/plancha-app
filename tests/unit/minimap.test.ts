@@ -10,6 +10,7 @@ import {
   subBranchLabel,
   jumpPinTarget,
   isCorrectPick,
+  gradeMark,
 } from '../../src/lib/minimap';
 
 describe('pinsKeyFor()', () => {
@@ -87,6 +88,20 @@ describe('isCorrectPick()', () => {
     expect(isCorrectPick([1], [])).toBe(false);
     expect(isCorrectPick([0, 2], [0])).toBe(false);
     expect(isCorrectPick([0], [1])).toBe(false);
+  });
+});
+
+describe('gradeMark()', () => {
+  it('is null for an unanswered question (no picks), regardless of correct', () => {
+    expect(gradeMark([0], [])).toBeNull();
+  });
+
+  it('is "ok" when the pick matches correct', () => {
+    expect(gradeMark([0], [0])).toBe('ok');
+  });
+
+  it('is "bad" when answered but wrong', () => {
+    expect(gradeMark([0], [1])).toBe('bad');
   });
 });
 

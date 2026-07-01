@@ -52,19 +52,25 @@ test.describe('práctica: rail + pins', () => {
     expect(await page.evaluate(() => window.scrollY)).toBe(afterFocus);
   });
 
-  test('grading colors the rail ticks and drawer rows to match the actual result', async ({
+  test('grading colors the rail ticks and drawer rows to match the actual result, leaving unanswered questions uncolored', async ({
     page,
   }) => {
     await page.goto(`${BASE}/practica/si`);
 
-    const firstQuestion = page.locator('.tq').first();
-    const correct = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
-    await firstQuestion.locator(`input[value="${correct[0]}"]`).check();
+    const firstQuestion = page.locator('.tq').nth(0);
+    const firstCorrect = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
+    await firstQuestion.locator(`input[value="${firstCorrect[0]}"]`).check();
+
+    const secondQuestion = page.locator('.tq').nth(1);
+    const secondCorrect = JSON.parse((await secondQuestion.getAttribute('data-correct')) ?? '[]');
+    const wrongValue = [0, 1, 2, 3].find((v) => !secondCorrect.includes(v));
+    await secondQuestion.locator(`input[value="${wrongValue}"]`).check();
+
     await page.locator('[data-grade-trigger]').click();
 
+    // Third question onward stay unanswered: graded, but not counted as failures.
     await expect(page.locator('.mm-tick.ok')).toHaveCount(1);
-    const total = await page.locator('[data-tq]').count();
-    await expect(page.locator('.mm-tick.bad')).toHaveCount(total - 1);
+    await expect(page.locator('.mm-tick.bad')).toHaveCount(1);
   });
 
   test('mobile: the "Mapa" button opens a drawer listing every card, with pins on top', async ({

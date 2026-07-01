@@ -444,7 +444,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     subBranchId,
     subBranchLabel,
     jumpPinTarget,
-    isCorrectPick,
+    gradeMark,
   } from '../lib/minimap';
 
   interface Anchor {
@@ -547,7 +547,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       const picked = Array.from(a.el.querySelectorAll<HTMLInputElement>('input'))
         .filter((i) => i.checked)
         .map((i) => Number(i.value));
-      return isCorrectPick(correct, picked) ? 'ok' : 'bad';
+      return gradeMark(correct, picked);
     }
 
     function activeAnchor(): Anchor | undefined {
