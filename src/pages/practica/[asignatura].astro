@@ -5,6 +5,7 @@ import TestQuestion from '../../components/TestQuestion.astro';
 import DesarrolloQuestion from '../../components/DesarrolloQuestion.astro';
 import Minimap from '../../components/Minimap.astro';
 import { meta } from '../../data/asignaturas';
+import { uniqueTemas } from '../../lib/practica-temas';
 
 export async function getStaticPaths() {
   const test = await getCollection('test');
@@ -33,6 +34,7 @@ export async function getStaticPaths() {
 
 const { code, tests, devs } = Astro.props;
 const m = meta(code);
+const temas = uniqueTemas(tests.map((t) => t.data.tema));
 
 // Renderiza el cuerpo (respuesta modelo) de cada desarrollo.
 const devsRendered = await Promise.all(
@@ -114,6 +116,19 @@ const devsRendered = await Promise.all(
             <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
           </div>
         </div>
+
+        {temas.length > 0 && (
+          <div class="tema-filters" role="group" aria-label="Filtrar por tema" data-tema-filters>
+            <button class="filter-btn on" type="button" data-tema-filter="all" aria-pressed="true">
+              Todos
+            </button>
+            {temas.map((t) => (
+              <button class="filter-btn" type="button" data-tema-filter={t} aria-pressed="false">
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
 
         {tests.map((q, i) => (
           <TestQuestion
@@ -255,10 +270,13 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
-  // Exam mode and «solo mis fallos» both drive `hidden` on the same
-  // `[data-tq]` elements — mutually exclusive so they never fight over it.
+  // Exam mode, the topic filter, and «solo mis fallos» all drive `hidden` on
+  // the same `[data-tq]` elements — mutually exclusive so they never fight.
   failedToggle?.addEventListener('change', () => {
-    if (failedToggle.checked && examActive) exitExam();
+    if (failedToggle.checked) {
+      if (examActive) exitExam();
+      resetTemaButtons();
+    }
     applyFailedFilter();
   });
 
@@ -335,12 +353,13 @@ const devsRendered = await Promise.all(
   function startExam(): void {
     const container = originalOrder[0]?.parentElement;
     if (!container) return;
-    // Exam mode and «solo mis fallos» share the same `hidden` flag: starting
-    // a simulacro takes over, so drop the fallos filter first.
+    // Exam mode shares the same `hidden` flag with «solo mis fallos» and the
+    // topic filter: starting a simulacro takes over, so drop both first.
     if (failedToggle?.checked) {
       failedToggle.checked = false;
       applyFailedFilter();
     }
+    resetTemaButtons();
     const rng = createRng(Date.now());
     const subsetSize = examSubsetToggle?.checked
       ? Math.max(
@@ -426,6 +445,49 @@ const devsRendered = await Promise.all(
     el?.addEventListener('change', saveExamConfig);
   }
   restoreExamConfig();
+
+  // --- Topic filter (tema) ---------------------------------------------------
+  const temaButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[data-tema-filter]'),
+  );
+  let temaFilter = 'all';
+
+  function applyTemaFilter(): void {
+    document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
+      q.hidden = temaFilter !== 'all' && q.dataset.tema !== temaFilter;
+    });
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+  }
+
+  // Resets the button states to «Todos» without reapplying visibility — used
+  // when «solo mis fallos» or the exam mode take over the `hidden` flag.
+  function resetTemaButtons(): void {
+    temaFilter = 'all';
+    temaButtons.forEach((b) => {
+      const on = b.dataset.temaFilter === 'all';
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  temaButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      temaFilter = btn.dataset.temaFilter ?? 'all';
+      temaButtons.forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      // The topic filter shares `hidden` with «solo mis fallos» and the exam
+      // mode: selecting a tema takes over, so drop both first.
+      if (failedToggle?.checked) {
+        failedToggle.checked = false;
+        applyFailedFilter();
+      }
+      if (examActive) exitExam();
+      applyTemaFilter();
+    });
+  });
 </script>
 
 <style>
@@ -598,5 +660,35 @@ const devsRendered = await Promise.all(
   }
   .exam-timer {
     font-weight: 700;
+  }
+  .tema-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
+  }
+  .filter-btn {
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .filter-btn:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .filter-btn.on {
+    color: #fff;
+    background: var(--site-accent);
+    border-color: var(--site-accent);
   }
 </style>

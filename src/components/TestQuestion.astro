@@ -36,6 +36,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
   data-tq
   data-correct={JSON.stringify(correct)}
   data-type={type}
+  data-tema={tema ?? ''}
   data-mm-type="test"
   data-mm-level="0"
   data-mm-label={mmLabel}
@@ -266,7 +267,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
 
   // Corrección delegada (incluido una sola vez por página).
   function gradeAll(): { score: number; total: number; results: GradeResult[] } {
-    const qs = Array.from(document.querySelectorAll<HTMLElement>('[data-tq]'));
+    const qs = Array.from(document.querySelectorAll<HTMLElement>('[data-tq]:not([hidden])'));
     let score = 0;
     const results: GradeResult[] = [];
     for (const q of qs) {
