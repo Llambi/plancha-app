@@ -55,6 +55,18 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     <h4 class="dq-model-h">Respuesta modelo</h4>
     <slot />
   </div>
+
+  <div class="dq-self" role="group" aria-label="Autoevaluación">
+    <button class="dq-self-btn" type="button" data-dq-self="sabia" aria-pressed="false">
+      Lo sabía
+    </button>
+    <button class="dq-self-btn" type="button" data-dq-self="medias" aria-pressed="false">
+      A medias
+    </button>
+    <button class="dq-self-btn" type="button" data-dq-self="no" aria-pressed="false">
+      No lo sabía
+    </button>
+  </div>
 </article>
 
 <style>
@@ -198,9 +210,41 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     padding: 0.15rem 0.5rem;
     margin-right: 0.35rem;
   }
+  .dq-self {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+  }
+  .dq-self-btn {
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .dq-self-btn:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .dq-self-btn[aria-pressed='true'] {
+    color: #fff;
+    background: var(--site-accent);
+    border-color: var(--site-accent);
+  }
 </style>
 
 <script>
+  import { keyFor, serialize, parse, pruneAnswers } from '../lib/desarrollo-progress';
+
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest('.dq-reveal');
     if (!btn) return;
@@ -213,4 +257,56 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     btn.setAttribute('aria-expanded', String(isHidden));
     btn.textContent = isHidden ? 'Ocultar respuesta modelo' : 'Ver respuesta modelo';
   });
+
+  // --- Self-assessment (localStorage, per asignatura) ------------------------
+  const asignatura =
+    document.querySelector('[data-desarrollo]')?.getAttribute('data-desarrollo') ?? '';
+
+  function safeGet(key: string): string | null {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+  function safeSet(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* no-op */
+    }
+  }
+
+  function questionIds(): string[] {
+    return Array.from(document.querySelectorAll<HTMLElement>('[data-dq]')).map((q) => q.id);
+  }
+
+  function restoreSelfAssessment(): void {
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura)));
+    if (!state) return;
+    const answers = pruneAnswers(state.answers, questionIds());
+    for (const [id, assessment] of Object.entries(answers)) {
+      const card = document.getElementById(id);
+      const btn = card?.querySelector(`[data-dq-self="${assessment}"]`);
+      btn?.setAttribute('aria-pressed', 'true');
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-dq-self]');
+    if (!btn || !asignatura) return;
+    const card = btn.closest<HTMLElement>('[data-dq]');
+    if (!card) return;
+    const assessment = btn.dataset.dqSelf as 'sabia' | 'medias' | 'no';
+    card
+      .querySelectorAll('[data-dq-self]')
+      .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {} };
+    state.answers[card.id] = assessment;
+    safeSet(keyFor(asignatura), serialize(state));
+    document.dispatchEvent(new CustomEvent('desarrollo:stats-updated'));
+  });
+
+  restoreSelfAssessment();
 </script>

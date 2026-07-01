@@ -400,13 +400,14 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
     }
     if (state.graded) {
       // Reuse the bulk grader to repaint the corrected state, then re-emit the
-      // score through the same event the page listens to. Deferred so the page's
-      // `tq:graded` listener is already registered regardless of script order.
+      // score through the same event the page listens to. Deferred to `load` (not
+      // a same-tick setTimeout) so the page's `tq:graded` listener is guaranteed to
+      // be registered regardless of relative script/chunk load order or size.
       const { score, total } = gradeAll();
-      setTimeout(
-        () => document.dispatchEvent(new CustomEvent('tq:graded', { detail: { score, total } })),
-        0,
-      );
+      const emit = () =>
+        document.dispatchEvent(new CustomEvent('tq:graded', { detail: { score, total } }));
+      if (document.readyState === 'complete') emit();
+      else window.addEventListener('load', emit, { once: true });
     }
   }
 
