@@ -521,6 +521,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
           pin.className = 'pin-btn pin-btn-sm mm-sub-pin';
           pin.dataset.mmPin = '';
           pin.setAttribute('aria-label', 'Fijar sección');
+          pin.setAttribute('aria-pressed', 'false');
           pin.setAttribute('title', 'Fijar sección');
           pin.innerHTML = PIN_SVG;
           li.insertBefore(pin, li.firstChild);
@@ -656,10 +657,17 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       fabCountEl.classList.toggle('zero', pins.size === 0);
     }
 
+    function syncPinState(el: HTMLElement, pinned: boolean): void {
+      el.classList.toggle('pinned', pinned);
+      el.querySelectorAll<HTMLElement>('[data-mm-pin]').forEach((btn) =>
+        btn.setAttribute('aria-pressed', String(pinned)),
+      );
+    }
+
     function rebuild(): void {
       ensureSubAnchors();
       anchors = collectAnchors();
-      anchors.forEach((a) => a.el.classList.toggle('pinned', pins.has(a.id)));
+      anchors.forEach((a) => syncPinState(a.el, pins.has(a.id)));
       buildRail();
       buildDrawer();
       updateFab();
@@ -751,7 +759,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     function togglePin(id: string): void {
       setPins(new Set(togglePinned([...pins], id)));
       const a = anchors.find((x) => x.id === id);
-      a?.el.classList.toggle('pinned', pins.has(id));
+      if (a) syncPinState(a.el, pins.has(id));
       buildRail();
       buildDrawer();
       updateFab();

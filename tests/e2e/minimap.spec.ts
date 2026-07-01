@@ -22,6 +22,24 @@ test.describe('práctica: rail + pins', () => {
     await expect(page.locator('.mm-tick.pinned')).toHaveCount(1);
   });
 
+  test('the pin button exposes its state via aria-pressed', async ({ page }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const pinBtn = page.locator('.tq').first().locator('[data-mm-pin]');
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'false');
+    await pinBtn.click();
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'true');
+    await pinBtn.click();
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'false');
+
+    await pinBtn.click();
+    await page.reload();
+    await expect(page.locator('.tq').first().locator('[data-mm-pin]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
   test('clicking a tick scrolls the page to its card', async ({ page }) => {
     await page.goto(`${BASE}/practica/si`);
 
