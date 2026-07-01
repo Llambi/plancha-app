@@ -95,3 +95,24 @@ test('el cronómetro muestra cuenta atrás y corrige automáticamente al agotars
   await expect(page.locator('[data-exam-timer]')).not.toHaveText('');
   await expect(page.locator('[data-tq]').first()).toHaveClass(/graded/, { timeout: 5000 });
 });
+
+test('la configuración del panel persiste entre recargas de página', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  await page.locator('[data-exam-shuffle]').check();
+  await page.locator('[data-exam-subset-toggle]').check();
+  await page.locator('[data-exam-subset-n]').fill('5');
+  await page.locator('[data-exam-timed]').check();
+  await page.locator('[data-exam-minutes]').fill('15');
+
+  await page.reload();
+
+  await expect(page.locator('[data-exam-shuffle]')).toBeChecked();
+  await expect(page.locator('[data-exam-subset-toggle]')).toBeChecked();
+  await expect(page.locator('[data-exam-subset-n]')).toHaveValue('5');
+  await expect(page.locator('[data-exam-timed]')).toBeChecked();
+  await expect(page.locator('[data-exam-minutes]')).toHaveValue('15');
+  // Restaurar la config no arranca el simulacro por sí sola.
+  await expect(page.locator('[data-exam-start]')).toBeVisible();
+  await expect(page.locator('[data-exam-exit]')).toBeHidden();
+});

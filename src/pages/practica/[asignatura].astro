@@ -172,7 +172,14 @@ const devsRendered = await Promise.all(
 
 <script>
   import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
-  import { createRng, buildExamOrder } from '../../lib/exam-mode';
+  import {
+    createRng,
+    buildExamOrder,
+    examConfigKeyFor,
+    serializeExamConfig,
+    parseExamConfig,
+    type ExamConfig,
+  } from '../../lib/exam-mode';
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
@@ -189,6 +196,13 @@ const devsRendered = await Promise.all(
       return localStorage.getItem(key);
     } catch {
       return null;
+    }
+  }
+  function safeSet(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* no-op */
     }
   }
   function safeRemove(key: string): void {
@@ -369,6 +383,49 @@ const devsRendered = await Promise.all(
 
   examStartBtn?.addEventListener('click', startExam);
   examExitBtn?.addEventListener('click', exitExam);
+
+  // Remember the panel's settings (not the in-progress simulacro) per asignatura.
+  function saveExamConfig(): void {
+    if (!asignatura) return;
+    const config: ExamConfig = {
+      shuffle: examShuffleCheckbox?.checked ?? false,
+      subsetSize: examSubsetToggle?.checked ? Number(examSubsetN?.value ?? 0) : null,
+      timed: examTimedCheckbox?.checked ?? false,
+      minutes: Number(examMinutesInput?.value ?? 20),
+    };
+    safeSet(examConfigKeyFor(asignatura), serializeExamConfig(config));
+  }
+
+  function restoreExamConfig(): void {
+    if (!asignatura) return;
+    const config = parseExamConfig(safeGet(examConfigKeyFor(asignatura)));
+    if (!config) return;
+    if (examShuffleCheckbox) examShuffleCheckbox.checked = config.shuffle;
+    if (examSubsetToggle) examSubsetToggle.checked = config.subsetSize !== null;
+    if (examSubsetN) {
+      if (config.subsetSize !== null) examSubsetN.value = String(config.subsetSize);
+      examSubsetN.disabled = config.subsetSize === null;
+    }
+    if (examTimedCheckbox) examTimedCheckbox.checked = config.timed;
+    if (examMinutesInput) {
+      examMinutesInput.value = String(config.minutes);
+      examMinutesInput.disabled = !config.timed;
+    }
+  }
+
+  for (const el of [
+    examShuffleCheckbox,
+    examSubsetToggle,
+    examSubsetN,
+    examTimedCheckbox,
+    examMinutesInput,
+  ]) {
+    // `input` covers number fields as the user types (no blur needed); `change`
+    // covers the checkboxes. Attaching both to every control is harmless.
+    el?.addEventListener('input', saveExamConfig);
+    el?.addEventListener('change', saveExamConfig);
+  }
+  restoreExamConfig();
 </script>
 
 <style>

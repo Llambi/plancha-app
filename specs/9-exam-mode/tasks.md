@@ -78,7 +78,7 @@ number | null; timed: boolean; minutes: number`) + las tres funciones en
     dispara `[data-grade-trigger]`.click() y detiene el intervalo.
   - Commit: `feat(practica): add timed exam mode with auto-grading (refs #9)`
 
-- [ ] **T8 — Persistir y restaurar la configuración del panel**
+- [x] **T8 — Persistir y restaurar la configuración del panel**
   - Test (rojo): tras fijar valores en el panel (barajar/N/cronómetro) y
     recargar la página, los controles reflejan la configuración guardada (sin
     arrancar el simulacro automáticamente).
