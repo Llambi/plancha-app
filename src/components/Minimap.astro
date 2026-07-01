@@ -1,0 +1,791 @@
+---
+/**
+ * Minimap — right-hand navigation rail (desktop) / "Mapa" drawer (narrower
+ * viewports) for long práctica/esquemas pages. One tick/row per `.mm-anchor`
+ * element already present in the page (test/desarrollo cards, esquema temas)
+ * plus the esquema outline's top-level branches, which get `.mm-anchor`
+ * injected at runtime by this component's script (see `ensureSubAnchors`),
+ * since the outline tree is rendered straight from markdown with no per-branch
+ * ids of its own.
+ *
+ * Cards/branches opt in by rendering `<PinButton />` and carrying the class
+ * `mm-anchor` + `data-mm-type`/`data-mm-level`/`data-mm-label`; everything else
+ * (rail, viewport bracket, hover tooltip, drag-to-scrub, drawer, pin
+ * persistence, n/p navigation, grading-color sync) lives here.
+ *
+ * One scrollable surface: unlike the design prototype (which simulated a
+ * fixed-size app window with its own scroll container), real pages scroll the
+ * whole document, so this tracks `window`/`document.documentElement` directly.
+ */
+interface Props {
+  /** Unique per-page key for pin persistence (e.g. `practica-si`). */
+  scope: string;
+  kind: 'practica' | 'esquema';
+}
+const { scope, kind } = Astro.props;
+const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temario';
+---
+
+<div class="mm" data-mm data-mm-scope={scope}>
+  <nav class="mm-rail" aria-label="Minimapa de navegación" data-mm-rail>
+    <div class="mm-vp" data-mm-vp></div>
+  </nav>
+  <div class="mm-tip" data-mm-tip></div>
+
+  <button
+    class="mm-fab"
+    type="button"
+    data-mm-drawer-toggle
+    aria-label={`Abrir ${drawerTitle.toLowerCase()}`}
+  >
+    <svg class="mm-fab-ic" viewBox="0 0 24 24" aria-hidden="true"
+      ><path d="M4 6h16M4 12h16M4 18h10"></path></svg
+    >
+    Mapa <span class="mm-fab-count zero" data-mm-fab-count>0</span>
+  </button>
+  <div class="mm-scrim" data-mm-drawer-toggle aria-hidden="true"></div>
+  <aside class="mm-drawer" role="dialog" aria-modal="true" aria-label={drawerTitle} data-mm-drawer>
+    <div class="mm-dhead">
+      <b>{drawerTitle}</b>
+      <button class="mm-x" type="button" data-mm-drawer-toggle aria-label="Cerrar mapa">✕</button>
+    </div>
+    <div class="mm-pinned" data-mm-pinned hidden></div>
+    <div class="mm-dlist" data-mm-dlist></div>
+  </aside>
+</div>
+
+<style is:global>
+  /* ===== rail (desktop) ===== */
+  .mm-rail {
+    display: none;
+    position: fixed;
+    top: 76px;
+    right: 24px;
+    bottom: 16px;
+    width: 34px;
+    background: var(--site-surface-2);
+    border: 1px solid var(--site-line);
+    border-radius: 10px;
+    z-index: 40;
+    touch-action: none;
+  }
+  .mm-rail::before {
+    content: 'mapa';
+    position: absolute;
+    top: 6px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font: 700 7.5px/1 var(--site-sans);
+    letter-spacing: 0.12em;
+    color: var(--site-muted);
+    text-transform: uppercase;
+  }
+  .mm-tick {
+    position: absolute;
+    left: 11px;
+    right: 5px;
+    height: 2.5px;
+    border-radius: 2px;
+    background: var(--site-line);
+    cursor: pointer;
+    transition:
+      background 0.12s,
+      box-shadow 0.12s;
+  }
+  .mm-tick.lvl1 {
+    left: 17px;
+    right: 7px;
+    height: 2px;
+    opacity: 0.75;
+  }
+  .mm-tick:hover {
+    background: var(--site-muted);
+  }
+  .mm-tick.pinned {
+    background: var(--mm-pin);
+  }
+  .mm-tick.ok {
+    background: var(--site-ok);
+  }
+  .mm-tick.bad {
+    background: var(--site-bad);
+  }
+  .mm-tick.active {
+    background: var(--site-accent);
+    box-shadow: 0 0 0 1.5px var(--site-accent);
+  }
+  .mm-vp {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: color-mix(in srgb, var(--site-accent) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--site-accent) 42%, transparent);
+    border-radius: 4px;
+    pointer-events: none;
+    min-height: 14px;
+  }
+  .mm-tip {
+    position: fixed;
+    z-index: 60;
+    max-width: 240px;
+    padding: 5px 9px;
+    font: 11px/1.35 var(--site-sans);
+    background: var(--site-topbar-bg);
+    color: var(--site-topbar-ink);
+    border-radius: 7px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(5px);
+    transition: 0.12s;
+    pointer-events: none;
+  }
+  .mm-tip.show {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ===== FAB + drawer (narrower viewports) ===== */
+  .mm-fab {
+    display: none;
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 50;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    border-radius: 999px;
+    background: var(--site-accent);
+    color: #fff;
+    font: 700 13px var(--site-sans);
+    padding: 11px 16px;
+    box-shadow: 0 6px 18px rgba(16, 33, 43, 0.3);
+    cursor: pointer;
+  }
+  .mm-fab-ic {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+  .mm-fab-count {
+    font-size: 10px;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    padding: 1px 7px;
+  }
+  .mm-fab-count.zero {
+    display: none;
+  }
+  .mm-scrim {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 14, 18, 0.45);
+    z-index: 1250;
+  }
+  .mm-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 86%;
+    max-width: 320px;
+    background: var(--site-surface);
+    color: var(--site-ink);
+    border-left: 1px solid var(--site-line);
+    box-shadow: -10px 0 30px rgba(8, 14, 18, 0.25);
+    z-index: 1260;
+    flex-direction: column;
+  }
+  .mm-dhead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--site-line);
+    flex: none;
+  }
+  .mm-dhead b {
+    font-size: 0.92rem;
+    font-weight: 800;
+    flex: 1;
+  }
+  .mm-x {
+    border: none;
+    background: var(--site-surface-2);
+    color: var(--site-muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .mm-pinned {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--site-line);
+    flex: none;
+  }
+  .mm-ph2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--mm-pin);
+    margin-bottom: 8px;
+  }
+  .mm-ph2 svg {
+    width: 13px;
+    height: 13px;
+    fill: var(--mm-pin);
+  }
+  .mm-prow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid color-mix(in srgb, var(--mm-pin) 40%, var(--site-line));
+    background: color-mix(in srgb, var(--mm-pin) 9%, transparent);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 6px;
+  }
+  .mm-pd {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--mm-pin);
+    flex: none;
+  }
+  .mm-dlist {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .mm-lrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--site-muted);
+  }
+  .mm-lrow:hover {
+    background: var(--site-surface-2);
+    color: var(--site-ink);
+  }
+  .mm-lt {
+    flex: none;
+    width: 18px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--site-line);
+  }
+  .mm-lrow.sub {
+    padding-left: 28px;
+  }
+  .mm-lrow.sub .mm-lt {
+    width: 12px;
+    opacity: 0.7;
+  }
+  .mm-lrow.ok .mm-lt {
+    background: var(--site-ok);
+  }
+  .mm-lrow.bad .mm-lt {
+    background: var(--site-bad);
+  }
+  .mm-lrow.pinned {
+    color: var(--site-ink);
+    font-weight: 600;
+  }
+  .mm-lrow.pinned .mm-lt {
+    background: var(--mm-pin);
+  }
+  .mm-lrow.cur {
+    background: color-mix(in srgb, var(--site-accent) 9%, transparent);
+  }
+  .mm-lrow.cur .mm-lt {
+    background: var(--site-accent);
+  }
+
+  @media (min-width: 1240px) {
+    .mm-rail {
+      display: block;
+    }
+  }
+  @media (max-width: 1239.98px) {
+    .mm-fab {
+      display: inline-flex;
+    }
+    .mm-drawer {
+      display: flex;
+      transform: translateX(100%);
+      transition: transform 0.22s ease;
+      pointer-events: none;
+    }
+    .mm-scrim {
+      display: block;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .mm.mm-open .mm-drawer {
+      transform: none;
+      pointer-events: auto;
+    }
+    .mm.mm-open .mm-scrim {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mm-drawer,
+    .mm-scrim,
+    .mm-tip {
+      transition: none;
+    }
+  }
+
+  /* ===== pin button (templated on cards + injected on outline sub-branches) ===== */
+  .pin-btn {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--site-line);
+    border-radius: 7px;
+    background: var(--site-surface);
+    color: var(--site-muted);
+    cursor: pointer;
+    transition: 0.12s;
+  }
+  .pin-btn:hover {
+    color: var(--mm-pin);
+    border-color: var(--mm-pin);
+  }
+  .pin-btn:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 1px;
+  }
+  .pin-svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linejoin: round;
+  }
+  .pin-btn.pin-btn-sm {
+    width: 20px;
+    height: 20px;
+  }
+  .pin-btn.pin-btn-sm .pin-svg {
+    width: 11px;
+    height: 11px;
+  }
+  .mm-anchor.pinned .pin-btn {
+    color: var(--mm-pin);
+    border-color: var(--mm-pin);
+    background: color-mix(in srgb, var(--mm-pin) 13%, transparent);
+  }
+  .mm-anchor.pinned .pin-svg {
+    fill: var(--mm-pin);
+    stroke: var(--mm-pin);
+  }
+
+  /* esquema outline: sub-branches get their pin button injected at runtime */
+  .esq-tree li.mm-anchor {
+    position: relative;
+    padding-right: 1.6rem;
+  }
+  .esq-tree li.mm-anchor > .mm-sub-pin {
+    position: absolute;
+    top: -0.05rem;
+    right: -0.15rem;
+  }
+  .esq-tree li.mm-anchor.pinned {
+    background: color-mix(in srgb, var(--mm-pin) 8%, transparent);
+    border-radius: 6px;
+  }
+
+  /* brief highlight when a jump lands on a card/branch */
+  @keyframes mm-flash {
+    0%,
+    100% {
+      box-shadow: var(--site-shadow);
+    }
+    25% {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--site-accent) 38%, transparent);
+    }
+  }
+  .mm-anchor.mm-flash {
+    animation: mm-flash 1.1s ease;
+  }
+</style>
+
+<script>
+  import {
+    pinsKeyFor,
+    parsePins,
+    serializePins,
+    togglePinned,
+    subBranchId,
+    subBranchLabel,
+    jumpPinTarget,
+    isCorrectPick,
+  } from '../lib/minimap';
+
+  interface Anchor {
+    el: HTMLElement;
+    id: string;
+    type: string;
+    level: number;
+    label: string;
+    tick?: HTMLElement;
+    row?: HTMLElement;
+  }
+
+  const PIN_SVG =
+    '<svg class="pin-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v16.5a.6.6 0 0 1-.9.52L12 18l-5.1 3.02A.6.6 0 0 1 6 20.5V4a1 1 0 0 1 1-1z"></path></svg>';
+  const TOPBAR_OFFSET = 70;
+
+  const root = document.querySelector<HTMLElement>('[data-mm]');
+  if (root) {
+    const scope = root.dataset.mmScope ?? '';
+    const railEl = root.querySelector<HTMLElement>('[data-mm-rail]')!;
+    const vpEl = root.querySelector<HTMLElement>('[data-mm-vp]')!;
+    const tipEl = root.querySelector<HTMLElement>('[data-mm-tip]')!;
+    const fabCountEl = root.querySelector<HTMLElement>('[data-mm-fab-count]')!;
+    const pinnedWrap = root.querySelector<HTMLElement>('[data-mm-pinned]')!;
+    const listWrap = root.querySelector<HTMLElement>('[data-mm-dlist]')!;
+
+    function safeGet(key: string): string | null {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }
+    function safeSet(key: string, value: string): void {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        /* private mode / quota: degrade silently, pins just won't persist */
+      }
+    }
+
+    let pins = new Set(parsePins(safeGet(pinsKeyFor(scope))));
+    let anchors: Anchor[] = [];
+
+    // Esquema outline branches come from raw rendered markdown with no ids of
+    // their own: turn each top-level `<li>` into a pinnable/navigable anchor.
+    function ensureSubAnchors(): void {
+      document.querySelectorAll<HTMLElement>('[data-mm-tree]').forEach((tree) => {
+        const section = tree.closest<HTMLElement>('.esq');
+        const temaId = section?.id ?? '';
+        const temaNum = section?.querySelector('.esq-num')?.textContent?.trim() ?? '';
+        const items = Array.from(tree.querySelectorAll<HTMLLIElement>(':scope > ul > li'));
+        items.forEach((li, i) => {
+          if (li.classList.contains('mm-anchor')) return;
+          const clone = li.cloneNode(true) as HTMLElement;
+          clone.querySelectorAll('ul').forEach((ul) => ul.remove());
+          const name = (clone.textContent || '').trim();
+          li.id = subBranchId(temaId, i);
+          li.classList.add('mm-anchor');
+          li.dataset.mmType = 'sub';
+          li.dataset.mmLevel = '1';
+          li.dataset.mmLabel = subBranchLabel(temaNum, i, name);
+          const pin = document.createElement('button');
+          pin.type = 'button';
+          pin.className = 'pin-btn pin-btn-sm mm-sub-pin';
+          pin.dataset.mmPin = '';
+          pin.setAttribute('aria-label', 'Fijar sección');
+          pin.setAttribute('title', 'Fijar sección');
+          pin.innerHTML = PIN_SVG;
+          li.insertBefore(pin, li.firstChild);
+        });
+      });
+    }
+
+    function collectAnchors(): Anchor[] {
+      return Array.from(document.querySelectorAll<HTMLElement>('.mm-anchor')).map((el) => ({
+        el,
+        id: el.id,
+        type: el.dataset.mmType ?? '',
+        level: Number(el.dataset.mmLevel ?? 0),
+        label: el.dataset.mmLabel ?? '',
+      }));
+    }
+
+    function absoluteTop(el: HTMLElement): number {
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
+
+    // Re-derives the same correctness TestQuestion's gradeAll() computes (it
+    // only annotates picked-wrong options with `.incorrect`, not unanswered
+    // ones, so that class alone can't tell an unanswered question from a hit).
+    function resultFor(a: Anchor): 'ok' | 'bad' | null {
+      if (a.type !== 'test' || !a.el.classList.contains('graded')) return null;
+      let correct: number[] = [];
+      try {
+        correct = JSON.parse(a.el.dataset.correct || '[]');
+      } catch {
+        correct = [];
+      }
+      const picked = Array.from(a.el.querySelectorAll<HTMLInputElement>('input'))
+        .filter((i) => i.checked)
+        .map((i) => Number(i.value));
+      return isCorrectPick(correct, picked) ? 'ok' : 'bad';
+    }
+
+    function activeAnchor(): Anchor | undefined {
+      const y = window.scrollY + 30;
+      let act = anchors[0];
+      for (const a of anchors) {
+        if (absoluteTop(a.el) <= y) act = a;
+        else break;
+      }
+      return act;
+    }
+
+    function buildRail(): void {
+      railEl.querySelectorAll('.mm-tick').forEach((n) => n.remove());
+      const docH = Math.max(document.documentElement.scrollHeight, 1);
+      const railH = railEl.clientHeight || 1;
+      anchors.forEach((a) => {
+        const tick = document.createElement('div');
+        tick.className = `mm-tick lvl${a.level}`;
+        tick.dataset.mid = a.id;
+        tick.style.top = `${(absoluteTop(a.el) / docH) * railH}px`;
+        if (pins.has(a.id)) tick.classList.add('pinned');
+        const r = resultFor(a);
+        if (r) tick.classList.add(r);
+        railEl.appendChild(tick);
+        a.tick = tick;
+      });
+    }
+
+    function buildDrawer(): void {
+      pinnedWrap.innerHTML = '';
+      const pinned = anchors.filter((a) => pins.has(a.id));
+      if (pinned.length) {
+        const h = document.createElement('div');
+        h.className = 'mm-ph2';
+        h.innerHTML = `${PIN_SVG} Fijados · ${pinned.length}`;
+        pinnedWrap.appendChild(h);
+        pinned.forEach((a) => {
+          const row = document.createElement('div');
+          row.className = 'mm-prow';
+          row.dataset.mid = a.id;
+          row.innerHTML = '<span class="mm-pd"></span>';
+          row.appendChild(document.createTextNode(` ${a.label}`));
+          pinnedWrap.appendChild(row);
+        });
+        pinnedWrap.hidden = false;
+      } else {
+        pinnedWrap.hidden = true;
+      }
+
+      listWrap.innerHTML = '';
+      anchors.forEach((a) => {
+        const row = document.createElement('div');
+        row.className = `mm-lrow${a.level ? ' sub' : ''}`;
+        if (pins.has(a.id)) row.classList.add('pinned');
+        const r = resultFor(a);
+        if (r) row.classList.add(r);
+        row.dataset.mid = a.id;
+        row.innerHTML = '<span class="mm-lt"></span>';
+        row.appendChild(document.createTextNode(` ${a.label}`));
+        listWrap.appendChild(row);
+        a.row = row;
+      });
+    }
+
+    function updateActiveMarkers(): void {
+      const act = activeAnchor();
+      anchors.forEach((a) => {
+        a.tick?.classList.toggle('active', a === act);
+        a.row?.classList.toggle('cur', a === act);
+      });
+    }
+
+    function updateViewport(): void {
+      const docH = Math.max(document.documentElement.scrollHeight, 1);
+      const railH = railEl.clientHeight || 1;
+      vpEl.style.top = `${(window.scrollY / docH) * railH}px`;
+      vpEl.style.height = `${Math.max(14, (window.innerHeight / docH) * railH)}px`;
+    }
+
+    function updateFab(): void {
+      fabCountEl.textContent = String(pins.size);
+      fabCountEl.classList.toggle('zero', pins.size === 0);
+    }
+
+    function rebuild(): void {
+      ensureSubAnchors();
+      anchors = collectAnchors();
+      anchors.forEach((a) => a.el.classList.toggle('pinned', pins.has(a.id)));
+      buildRail();
+      buildDrawer();
+      updateFab();
+      updateViewport();
+      updateActiveMarkers();
+    }
+
+    function jumpTo(id: string): void {
+      const a = anchors.find((x) => x.id === id);
+      if (!a) return;
+      window.scrollTo({ top: Math.max(0, absoluteTop(a.el) - TOPBAR_OFFSET), behavior: 'smooth' });
+      a.el.classList.remove('mm-flash');
+      void a.el.offsetWidth; // restart the flash animation
+      a.el.classList.add('mm-flash');
+    }
+
+    function scrubTo(clientY: number): void {
+      const r = railEl.getBoundingClientRect();
+      const frac = Math.min(1, Math.max(0, (clientY - r.top) / r.height));
+      const docH = document.documentElement.scrollHeight;
+      window.scrollTo({ top: frac * docH - window.innerHeight / 2 });
+    }
+
+    function showTip(tick: HTMLElement): void {
+      const a = anchors.find((x) => x.id === tick.dataset.mid);
+      if (!a) return;
+      tipEl.textContent = a.label;
+      const railRect = railEl.getBoundingClientRect();
+      const tickTop = parseFloat(tick.style.top || '0');
+      tipEl.style.top = `${railRect.top + tickTop - 8}px`;
+      tipEl.style.right = `${window.innerWidth - railRect.left + 10}px`;
+      tipEl.classList.add('show');
+    }
+    function hideTip(): void {
+      tipEl.classList.remove('show');
+    }
+
+    function railDown(e: PointerEvent): void {
+      railEl.setPointerCapture(e.pointerId);
+      const downY = e.clientY;
+      let moved = false;
+      const onMove = (ev: PointerEvent) => {
+        if (Math.abs(ev.clientY - downY) > 4) moved = true;
+        if (moved) scrubTo(ev.clientY);
+      };
+      const onUp = (ev: PointerEvent) => {
+        try {
+          railEl.releasePointerCapture(e.pointerId);
+        } catch {
+          /* already released */
+        }
+        railEl.removeEventListener('pointermove', onMove);
+        railEl.removeEventListener('pointerup', onUp);
+        if (!moved) {
+          const t = (ev.target as HTMLElement).closest<HTMLElement>('.mm-tick');
+          if (t?.dataset.mid) jumpTo(t.dataset.mid);
+          else scrubTo(ev.clientY);
+        }
+      };
+      railEl.addEventListener('pointermove', onMove);
+      railEl.addEventListener('pointerup', onUp);
+    }
+
+    function setPins(next: Set<string>): void {
+      pins = next;
+      safeSet(pinsKeyFor(scope), serializePins([...pins]));
+    }
+
+    function togglePin(id: string): void {
+      setPins(new Set(togglePinned([...pins], id)));
+      const a = anchors.find((x) => x.id === id);
+      a?.el.classList.toggle('pinned', pins.has(id));
+      buildRail();
+      buildDrawer();
+      updateFab();
+      updateActiveMarkers();
+    }
+
+    function isTypingTarget(target: EventTarget | null): boolean {
+      const t = target as HTMLElement | null;
+      if (!t) return false;
+      return (
+        t.tagName === 'INPUT' ||
+        t.tagName === 'TEXTAREA' ||
+        t.tagName === 'SELECT' ||
+        t.isContentEditable
+      );
+    }
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const pinBtn = target.closest<HTMLElement>('[data-mm-pin]');
+      if (pinBtn) {
+        e.preventDefault();
+        const anchorEl = pinBtn.closest<HTMLElement>('.mm-anchor');
+        if (anchorEl?.id) togglePin(anchorEl.id);
+        return;
+      }
+      if (target.closest('[data-mm-drawer-toggle]')) {
+        root.classList.toggle('mm-open');
+        return;
+      }
+      const row = target.closest<HTMLElement>('[data-mid]');
+      if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
+        jumpTo(row.dataset.mid);
+        root.classList.remove('mm-open');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (isTypingTarget(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
+      const dir = e.key === 'n' || e.key === ']' ? 1 : e.key === 'p' || e.key === '[' ? -1 : 0;
+      if (!dir) return;
+      const target = jumpPinTarget(
+        anchors.map((a) => a.id),
+        pins,
+        activeAnchor()?.id ?? null,
+        dir,
+      );
+      if (target) {
+        e.preventDefault();
+        jumpTo(target);
+      }
+    });
+
+    railEl.addEventListener('pointerover', (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('.mm-tick');
+      if (t) showTip(t);
+    });
+    railEl.addEventListener('pointerout', (e) => {
+      if ((e.target as HTMLElement).closest('.mm-tick')) hideTip();
+    });
+    railEl.addEventListener('pointerdown', (e) => railDown(e));
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        updateViewport();
+        updateActiveMarkers();
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', () => rebuild());
+    window.addEventListener('load', () => rebuild());
+    document.addEventListener('tq:graded', () => {
+      buildRail();
+      buildDrawer();
+    });
+
+    requestAnimationFrame(() => requestAnimationFrame(rebuild));
+  }
+</script>

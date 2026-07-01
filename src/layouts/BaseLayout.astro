@@ -112,6 +112,7 @@ const accentStyle = accent ? `--site-accent:${accent}` : undefined;
     --site-accent: #5a5fd6; /* acento neutro por defecto (contraste AA) */
     --site-radius: 14px;
     --site-sans: -apple-system, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
+    --mm-pin: #e0a400; /* minimap: distinct from --site-accent/--site-ok/--site-bad so pins never collide with grading colors */
   }
   :root[data-theme='light'] {
     --site-bg: #eef1f0;
@@ -146,6 +147,7 @@ const accentStyle = accent ? `--site-accent:${accent}` : undefined;
     --site-ok-soft: #16291f;
     --site-bad: #e06576;
     --site-bad-soft: #33191d;
+    --mm-pin: #f0b400;
   }
 
   *,

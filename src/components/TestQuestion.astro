@@ -8,6 +8,9 @@
  * el script (incluido una sola vez por Astro) marca aciertos/fallos, revela
  * la explicación y emite un evento `tq:graded` con la puntuación.
  */
+import PinButton from './PinButton.astro';
+import { stripTags, truncateLabel } from '../lib/minimap';
+
 interface Props {
   id: string;
   type: 'single' | 'multi';
@@ -24,9 +27,19 @@ const { id, type, question, options, correct, explicacion, tema, num, aparicione
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const inputType = type === 'single' ? 'radio' : 'checkbox';
+const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
 ---
 
-<fieldset id={`q-${id}`} class="tq" data-tq data-correct={JSON.stringify(correct)} data-type={type}>
+<fieldset
+  id={`q-${id}`}
+  class="tq mm-anchor"
+  data-tq
+  data-correct={JSON.stringify(correct)}
+  data-type={type}
+  data-mm-type="test"
+  data-mm-level="0"
+  data-mm-label={mmLabel}
+>
   <legend class="tq-head">
     {num != null && <span class="tq-num">{num}</span>}
     <span class="tq-q">
@@ -40,6 +53,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
         )
       }
     </span>
+    <PinButton label="Fijar pregunta" />
   </legend>
 
   <div class="tq-opts">
@@ -107,6 +121,8 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
   .tq-q {
     font-weight: 600;
     line-height: 1.45;
+    flex: 1;
+    min-width: 0;
   }
   .tq-multi {
     display: inline-block;
@@ -243,6 +259,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
 <script>
   import { keyFor, serialize, parse, pruneAnswers } from '../lib/practica-progress';
   import { statsKeyFor, serializeStats, parseStats, recordGrading } from '../lib/practica-stats';
+  import { isCorrectPick } from '../lib/minimap';
 
   // Per-question grading outcome (used to feed the stats aggregation).
   type GradeResult = { id: string; answered: boolean; correct: boolean };
@@ -256,7 +273,7 @@ const inputType = type === 'single' ? 'radio' : 'checkbox';
       const correct: number[] = JSON.parse(q.dataset.correct || '[]');
       const inputs = Array.from(q.querySelectorAll<HTMLInputElement>('input'));
       const picked = inputs.filter((i) => i.checked).map((i) => Number(i.value));
-      const ok = picked.length === correct.length && picked.every((p) => correct.includes(p));
+      const ok = isCorrectPick(correct, picked);
       if (ok) score++;
       results.push({ id: q.id, answered: picked.length > 0, correct: ok });
       q.classList.add('graded');

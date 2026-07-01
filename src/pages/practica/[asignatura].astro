@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TestQuestion from '../../components/TestQuestion.astro';
 import DesarrolloQuestion from '../../components/DesarrolloQuestion.astro';
+import Minimap from '../../components/Minimap.astro';
 import { meta } from '../../data/asignaturas';
 
 export async function getStaticPaths() {
@@ -124,6 +125,12 @@ const devsRendered = await Promise.all(
           </DesarrolloQuestion>
         ))}
       </section>
+    )
+  }
+
+  {
+    (tests.length > 0 || devsRendered.length > 0) && (
+      <Minimap scope={`practica-${code}`} kind="practica" />
     )
   }
 </BaseLayout>
