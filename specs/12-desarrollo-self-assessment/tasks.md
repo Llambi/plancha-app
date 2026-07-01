@@ -20,7 +20,7 @@
     `parse`, `pruneAnswers`, `summarize`.
   - Commit: `feat(practica): add desarrollo-progress core for self-assessment (refs #12)`
 
-- [ ] **T2 — Botones de autoevaluación: seleccionar, persistir, restaurar**
+- [x] **T2 — Botones de autoevaluación: seleccionar, persistir, restaurar**
   - Test (rojo): `tests/e2e/desarrollo-self-assessment.spec.ts` — en
     `/practica/si` aparecen 3 botones por pregunta de desarrollo, ninguno
     activo; pulsar «Lo sabía» lo marca (`aria-pressed="true"`) y dejar los

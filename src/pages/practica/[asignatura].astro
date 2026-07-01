@@ -157,7 +157,7 @@ const devsRendered = await Promise.all(
 
   {
     devsRendered.length > 0 && (
-      <section class="block" aria-labelledby="h-dev">
+      <section class="block" aria-labelledby="h-dev" data-desarrollo={code}>
         <h2 class="block-h" id="h-dev">
           <span class="block-idx">{tests.length > 0 ? 'II' : 'I'}</span> Preguntas de desarrollo
         </h2>
