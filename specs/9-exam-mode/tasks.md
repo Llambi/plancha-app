@@ -37,7 +37,7 @@ number | null; timed: boolean; minutes: number`) + las tres funciones en
     `src/lib/exam-mode.ts`.
   - Commit: `feat(practica): persist exam-mode config in localStorage (refs #9)`
 
-- [ ] **T4 — Panel de modo examen: scaffold + empezar/salir**
+- [x] **T4 — Panel de modo examen: scaffold + empezar/salir**
   - Test (rojo): `tests/e2e/exam-mode.spec.ts` — en `/practica/si` el panel de
     modo examen es visible (hay preguntas de test); al pulsar «Empezar
     simulacro» sin barajar ni subconjunto y luego «Salir de modo examen», el

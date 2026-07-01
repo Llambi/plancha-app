@@ -80,6 +80,41 @@ const devsRendered = await Promise.all(
           </div>
         </div>
 
+        <div class="exam" data-exam-panel>
+          <p class="exam-title">Modo examen</p>
+          <div class="exam-opts">
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-shuffle /> Barajar preguntas
+            </label>
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
+              <input
+                type="number"
+                min="1"
+                max={tests.length}
+                value={tests.length}
+                data-exam-subset-n
+                disabled
+              />{' '}
+              preguntas
+            </label>
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
+              <input type="number" min="1" value="20" data-exam-minutes disabled />
+            </label>
+          </div>
+          <div class="exam-actions">
+            <button class="btn-grade" type="button" data-exam-start>
+              {' '}
+              Empezar simulacro{' '}
+            </button>
+            <button class="btn-reset" type="button" data-exam-exit hidden>
+              Salir de modo examen
+            </button>
+            <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
+          </div>
+        </div>
+
         {tests.map((q, i) => (
           <TestQuestion
             id={q.data.id}
@@ -217,6 +252,51 @@ const devsRendered = await Promise.all(
 
   document.addEventListener('practica:stats-updated', renderStats);
   renderStats();
+
+  // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
+  const examPanel = document.querySelector<HTMLElement>('[data-exam-panel]');
+  const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');
+  const examExitBtn = document.querySelector<HTMLButtonElement>('[data-exam-exit]');
+  const testSection = document.querySelector<HTMLElement>('[data-practica]');
+
+  // Enable a paired number input only while its checkbox is checked.
+  function wireToggle(checkboxSel: string, inputSel: string): void {
+    const checkbox = document.querySelector<HTMLInputElement>(checkboxSel);
+    const input = document.querySelector<HTMLInputElement>(inputSel);
+    if (!checkbox || !input) return;
+    checkbox.addEventListener('change', () => {
+      input.disabled = !checkbox.checked;
+    });
+  }
+  wireToggle('[data-exam-subset-toggle]', '[data-exam-subset-n]');
+  wireToggle('[data-exam-timed]', '[data-exam-minutes]');
+
+  if (examPanel && examStartBtn && examExitBtn && testSection) {
+    // Original order/visibility of the questions, captured once so «Salir de
+    // modo examen» can restore it exactly regardless of what the simulacro did.
+    const originalOrder = Array.from(testSection.querySelectorAll<HTMLElement>('[data-tq]'));
+
+    function startExam(): void {
+      examStartBtn!.hidden = true;
+      examExitBtn!.hidden = false;
+    }
+
+    function exitExam(): void {
+      const container = originalOrder[0]?.parentElement;
+      if (container) {
+        for (const q of originalOrder) {
+          q.hidden = false;
+          container.appendChild(q);
+        }
+      }
+      document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+      examStartBtn!.hidden = false;
+      examExitBtn!.hidden = true;
+    }
+
+    examStartBtn.addEventListener('click', startExam);
+    examExitBtn.addEventListener('click', exitExam);
+  }
 </script>
 
 <style>
@@ -343,5 +423,51 @@ const devsRendered = await Promise.all(
     accent-color: var(--site-accent);
     width: 1rem;
     height: 1rem;
+  }
+  .exam {
+    margin-bottom: 1.4rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--site-line);
+    border-radius: 12px;
+    background: var(--site-surface-2);
+  }
+  .exam-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+  .exam-opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .exam-opt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--site-muted);
+  }
+  .exam-opt input[type='checkbox'] {
+    accent-color: var(--site-accent);
+    width: 1rem;
+    height: 1rem;
+  }
+  .exam-opt input[type='number'] {
+    width: 4.2rem;
+    font: inherit;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--site-line);
+    border-radius: 6px;
+  }
+  .exam-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.85rem;
+  }
+  .exam-timer {
+    font-weight: 700;
   }
 </style>
