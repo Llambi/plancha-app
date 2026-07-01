@@ -17,7 +17,7 @@
     reutilizando `url()`.
   - Commit: `feat(seo): add canonicalUrl helper (refs #13)`
 
-- [ ] **T2 — Meta tags Open Graph/Twitter + favicon real**
+- [ ] **T2 — Favicon real + meta tags Open Graph/Twitter (sin imagen)**
   - Test (rojo): `tests/e2e/seo.spec.ts` — la home tiene
     `meta[property="og:title"]`, `og:description`, `og:type="website"`,
     `og:url` (con `/plancha-app`), `meta[name="twitter:card"]`,
@@ -28,7 +28,18 @@
     cambia el `<link rel="icon">`.
   - Commit: `feat(seo): add Open Graph/Twitter meta tags and a real favicon (refs #13)`
 
-- [ ] **T3 — Sitemap con `@astrojs/sitemap`**
+- [ ] **T3 — `og:image`/`twitter:image` con un asset propio**
+  - Test (rojo): extiende `tests/e2e/seo.spec.ts` — la home tiene
+    `meta[property="og:image"]` y `meta[name="twitter:image"]` con una URL
+    absoluta (`SITE`+`BASE`), `twitter:card` pasa a ser
+    `summary_large_image`, y esa URL de imagen responde 200 con
+    `content-type: image/png`.
+  - Implementación (verde): genera `public/og-image.png` (1200×630) a partir
+    de un SVG de marca con `rsvg-convert` (wordmark "PlanchaAPP" + acento por
+    defecto); añade las meta tags de imagen en `BaseLayout.astro`.
+  - Commit: `feat(seo): add a real og:image/twitter:image (refs #13)`
+
+- [ ] **T4 — Sitemap con `@astrojs/sitemap`**
   - Test (rojo): tras `npm run build`, `${BASE}/sitemap-index.xml` responde
     200 sirviendo `dist/` y su contenido referencia URLs con el subpath
     `/plancha-app` (verificado en `tests/e2e/seo.spec.ts`, que corre contra
