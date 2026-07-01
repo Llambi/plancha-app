@@ -35,7 +35,7 @@
     (patrón `.filter-btn` de `index.astro`) solo si no está vacío.
   - Commit: `feat(practica): add topic filter buttons (refs #11)`
 
-- [ ] **T4 — Aplicar el filtro: ocultar, minimap, corrección sobre visibles**
+- [x] **T4 — Aplicar el filtro: ocultar, minimap, corrección sobre visibles**
   - Test (rojo): elegir un tema deja visibles solo esas preguntas (resto
     `hidden`); el minimap (`.mm-tick`) las excluye; corregir con el filtro
     activo puntúa `.score` solo sobre las visibles.

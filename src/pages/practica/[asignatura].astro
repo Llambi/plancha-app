@@ -441,6 +441,31 @@ const devsRendered = await Promise.all(
     el?.addEventListener('change', saveExamConfig);
   }
   restoreExamConfig();
+
+  // --- Topic filter (tema) ---------------------------------------------------
+  const temaButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[data-tema-filter]'),
+  );
+  let temaFilter = 'all';
+
+  function applyTemaFilter(): void {
+    document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
+      q.hidden = temaFilter !== 'all' && q.dataset.tema !== temaFilter;
+    });
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+  }
+
+  temaButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      temaFilter = btn.dataset.temaFilter ?? 'all';
+      temaButtons.forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      applyTemaFilter();
+    });
+  });
 </script>
 
 <style>
