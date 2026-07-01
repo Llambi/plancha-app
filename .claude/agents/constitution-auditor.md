@@ -2,6 +2,7 @@
 name: constitution-auditor
 description: Audita el diff de la rama contra la Constitución de PlanchaAPP (contenido verbatim, BASE en enlaces, convenciones de idioma/Git, gotchas de Astro) y devuelve un checklist. Solo lee; no edita. Úsalo desde /deliver antes del Gate B.
 tools: Read, Grep, Glob, Bash
+model: haiku
 ---
 
 # constitution-auditor

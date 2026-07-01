@@ -2,6 +2,7 @@
 name: spec-analyst
 description: Analiza un requerimiento o issue de PlanchaAPP y produce un borrador de spec SDD (criterios de aceptación, alcance, no-objetivos, dudas). Úsalo desde /spec para requerimientos grandes o ambiguos.
 tools: Read, Grep, Glob, Bash, WebFetch
+model: sonnet
 ---
 
 # spec-analyst
