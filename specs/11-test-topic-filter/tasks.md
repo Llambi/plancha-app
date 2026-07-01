@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — `uniqueTemas`: helper puro para derivar los temas distintos**
+- [x] **T1 — `uniqueTemas`: helper puro para derivar los temas distintos**
   - Test (rojo): `tests/unit/practica-temas.test.ts` — dedup, orden natural
     ("Tema 2" antes que "Tema 10"; también con valores tipo "T1".."T10"),
     ignora `undefined`/cadena vacía, devuelve `[]` si no hay ningún tema.
