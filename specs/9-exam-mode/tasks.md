@@ -68,7 +68,7 @@ number | null; timed: boolean; minutes: number`) + las tres funciones en
     exclusión mutua con `[data-failed-toggle]`.
   - Commit: `feat(practica): wire N-question subset into exam mode (refs #9)`
 
-- [ ] **T7 — Modo cronometrado con autocorrección**
+- [x] **T7 — Modo cronometrado con autocorrección**
   - Test (rojo): con el cronómetro activado y una duración muy corta, al
     agotarse el tiempo el test queda corregido (`.tq.graded`) sin intervención
     del usuario — mismo patrón de espera con timeout que el test de «Ver

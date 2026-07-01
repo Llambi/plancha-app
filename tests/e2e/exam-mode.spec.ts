@@ -82,3 +82,16 @@ test('activar el modo examen desactiva el filtro «solo mis fallos» y viceversa
   await expect(page.locator('[data-exam-start]')).toBeVisible();
   await expect(page.locator('[data-exam-exit]')).toBeHidden();
 });
+
+test('el cronómetro muestra cuenta atrás y corrige automáticamente al agotarse', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  await page.locator('[data-exam-timed]').check();
+  await page.locator('[data-exam-minutes]').fill('0.02'); // ~1.2 s, solo para el test
+  await page.locator('[data-exam-start]').click();
+
+  await expect(page.locator('[data-exam-timer]')).not.toHaveText('');
+  await expect(page.locator('[data-tq]').first()).toHaveClass(/graded/, { timeout: 5000 });
+});

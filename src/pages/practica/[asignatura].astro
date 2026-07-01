@@ -265,6 +265,9 @@ const devsRendered = await Promise.all(
   const examShuffleCheckbox = document.querySelector<HTMLInputElement>('[data-exam-shuffle]');
   const examSubsetToggle = document.querySelector<HTMLInputElement>('[data-exam-subset-toggle]');
   const examSubsetN = document.querySelector<HTMLInputElement>('[data-exam-subset-n]');
+  const examTimedCheckbox = document.querySelector<HTMLInputElement>('[data-exam-timed]');
+  const examMinutesInput = document.querySelector<HTMLInputElement>('[data-exam-minutes]');
+  const examTimerEl = document.querySelector<HTMLElement>('[data-exam-timer]');
   const testSection = document.querySelector<HTMLElement>('[data-practica]');
   // Original order/visibility of the questions, captured once so «Salir de
   // modo examen» can restore it exactly regardless of what the simulacro did.
@@ -281,10 +284,39 @@ const devsRendered = await Promise.all(
     });
   }
   wireToggle(examSubsetToggle, examSubsetN);
-  wireToggle(
-    document.querySelector('[data-exam-timed]'),
-    document.querySelector('[data-exam-minutes]'),
-  );
+  wireToggle(examTimedCheckbox, examMinutesInput);
+
+  let examTimerId: number | null = null;
+
+  function stopTimer(): void {
+    if (examTimerId !== null) {
+      clearInterval(examTimerId);
+      examTimerId = null;
+    }
+    if (examTimerEl) examTimerEl.textContent = '';
+  }
+
+  function startTimer(durationMs: number): void {
+    const endAt = Date.now() + durationMs;
+    function tick(): void {
+      const remaining = endAt - Date.now();
+      if (remaining <= 0) {
+        stopTimer();
+        document.querySelector<HTMLButtonElement>('[data-grade-trigger]')?.click();
+        return;
+      }
+      const totalSeconds = Math.ceil(remaining / 1000);
+      const mm = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const ss = String(totalSeconds % 60).padStart(2, '0');
+      if (examTimerEl) examTimerEl.textContent = `${mm}:${ss}`;
+    }
+    tick();
+    examTimerId = window.setInterval(tick, 250);
+  }
+
+  // Stop the countdown as soon as the test is corrected, whether by the timer
+  // itself or by the user clicking «Corregir» before time runs out.
+  document.addEventListener('tq:graded', stopTimer);
 
   function startExam(): void {
     const container = originalOrder[0]?.parentElement;
@@ -314,9 +346,14 @@ const devsRendered = await Promise.all(
     if (examStartBtn) examStartBtn.hidden = true;
     if (examExitBtn) examExitBtn.hidden = false;
     examActive = true;
+    if (examTimedCheckbox?.checked) {
+      const minutes = Number(examMinutesInput?.value ?? 20);
+      startTimer(minutes * 60000);
+    }
   }
 
   function exitExam(): void {
+    stopTimer();
     const container = originalOrder[0]?.parentElement;
     if (container) {
       for (const q of originalOrder) {
