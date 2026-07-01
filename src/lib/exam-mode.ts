@@ -57,3 +57,46 @@ export function buildExamOrder<T>(items: T[], options: ExamOrderOptions, rng: ()
   const subset = options.subsetSize == null ? items : pickSubset(items, options.subsetSize, rng);
   return options.shuffle ? shuffle(subset, rng) : subset;
 }
+
+const EXAM_CONFIG_PREFIX = 'plancha:exam:';
+
+/** Persisted exam-mode settings for an asignatura (not the in-progress run). */
+export interface ExamConfig {
+  shuffle: boolean;
+  /** null means "all questions" (no subset limit). */
+  subsetSize: number | null;
+  timed: boolean;
+  minutes: number;
+}
+
+/** `localStorage` key for an asignatura's exam-mode config. */
+export function examConfigKeyFor(asignatura: string): string {
+  return `${EXAM_CONFIG_PREFIX}${asignatura}`;
+}
+
+export function serializeExamConfig(config: ExamConfig): string {
+  return JSON.stringify(config);
+}
+
+/** Defensive parse: `null` on invalid JSON, non-object, or an incomplete shape. */
+export function parseExamConfig(raw: string | null): ExamConfig | null {
+  if (!raw) return null;
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (typeof value !== 'object' || value === null) return null;
+  const v = value as Record<string, unknown>;
+  if (typeof v.shuffle !== 'boolean') return null;
+  if (typeof v.timed !== 'boolean') return null;
+  if (typeof v.minutes !== 'number') return null;
+  if (v.subsetSize !== null && typeof v.subsetSize !== 'number') return null;
+  return {
+    shuffle: v.shuffle,
+    subsetSize: (v.subsetSize as number | null) ?? null,
+    timed: v.timed,
+    minutes: v.minutes,
+  };
+}

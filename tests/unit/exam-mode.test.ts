@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { createRng, shuffle, pickSubset, buildExamOrder } from '../../src/lib/exam-mode';
+import {
+  createRng,
+  shuffle,
+  pickSubset,
+  buildExamOrder,
+  examConfigKeyFor,
+  serializeExamConfig,
+  parseExamConfig,
+  type ExamConfig,
+} from '../../src/lib/exam-mode';
 
 describe('createRng()', () => {
   it('produces the same sequence for the same seed', () => {
@@ -93,5 +102,46 @@ describe('buildExamOrder()', () => {
     expect(order).toHaveLength(6);
     expect(new Set(order).size).toBe(6);
     for (const p of order) expect(items).toContain(p);
+  });
+});
+
+const sampleConfig: ExamConfig = { shuffle: true, subsetSize: 10, timed: true, minutes: 20 };
+
+describe('examConfigKeyFor()', () => {
+  it('namespaces the key by asignatura', () => {
+    expect(examConfigKeyFor('si')).toBe('plancha:exam:si');
+    expect(examConfigKeyFor('dar')).toBe('plancha:exam:dar');
+  });
+});
+
+describe('serializeExamConfig()/parseExamConfig()', () => {
+  it('round-trips a config', () => {
+    expect(parseExamConfig(serializeExamConfig(sampleConfig))).toEqual(sampleConfig);
+  });
+
+  it('round-trips subsetSize: null', () => {
+    const config: ExamConfig = { ...sampleConfig, subsetSize: null };
+    expect(parseExamConfig(serializeExamConfig(config))).toEqual(config);
+  });
+
+  it('returns null for null/empty input', () => {
+    expect(parseExamConfig(null)).toBeNull();
+    expect(parseExamConfig('')).toBeNull();
+  });
+
+  it('returns null for invalid JSON', () => {
+    expect(parseExamConfig('{not json')).toBeNull();
+  });
+
+  it('returns null when the value is not an object', () => {
+    expect(parseExamConfig('42')).toBeNull();
+    expect(parseExamConfig('null')).toBeNull();
+  });
+
+  it('returns null when the shape is incomplete', () => {
+    expect(parseExamConfig(JSON.stringify({ shuffle: true, timed: true }))).toBeNull(); // no minutes
+    expect(
+      parseExamConfig(JSON.stringify({ shuffle: true, subsetSize: null, minutes: 20 })),
+    ).toBeNull(); // no timed
   });
 });

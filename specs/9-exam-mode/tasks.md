@@ -27,7 +27,7 @@
     `src/lib/exam-mode.ts`.
   - Commit: `feat(practica): add subset sampling and exam order builder (refs #9)`
 
-- [ ] **T3 — Persistencia de la configuración (`ExamConfig`)**
+- [x] **T3 — Persistencia de la configuración (`ExamConfig`)**
   - Test (rojo): `examConfigKeyFor` namespacea por asignatura;
     `serializeExamConfig`/`parseExamConfig` hacen round-trip y son defensivos
     (`null` ante JSON inválido, no-objeto o forma incompleta) — mismo patrón que
