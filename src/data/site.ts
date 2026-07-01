@@ -13,3 +13,8 @@ export function url(path = '/'): string {
   const p = path.startsWith('/') ? path : `/${path}`;
   return `${BASE}${p}`.replace(/\/{2,}/g, '/');
 }
+
+/** URL absoluta (SITE + BASE + ruta), para metadatos como og:url/og:image. */
+export function canonicalUrl(path = '/'): string {
+  return `${SITE}${url(path)}`;
+}
