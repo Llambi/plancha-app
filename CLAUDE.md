@@ -23,7 +23,7 @@ npm run preview           # serves the built dist/
 
 npm test                  # unit tests (Vitest)
 npm run test:e2e          # e2e smoke (Playwright, sobre el preview)
-npm run test:all          # check + unit + build + e2e
+npm run test:all          # lint + format + check + unit + build + e2e
 
 docker compose up -d --build   # builds Astro + serves at http://localhost:8080
 docker compose down
