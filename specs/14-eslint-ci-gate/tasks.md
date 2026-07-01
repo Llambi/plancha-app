@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Alinear `test:all` con el gate de CI**
+- [x] **T1 — Alinear `test:all` con el gate de CI**
   - Verificación (roja): `npm run test:all` actual no ejecuta `eslint .` ni
     `prettier --check .`, así que puede dar verde localmente y aun así fallar
     en CI por lint/formato.
@@ -20,7 +20,7 @@ npm run build && npm run test:e2e"` (mismo orden que
   - Refactor: no aplica.
   - Commit: `ci(scripts): run lint and format:check as part of test:all (refs #14)`
 
-- [ ] **T2 — Documentar el gate en CLAUDE.md**
+- [x] **T2 — Documentar el gate en CLAUDE.md**
   - Verificación (roja): la línea de `CLAUDE.md` sobre `test:all` dice
     `# check + unit + build + e2e`, que ya no describe el comando real.
   - Implementación (verde): actualizar el comentario a
