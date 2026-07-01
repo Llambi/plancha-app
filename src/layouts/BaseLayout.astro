@@ -45,9 +45,11 @@ const pageUrl = canonicalUrl(Astro.url.pathname);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={pageUrl} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={canonicalUrl('/og-image.png')} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={canonicalUrl('/og-image.png')} />
 
     <slot name="head" />
     <script is:inline>

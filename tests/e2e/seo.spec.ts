@@ -30,3 +30,20 @@ test('la home emite meta tags Open Graph y Twitter Card', async ({ page }) => {
   await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', /.+/);
   await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute('content', /.+/);
 });
+
+test('la home emite og:image/twitter:image con una imagen PNG real', async ({ page }) => {
+  await page.goto(`${BASE}/`);
+
+  const ogImage = page.locator('meta[property="og:image"]');
+  const content = await ogImage.getAttribute('content');
+  expect(content).toBe(`${SITE}${BASE}/og-image.png`);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    'content',
+    'summary_large_image',
+  );
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', content!);
+
+  const res = await page.request.get(`${BASE}/og-image.png`);
+  expect(res.status()).toBe(200);
+  expect(res.headers()['content-type']).toBe('image/png');
+});

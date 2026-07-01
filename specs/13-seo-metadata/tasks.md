@@ -28,7 +28,7 @@
     cambia el `<link rel="icon">`.
   - Commit: `feat(seo): add Open Graph/Twitter meta tags and a real favicon (refs #13)`
 
-- [ ] **T3 — `og:image`/`twitter:image` con un asset propio**
+- [x] **T3 — `og:image`/`twitter:image` con un asset propio**
   - Test (rojo): extiende `tests/e2e/seo.spec.ts` — la home tiene
     `meta[property="og:image"]` y `meta[name="twitter:image"]` con una URL
     absoluta (`SITE`+`BASE`), `twitter:card` pasa a ser
