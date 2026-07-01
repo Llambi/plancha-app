@@ -44,7 +44,7 @@
     `practica:filter-changed`.
   - Commit: `feat(practica): wire the topic filter to hide non-matching questions (refs #11)`
 
-- [ ] **T5 — Exclusión mutua con «solo mis fallos» y modo examen**
+- [x] **T5 — Exclusión mutua con «solo mis fallos» y modo examen**
   - Test (rojo): activar el filtro de tema desactiva «solo mis fallos» y sale
     del modo examen si estaba activo; activar cualquiera de esos dos resetea
     el filtro de tema a «Todos».

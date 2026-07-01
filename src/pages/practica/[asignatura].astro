@@ -270,10 +270,13 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
-  // Exam mode and «solo mis fallos» both drive `hidden` on the same
-  // `[data-tq]` elements — mutually exclusive so they never fight over it.
+  // Exam mode, the topic filter, and «solo mis fallos» all drive `hidden` on
+  // the same `[data-tq]` elements — mutually exclusive so they never fight.
   failedToggle?.addEventListener('change', () => {
-    if (failedToggle.checked && examActive) exitExam();
+    if (failedToggle.checked) {
+      if (examActive) exitExam();
+      resetTemaButtons();
+    }
     applyFailedFilter();
   });
 
@@ -350,12 +353,13 @@ const devsRendered = await Promise.all(
   function startExam(): void {
     const container = originalOrder[0]?.parentElement;
     if (!container) return;
-    // Exam mode and «solo mis fallos» share the same `hidden` flag: starting
-    // a simulacro takes over, so drop the fallos filter first.
+    // Exam mode shares the same `hidden` flag with «solo mis fallos» and the
+    // topic filter: starting a simulacro takes over, so drop both first.
     if (failedToggle?.checked) {
       failedToggle.checked = false;
       applyFailedFilter();
     }
+    resetTemaButtons();
     const rng = createRng(Date.now());
     const subsetSize = examSubsetToggle?.checked
       ? Math.max(
@@ -455,6 +459,17 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
+  // Resets the button states to «Todos» without reapplying visibility — used
+  // when «solo mis fallos» or the exam mode take over the `hidden` flag.
+  function resetTemaButtons(): void {
+    temaFilter = 'all';
+    temaButtons.forEach((b) => {
+      const on = b.dataset.temaFilter === 'all';
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
   temaButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       temaFilter = btn.dataset.temaFilter ?? 'all';
@@ -463,6 +478,13 @@ const devsRendered = await Promise.all(
         b.classList.toggle('on', on);
         b.setAttribute('aria-pressed', String(on));
       });
+      // The topic filter shares `hidden` with «solo mis fallos» and the exam
+      // mode: selecting a tema takes over, so drop both first.
+      if (failedToggle?.checked) {
+        failedToggle.checked = false;
+        applyFailedFilter();
+      }
+      if (examActive) exitExam();
       applyTemaFilter();
     });
   });

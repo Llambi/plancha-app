@@ -45,3 +45,30 @@ test('corregir con un tema activo puntúa solo sobre las preguntas visibles', as
 
   await expect(page.locator('.score')).toHaveText('Aciertos: 0 / 8');
 });
+
+test('el filtro de tema es mutuamente excluyente con «solo mis fallos» y el modo examen', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  // Activar un tema desmarca «solo mis fallos» si estaba activo.
+  await page.locator('[data-failed-toggle]').check();
+  await page.locator('[data-tema-filter="T1"]').click();
+  await expect(page.locator('[data-failed-toggle]')).not.toBeChecked();
+
+  // Y activar «solo mis fallos» vuelve el filtro de tema a «Todos».
+  await page.locator('[data-failed-toggle]').check();
+  await expect(page.locator('[data-tema-filter="all"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-tema-filter="T1"]')).toHaveAttribute('aria-pressed', 'false');
+  await page.locator('[data-failed-toggle]').uncheck();
+
+  // Activar un tema sale del modo examen si estaba activo.
+  await page.locator('[data-exam-start]').click();
+  await page.locator('[data-tema-filter="T1"]').click();
+  await expect(page.locator('[data-exam-start]')).toBeVisible();
+  await expect(page.locator('[data-exam-exit]')).toBeHidden();
+
+  // Y empezar un simulacro vuelve el filtro de tema a «Todos».
+  await page.locator('[data-exam-start]').click();
+  await expect(page.locator('[data-tema-filter="all"]')).toHaveAttribute('aria-pressed', 'true');
+});
