@@ -29,3 +29,31 @@ export function shuffle<T>(items: T[], rng: () => number): T[] {
   }
   return out;
 }
+
+/**
+ * Picks `n` distinct items at random, `n` clamped to `[0, items.length]`.
+ * Preserves the original relative order of the chosen items (selection only,
+ * no reordering — `buildExamOrder` applies `shuffle` on top when asked).
+ */
+export function pickSubset<T>(items: T[], n: number, rng: () => number): T[] {
+  const clamped = Math.max(0, Math.min(n, items.length));
+  const indices = shuffle(
+    items.map((_, i) => i),
+    rng,
+  )
+    .slice(0, clamped)
+    .sort((a, b) => a - b);
+  return indices.map((i) => items[i]);
+}
+
+/** Options for `buildExamOrder`: `subsetSize: null` means "all items". */
+export interface ExamOrderOptions {
+  shuffle: boolean;
+  subsetSize: number | null;
+}
+
+/** Combines subset selection and shuffling into the final review order. */
+export function buildExamOrder<T>(items: T[], options: ExamOrderOptions, rng: () => number): T[] {
+  const subset = options.subsetSize == null ? items : pickSubset(items, options.subsetSize, rng);
+  return options.shuffle ? shuffle(subset, rng) : subset;
+}

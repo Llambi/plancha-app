@@ -18,7 +18,7 @@
     (Fisher–Yates, no muta la entrada).
   - Commit: `feat(practica): add seeded shuffle utility (refs #9)`
 
-- [ ] **T2 — `pickSubset` + `buildExamOrder`**
+- [x] **T2 — `pickSubset` + `buildExamOrder`**
   - Test (rojo): `pickSubset(items, n, rng)` devuelve `n` elementos distintos de
     la entrada, con `n` clamped a `[0, total]`, determinista por semilla;
     `buildExamOrder(items, { shuffle, subsetSize }, rng)` combina ambos y, con
