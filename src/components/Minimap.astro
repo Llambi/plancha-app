@@ -723,6 +723,26 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       railEl.addEventListener('pointerup', onUp);
     }
 
+    // Focus that was on the page before the drawer opened, restored on close.
+    let lastFocused: HTMLElement | null = null;
+
+    function drawerFocusables(): HTMLElement[] {
+      const drawer = root.querySelector<HTMLElement>('[data-mm-drawer]')!;
+      return Array.from(drawer.querySelectorAll<HTMLElement>('button, [tabindex]'));
+    }
+
+    function openDrawer(): void {
+      lastFocused = document.activeElement as HTMLElement | null;
+      root.classList.add('mm-open');
+      root.querySelector<HTMLElement>('.mm-x')?.focus();
+    }
+
+    function closeDrawer(): void {
+      root.classList.remove('mm-open');
+      lastFocused?.focus();
+      lastFocused = null;
+    }
+
     function setPins(next: Set<string>): void {
       pins = next;
       safeSet(pinsKeyFor(scope), serializePins([...pins]));
@@ -759,17 +779,38 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
         return;
       }
       if (target.closest('[data-mm-drawer-toggle]')) {
-        root.classList.toggle('mm-open');
+        if (root.classList.contains('mm-open')) closeDrawer();
+        else openDrawer();
         return;
       }
       const row = target.closest<HTMLElement>('[data-mid]');
       if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
         jumpTo(row.dataset.mid);
-        root.classList.remove('mm-open');
+        closeDrawer();
       }
     });
 
     document.addEventListener('keydown', (e) => {
+      if (root.classList.contains('mm-open')) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeDrawer();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = drawerFocusables();
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+          }
+        }
+      }
+
       if (isTypingTarget(e.target)) return;
 
       if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'Enter' || e.key === ' ')) {
@@ -784,7 +825,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
         if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
           e.preventDefault();
           jumpTo(row.dataset.mid);
-          root.classList.remove('mm-open');
+          closeDrawer();
           return;
         }
       }

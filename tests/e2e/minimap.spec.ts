@@ -115,6 +115,38 @@ test.describe('práctica: rail + pins', () => {
     await expect(page.locator('.mm-tick')).toHaveCount(totalTests + totalDevs);
   });
 
+  test('opening the drawer moves focus in, Tab traps it, and Escape closes it and restores focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 414, height: 860 });
+    await page.goto(`${BASE}/practica/si`);
+
+    await page.locator('.mm-fab').click();
+    await expect(page.locator('.mm-drawer')).toBeVisible();
+    expect(await page.evaluate(() => !!document.activeElement?.closest('.mm-drawer'))).toBe(true);
+
+    // Tab-trap: focusing the last focusable in the drawer, Tab wraps to the first.
+    await page.evaluate(() => {
+      const drawer = document.querySelector('.mm-drawer')!;
+      const focusables = drawer.querySelectorAll<HTMLElement>('[tabindex], button');
+      focusables[focusables.length - 1].focus();
+    });
+    await page.keyboard.press('Tab');
+    expect(
+      await page.evaluate(() => {
+        const drawer = document.querySelector('.mm-drawer')!;
+        const focusables = drawer.querySelectorAll<HTMLElement>('[tabindex], button');
+        return document.activeElement === focusables[0];
+      }),
+    ).toBe(true);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-mm]')).not.toHaveClass(/mm-open/);
+    expect(await page.evaluate(() => document.activeElement?.classList.contains('mm-fab'))).toBe(
+      true,
+    );
+  });
+
   test('mobile: the "Mapa" button opens a drawer listing every card, with pins on top', async ({
     page,
   }) => {
