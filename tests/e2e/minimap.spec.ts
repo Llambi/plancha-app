@@ -22,6 +22,24 @@ test.describe('práctica: rail + pins', () => {
     await expect(page.locator('.mm-tick.pinned')).toHaveCount(1);
   });
 
+  test('the pin button exposes its state via aria-pressed', async ({ page }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const pinBtn = page.locator('.tq').first().locator('[data-mm-pin]');
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'false');
+    await pinBtn.click();
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'true');
+    await pinBtn.click();
+    await expect(pinBtn).toHaveAttribute('aria-pressed', 'false');
+
+    await pinBtn.click();
+    await page.reload();
+    await expect(page.locator('.tq').first().locator('[data-mm-pin]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
   test('clicking a tick scrolls the page to its card', async ({ page }) => {
     await page.goto(`${BASE}/practica/si`);
 
@@ -29,6 +47,26 @@ test.describe('práctica: rail + pins', () => {
     const before = await page.evaluate(() => window.scrollY);
     await page.locator('.mm-tick').last().click();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+  });
+
+  test('rail ticks and drawer rows are keyboard-operable', async ({ page }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const tick = page.locator('.mm-tick').last();
+    await expect(tick).toHaveAttribute('role', 'button');
+    await expect(tick).toHaveAttribute('aria-label', /.+/);
+    const before = await page.evaluate(() => window.scrollY);
+    await tick.focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+
+    await page.setViewportSize({ width: 414, height: 860 });
+    await page.locator('.mm-fab').click();
+    const row = page.locator('.mm-lrow').last();
+    await expect(row).toHaveAttribute('role', 'button');
+    await row.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-mm]')).not.toHaveClass(/mm-open/);
   });
 
   test('n/p jumps between pinned cards, but typing n/p in a textarea does not navigate', async ({
@@ -52,19 +90,79 @@ test.describe('práctica: rail + pins', () => {
     expect(await page.evaluate(() => window.scrollY)).toBe(afterFocus);
   });
 
-  test('grading colors the rail ticks and drawer rows to match the actual result', async ({
+  test('grading colors the rail ticks and drawer rows to match the actual result, leaving unanswered questions uncolored', async ({
     page,
   }) => {
     await page.goto(`${BASE}/practica/si`);
 
-    const firstQuestion = page.locator('.tq').first();
-    const correct = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
-    await firstQuestion.locator(`input[value="${correct[0]}"]`).check();
+    const firstQuestion = page.locator('.tq').nth(0);
+    const firstCorrect = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
+    await firstQuestion.locator(`input[value="${firstCorrect[0]}"]`).check();
+
+    const secondQuestion = page.locator('.tq').nth(1);
+    const secondCorrect = JSON.parse((await secondQuestion.getAttribute('data-correct')) ?? '[]');
+    const wrongValue = [0, 1, 2, 3].find((v) => !secondCorrect.includes(v));
+    await secondQuestion.locator(`input[value="${wrongValue}"]`).check();
+
     await page.locator('[data-grade-trigger]').click();
 
+    // Third question onward stay unanswered: graded, but not counted as failures.
     await expect(page.locator('.mm-tick.ok')).toHaveCount(1);
-    const total = await page.locator('[data-tq]').count();
-    await expect(page.locator('.mm-tick.bad')).toHaveCount(total - 1);
+    await expect(page.locator('.mm-tick.bad')).toHaveCount(1);
+  });
+
+  test('the «Solo mis fallos» filter hides filtered-out questions from the rail', async ({
+    page,
+  }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const totalTests = await page.locator('[data-tq]').count();
+    const totalDevs = await page.locator('[data-dq]').count();
+
+    const firstQuestion = page.locator('.tq').nth(0);
+    const correct = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
+    const wrongValue = [0, 1, 2, 3].find((v) => !correct.includes(v));
+    await firstQuestion.locator(`input[value="${wrongValue}"]`).check();
+    await page.locator('[data-grade-trigger]').click();
+
+    // Only the failed question (+ desarrollo, untouched by this filter) stays.
+    await page.locator('[data-failed-toggle]').check();
+    await expect(page.locator('.mm-tick')).toHaveCount(1 + totalDevs);
+
+    await page.locator('[data-failed-toggle]').uncheck();
+    await expect(page.locator('.mm-tick')).toHaveCount(totalTests + totalDevs);
+  });
+
+  test('opening the drawer moves focus in, Tab traps it, and Escape closes it and restores focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 414, height: 860 });
+    await page.goto(`${BASE}/practica/si`);
+
+    await page.locator('.mm-fab').click();
+    await expect(page.locator('.mm-drawer')).toBeVisible();
+    expect(await page.evaluate(() => !!document.activeElement?.closest('.mm-drawer'))).toBe(true);
+
+    // Tab-trap: focusing the last focusable in the drawer, Tab wraps to the first.
+    await page.evaluate(() => {
+      const drawer = document.querySelector('.mm-drawer')!;
+      const focusables = drawer.querySelectorAll<HTMLElement>('[tabindex], button');
+      focusables[focusables.length - 1].focus();
+    });
+    await page.keyboard.press('Tab');
+    expect(
+      await page.evaluate(() => {
+        const drawer = document.querySelector('.mm-drawer')!;
+        const focusables = drawer.querySelectorAll<HTMLElement>('[tabindex], button');
+        return document.activeElement === focusables[0];
+      }),
+    ).toBe(true);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-mm]')).not.toHaveClass(/mm-open/);
+    expect(await page.evaluate(() => document.activeElement?.classList.contains('mm-fab'))).toBe(
+      true,
+    );
   });
 
   test('mobile: the "Mapa" button opens a drawer listing every card, with pins on top', async ({

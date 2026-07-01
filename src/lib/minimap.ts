@@ -50,6 +50,18 @@ export function isCorrectPick(correct: readonly number[], picked: readonly numbe
   return picked.length === correct.length && picked.every((p) => correct.includes(p));
 }
 
+/**
+ * Minimap grading mark for a test question: `null` when unanswered (so it
+ * isn't shown as a failure), `'ok'`/`'bad'` otherwise.
+ */
+export function gradeMark(
+  correct: readonly number[],
+  picked: readonly number[],
+): 'ok' | 'bad' | null {
+  if (!picked.length) return null;
+  return isCorrectPick(correct, picked) ? 'ok' : 'bad';
+}
+
 /** id assigned to the n-th (0-based) top-level branch of a tema's outline tree. */
 export function subBranchId(temaId: string, index: number): string {
   return `${temaId}-s${index + 1}`;

@@ -115,6 +115,10 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     background: var(--site-accent);
     box-shadow: 0 0 0 1.5px var(--site-accent);
   }
+  .mm-tick:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 2px;
+  }
   .mm-vp {
     position: absolute;
     left: 2px;
@@ -285,6 +289,11 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     background: var(--site-surface-2);
     color: var(--site-ink);
   }
+  .mm-lrow:focus-visible,
+  .mm-prow:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: -2px;
+  }
   .mm-lt {
     flex: none;
     width: 18px;
@@ -444,7 +453,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     subBranchId,
     subBranchLabel,
     jumpPinTarget,
-    isCorrectPick,
+    gradeMark,
   } from '../lib/minimap';
 
   interface Anchor {
@@ -512,6 +521,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
           pin.className = 'pin-btn pin-btn-sm mm-sub-pin';
           pin.dataset.mmPin = '';
           pin.setAttribute('aria-label', 'Fijar sección');
+          pin.setAttribute('aria-pressed', 'false');
           pin.setAttribute('title', 'Fijar sección');
           pin.innerHTML = PIN_SVG;
           li.insertBefore(pin, li.firstChild);
@@ -520,13 +530,15 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     }
 
     function collectAnchors(): Anchor[] {
-      return Array.from(document.querySelectorAll<HTMLElement>('.mm-anchor')).map((el) => ({
-        el,
-        id: el.id,
-        type: el.dataset.mmType ?? '',
-        level: Number(el.dataset.mmLevel ?? 0),
-        label: el.dataset.mmLabel ?? '',
-      }));
+      return Array.from(document.querySelectorAll<HTMLElement>('.mm-anchor'))
+        .filter((el) => !el.hidden)
+        .map((el) => ({
+          el,
+          id: el.id,
+          type: el.dataset.mmType ?? '',
+          level: Number(el.dataset.mmLevel ?? 0),
+          label: el.dataset.mmLabel ?? '',
+        }));
     }
 
     function absoluteTop(el: HTMLElement): number {
@@ -547,7 +559,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       const picked = Array.from(a.el.querySelectorAll<HTMLInputElement>('input'))
         .filter((i) => i.checked)
         .map((i) => Number(i.value));
-      return isCorrectPick(correct, picked) ? 'ok' : 'bad';
+      return gradeMark(correct, picked);
     }
 
     function activeAnchor(): Anchor | undefined {
@@ -560,6 +572,15 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       return act;
     }
 
+    // Rail ticks / drawer rows are plain divs (not real <button>s, to keep
+    // their existing layout/CSS untouched) made keyboard-operable via
+    // role="button" + tabindex + the keydown handler below.
+    function makeNavigable(el: HTMLElement, label: string): void {
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', label);
+    }
+
     function buildRail(): void {
       railEl.querySelectorAll('.mm-tick').forEach((n) => n.remove());
       const docH = Math.max(document.documentElement.scrollHeight, 1);
@@ -569,6 +590,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
         tick.className = `mm-tick lvl${a.level}`;
         tick.dataset.mid = a.id;
         tick.style.top = `${(absoluteTop(a.el) / docH) * railH}px`;
+        makeNavigable(tick, a.label);
         if (pins.has(a.id)) tick.classList.add('pinned');
         const r = resultFor(a);
         if (r) tick.classList.add(r);
@@ -589,6 +611,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
           const row = document.createElement('div');
           row.className = 'mm-prow';
           row.dataset.mid = a.id;
+          makeNavigable(row, a.label);
           row.innerHTML = '<span class="mm-pd"></span>';
           row.appendChild(document.createTextNode(` ${a.label}`));
           pinnedWrap.appendChild(row);
@@ -602,10 +625,11 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       anchors.forEach((a) => {
         const row = document.createElement('div');
         row.className = `mm-lrow${a.level ? ' sub' : ''}`;
+        row.dataset.mid = a.id;
+        makeNavigable(row, a.label);
         if (pins.has(a.id)) row.classList.add('pinned');
         const r = resultFor(a);
         if (r) row.classList.add(r);
-        row.dataset.mid = a.id;
         row.innerHTML = '<span class="mm-lt"></span>';
         row.appendChild(document.createTextNode(` ${a.label}`));
         listWrap.appendChild(row);
@@ -633,10 +657,17 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       fabCountEl.classList.toggle('zero', pins.size === 0);
     }
 
+    function syncPinState(el: HTMLElement, pinned: boolean): void {
+      el.classList.toggle('pinned', pinned);
+      el.querySelectorAll<HTMLElement>('[data-mm-pin]').forEach((btn) =>
+        btn.setAttribute('aria-pressed', String(pinned)),
+      );
+    }
+
     function rebuild(): void {
       ensureSubAnchors();
       anchors = collectAnchors();
-      anchors.forEach((a) => a.el.classList.toggle('pinned', pins.has(a.id)));
+      anchors.forEach((a) => syncPinState(a.el, pins.has(a.id)));
       buildRail();
       buildDrawer();
       updateFab();
@@ -700,6 +731,26 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       railEl.addEventListener('pointerup', onUp);
     }
 
+    // Focus that was on the page before the drawer opened, restored on close.
+    let lastFocused: HTMLElement | null = null;
+
+    function drawerFocusables(): HTMLElement[] {
+      const drawer = root!.querySelector<HTMLElement>('[data-mm-drawer]')!;
+      return Array.from(drawer.querySelectorAll<HTMLElement>('button, [tabindex]'));
+    }
+
+    function openDrawer(): void {
+      lastFocused = document.activeElement as HTMLElement | null;
+      root!.classList.add('mm-open');
+      root!.querySelector<HTMLElement>('.mm-x')?.focus();
+    }
+
+    function closeDrawer(): void {
+      root!.classList.remove('mm-open');
+      lastFocused?.focus();
+      lastFocused = null;
+    }
+
     function setPins(next: Set<string>): void {
       pins = next;
       safeSet(pinsKeyFor(scope), serializePins([...pins]));
@@ -708,7 +759,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     function togglePin(id: string): void {
       setPins(new Set(togglePinned([...pins], id)));
       const a = anchors.find((x) => x.id === id);
-      a?.el.classList.toggle('pinned', pins.has(id));
+      if (a) syncPinState(a.el, pins.has(id));
       buildRail();
       buildDrawer();
       updateFab();
@@ -736,18 +787,58 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
         return;
       }
       if (target.closest('[data-mm-drawer-toggle]')) {
-        root.classList.toggle('mm-open');
+        if (root.classList.contains('mm-open')) closeDrawer();
+        else openDrawer();
         return;
       }
       const row = target.closest<HTMLElement>('[data-mid]');
       if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
         jumpTo(row.dataset.mid);
-        root.classList.remove('mm-open');
+        closeDrawer();
       }
     });
 
     document.addEventListener('keydown', (e) => {
-      if (isTypingTarget(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (root.classList.contains('mm-open')) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeDrawer();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = drawerFocusables();
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+          }
+        }
+      }
+
+      if (isTypingTarget(e.target)) return;
+
+      if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'Enter' || e.key === ' ')) {
+        const el = e.target as HTMLElement;
+        const tick = el.closest<HTMLElement>('.mm-tick[data-mid]');
+        if (tick) {
+          e.preventDefault();
+          jumpTo(tick.dataset.mid!);
+          return;
+        }
+        const row = el.closest<HTMLElement>('[data-mid]');
+        if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
+          e.preventDefault();
+          jumpTo(row.dataset.mid);
+          closeDrawer();
+          return;
+        }
+      }
+
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const dir = e.key === 'n' || e.key === ']' ? 1 : e.key === 'p' || e.key === '[' ? -1 : 0;
       if (!dir) return;
       const target = jumpPinTarget(
@@ -785,6 +876,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       buildRail();
       buildDrawer();
     });
+    document.addEventListener('practica:filter-changed', () => rebuild());
 
     requestAnimationFrame(() => requestAnimationFrame(rebuild));
   }
