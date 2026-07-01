@@ -172,6 +172,7 @@ const devsRendered = await Promise.all(
 
 <script>
   import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
+  import { createRng, buildExamOrder } from '../../lib/exam-mode';
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
@@ -275,8 +276,19 @@ const devsRendered = await Promise.all(
     // Original order/visibility of the questions, captured once so «Salir de
     // modo examen» can restore it exactly regardless of what the simulacro did.
     const originalOrder = Array.from(testSection.querySelectorAll<HTMLElement>('[data-tq]'));
+    const shuffleCheckbox = examPanel.querySelector<HTMLInputElement>('[data-exam-shuffle]');
 
     function startExam(): void {
+      const container = originalOrder[0]?.parentElement;
+      if (container) {
+        const rng = createRng(Date.now());
+        const order = buildExamOrder(
+          originalOrder,
+          { shuffle: shuffleCheckbox?.checked ?? false, subsetSize: null },
+          rng,
+        );
+        for (const q of order) container.appendChild(q);
+      }
       examStartBtn!.hidden = true;
       examExitBtn!.hidden = false;
     }

@@ -48,7 +48,7 @@ number | null; timed: boolean; minutes: number`) + las tres funciones en
     orden original de los `[data-tq]` al cargar y lo restaura al salir.
   - Commit: `feat(practica): add exam-mode panel with start/exit (refs #9)`
 
-- [ ] **T5 — Integrar barajado real en el simulacro**
+- [x] **T5 — Integrar barajado real en el simulacro**
   - Test (rojo): activar «Barajar preguntas» + empezar conserva el mismo
     conjunto de ids visibles que antes (invariante, sin asumir un orden
     concreto para no introducir flakiness).

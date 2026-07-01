@@ -35,3 +35,19 @@ test('empezar y salir del modo examen restaura el conjunto y orden original', as
   const after = await questionIds(page);
   expect(after).toEqual(before);
 });
+
+test('barajar conserva el mismo conjunto de preguntas pero cambia el orden', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  const before = await questionIds(page);
+
+  await page.locator('[data-exam-shuffle]').check();
+  await page.locator('[data-exam-start]').click();
+
+  const after = await questionIds(page);
+  // Invariante: mismo conjunto (sin pérdidas ni duplicados).
+  expect([...after].sort()).toEqual([...before].sort());
+  // Con 88 preguntas, la probabilidad de que el barajado devuelva el mismo
+  // orden es prácticamente nula — sirve como señal de que sí se ha barajado.
+  expect(after).not.toEqual(before);
+});
