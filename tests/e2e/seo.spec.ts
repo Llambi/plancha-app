@@ -47,3 +47,18 @@ test('la home emite og:image/twitter:image con una imagen PNG real', async ({ pa
   expect(res.status()).toBe(200);
   expect(res.headers()['content-type']).toBe('image/png');
 });
+
+test('el sitemap se genera bajo el subpath y referencia URLs con BASE', async ({ page }) => {
+  const res = await page.request.get(`${BASE}/sitemap-index.xml`);
+  expect(res.status()).toBe(200);
+
+  const body = await res.text();
+  // The index references the per-page sitemap by its full production URL
+  // (SITE + BASE); it's fetched here relative to the local preview server.
+  expect(body).toContain(`${SITE}${BASE}/sitemap-0.xml`);
+
+  const sitemapRes = await page.request.get(`${BASE}/sitemap-0.xml`);
+  expect(sitemapRes.status()).toBe(200);
+  const sitemapBody = await sitemapRes.text();
+  expect(sitemapBody).toContain(`${SITE}${BASE}/`);
+});

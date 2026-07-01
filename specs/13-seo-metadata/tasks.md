@@ -39,7 +39,7 @@
     defecto); añade las meta tags de imagen en `BaseLayout.astro`.
   - Commit: `feat(seo): add a real og:image/twitter:image (refs #13)`
 
-- [ ] **T4 — Sitemap con `@astrojs/sitemap`**
+- [x] **T4 — Sitemap con `@astrojs/sitemap`**
   - Test (rojo): tras `npm run build`, `${BASE}/sitemap-index.xml` responde
     200 sirviendo `dist/` y su contenido referencia URLs con el subpath
     `/plancha-app` (verificado en `tests/e2e/seo.spec.ts`, que corre contra
