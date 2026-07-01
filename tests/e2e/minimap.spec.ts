@@ -31,6 +31,26 @@ test.describe('práctica: rail + pins', () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
   });
 
+  test('rail ticks and drawer rows are keyboard-operable', async ({ page }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const tick = page.locator('.mm-tick').last();
+    await expect(tick).toHaveAttribute('role', 'button');
+    await expect(tick).toHaveAttribute('aria-label', /.+/);
+    const before = await page.evaluate(() => window.scrollY);
+    await tick.focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+
+    await page.setViewportSize({ width: 414, height: 860 });
+    await page.locator('.mm-fab').click();
+    const row = page.locator('.mm-lrow').last();
+    await expect(row).toHaveAttribute('role', 'button');
+    await row.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-mm]')).not.toHaveClass(/mm-open/);
+  });
+
   test('n/p jumps between pinned cards, but typing n/p in a textarea does not navigate', async ({
     page,
   }) => {

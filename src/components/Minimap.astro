@@ -115,6 +115,10 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     background: var(--site-accent);
     box-shadow: 0 0 0 1.5px var(--site-accent);
   }
+  .mm-tick:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 2px;
+  }
   .mm-vp {
     position: absolute;
     left: 2px;
@@ -284,6 +288,11 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
   .mm-lrow:hover {
     background: var(--site-surface-2);
     color: var(--site-ink);
+  }
+  .mm-lrow:focus-visible,
+  .mm-prow:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: -2px;
   }
   .mm-lt {
     flex: none;
@@ -562,6 +571,15 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       return act;
     }
 
+    // Rail ticks / drawer rows are plain divs (not real <button>s, to keep
+    // their existing layout/CSS untouched) made keyboard-operable via
+    // role="button" + tabindex + the keydown handler below.
+    function makeNavigable(el: HTMLElement, label: string): void {
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', label);
+    }
+
     function buildRail(): void {
       railEl.querySelectorAll('.mm-tick').forEach((n) => n.remove());
       const docH = Math.max(document.documentElement.scrollHeight, 1);
@@ -571,6 +589,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
         tick.className = `mm-tick lvl${a.level}`;
         tick.dataset.mid = a.id;
         tick.style.top = `${(absoluteTop(a.el) / docH) * railH}px`;
+        makeNavigable(tick, a.label);
         if (pins.has(a.id)) tick.classList.add('pinned');
         const r = resultFor(a);
         if (r) tick.classList.add(r);
@@ -591,6 +610,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
           const row = document.createElement('div');
           row.className = 'mm-prow';
           row.dataset.mid = a.id;
+          makeNavigable(row, a.label);
           row.innerHTML = '<span class="mm-pd"></span>';
           row.appendChild(document.createTextNode(` ${a.label}`));
           pinnedWrap.appendChild(row);
@@ -604,10 +624,11 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       anchors.forEach((a) => {
         const row = document.createElement('div');
         row.className = `mm-lrow${a.level ? ' sub' : ''}`;
+        row.dataset.mid = a.id;
+        makeNavigable(row, a.label);
         if (pins.has(a.id)) row.classList.add('pinned');
         const r = resultFor(a);
         if (r) row.classList.add(r);
-        row.dataset.mid = a.id;
         row.innerHTML = '<span class="mm-lt"></span>';
         row.appendChild(document.createTextNode(` ${a.label}`));
         listWrap.appendChild(row);
@@ -749,7 +770,26 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     });
 
     document.addEventListener('keydown', (e) => {
-      if (isTypingTarget(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (isTypingTarget(e.target)) return;
+
+      if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'Enter' || e.key === ' ')) {
+        const el = e.target as HTMLElement;
+        const tick = el.closest<HTMLElement>('.mm-tick[data-mid]');
+        if (tick) {
+          e.preventDefault();
+          jumpTo(tick.dataset.mid!);
+          return;
+        }
+        const row = el.closest<HTMLElement>('[data-mid]');
+        if (row && (pinnedWrap.contains(row) || listWrap.contains(row)) && row.dataset.mid) {
+          e.preventDefault();
+          jumpTo(row.dataset.mid);
+          root.classList.remove('mm-open');
+          return;
+        }
+      }
+
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const dir = e.key === 'n' || e.key === ']' ? 1 : e.key === 'p' || e.key === '[' ? -1 : 0;
       if (!dir) return;
       const target = jumpPinTarget(
