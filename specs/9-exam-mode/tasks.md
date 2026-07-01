@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — PRNG con semilla + `shuffle`**
+- [x] **T1 — PRNG con semilla + `shuffle`**
   - Test (rojo): `tests/unit/exam-mode.test.ts` — `createRng(seed)` produce la
     misma secuencia para la misma semilla; `shuffle(items, rng)` es una
     permutación (mismo tamaño y elementos) y es determinista por semilla.
