@@ -25,7 +25,7 @@
     selector de `gradeAll()` de `[data-tq]` a `[data-tq]:not([hidden])`.
   - Commit: `fix(practica): grade only visible questions (refs #11)`
 
-- [ ] **T3 — `data-tema` en `TestQuestion` + grupo de botones de filtro**
+- [x] **T3 — `data-tema` en `TestQuestion` + grupo de botones de filtro**
   - Test (rojo): `tests/e2e/practica-tema-filter.spec.ts` — en `/practica/si`
     aparece el grupo «Filtrar por tema» con «Todos» + un botón por cada uno de
     los 10 temas; en `/practica/cl` (sin test) no aparece.

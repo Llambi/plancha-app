@@ -5,6 +5,7 @@ import TestQuestion from '../../components/TestQuestion.astro';
 import DesarrolloQuestion from '../../components/DesarrolloQuestion.astro';
 import Minimap from '../../components/Minimap.astro';
 import { meta } from '../../data/asignaturas';
+import { uniqueTemas } from '../../lib/practica-temas';
 
 export async function getStaticPaths() {
   const test = await getCollection('test');
@@ -33,6 +34,7 @@ export async function getStaticPaths() {
 
 const { code, tests, devs } = Astro.props;
 const m = meta(code);
+const temas = uniqueTemas(tests.map((t) => t.data.tema));
 
 // Renderiza el cuerpo (respuesta modelo) de cada desarrollo.
 const devsRendered = await Promise.all(
@@ -114,6 +116,19 @@ const devsRendered = await Promise.all(
             <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
           </div>
         </div>
+
+        {temas.length > 0 && (
+          <div class="tema-filters" role="group" aria-label="Filtrar por tema" data-tema-filters>
+            <button class="filter-btn on" type="button" data-tema-filter="all" aria-pressed="true">
+              Todos
+            </button>
+            {temas.map((t) => (
+              <button class="filter-btn" type="button" data-tema-filter={t} aria-pressed="false">
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
 
         {tests.map((q, i) => (
           <TestQuestion
@@ -598,5 +613,35 @@ const devsRendered = await Promise.all(
   }
   .exam-timer {
     font-weight: 700;
+  }
+  .tema-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
+  }
+  .filter-btn {
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .filter-btn:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .filter-btn.on {
+    color: #fff;
+    background: var(--site-accent);
+    border-color: var(--site-accent);
   }
 </style>
