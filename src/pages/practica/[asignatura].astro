@@ -80,6 +80,41 @@ const devsRendered = await Promise.all(
           </div>
         </div>
 
+        <div class="exam" data-exam-panel>
+          <p class="exam-title">Modo examen</p>
+          <div class="exam-opts">
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-shuffle /> Barajar preguntas
+            </label>
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
+              <input
+                type="number"
+                min="1"
+                max={tests.length}
+                value={tests.length}
+                data-exam-subset-n
+                disabled
+              />{' '}
+              preguntas
+            </label>
+            <label class="exam-opt">
+              <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
+              <input type="number" min="1" value="20" data-exam-minutes disabled />
+            </label>
+          </div>
+          <div class="exam-actions">
+            <button class="btn-grade" type="button" data-exam-start>
+              {' '}
+              Empezar simulacro{' '}
+            </button>
+            <button class="btn-reset" type="button" data-exam-exit hidden>
+              Salir de modo examen
+            </button>
+            <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
+          </div>
+        </div>
+
         {tests.map((q, i) => (
           <TestQuestion
             id={q.data.id}
@@ -137,6 +172,14 @@ const devsRendered = await Promise.all(
 
 <script>
   import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
+  import {
+    createRng,
+    buildExamOrder,
+    examConfigKeyFor,
+    serializeExamConfig,
+    parseExamConfig,
+    type ExamConfig,
+  } from '../../lib/exam-mode';
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
@@ -153,6 +196,13 @@ const devsRendered = await Promise.all(
       return localStorage.getItem(key);
     } catch {
       return null;
+    }
+  }
+  function safeSet(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* no-op */
     }
   }
   function safeRemove(key: string): void {
@@ -205,7 +255,12 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
-  failedToggle?.addEventListener('change', applyFailedFilter);
+  // Exam mode and «solo mis fallos» both drive `hidden` on the same
+  // `[data-tq]` elements — mutually exclusive so they never fight over it.
+  failedToggle?.addEventListener('change', () => {
+    if (failedToggle.checked && examActive) exitExam();
+    applyFailedFilter();
+  });
 
   // Reset stats only (independent of the answers progress reset of #8).
   document.querySelector('[data-stats-reset]')?.addEventListener('click', () => {
@@ -217,6 +272,160 @@ const devsRendered = await Promise.all(
 
   document.addEventListener('practica:stats-updated', renderStats);
   renderStats();
+
+  // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
+  const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');
+  const examExitBtn = document.querySelector<HTMLButtonElement>('[data-exam-exit]');
+  const examShuffleCheckbox = document.querySelector<HTMLInputElement>('[data-exam-shuffle]');
+  const examSubsetToggle = document.querySelector<HTMLInputElement>('[data-exam-subset-toggle]');
+  const examSubsetN = document.querySelector<HTMLInputElement>('[data-exam-subset-n]');
+  const examTimedCheckbox = document.querySelector<HTMLInputElement>('[data-exam-timed]');
+  const examMinutesInput = document.querySelector<HTMLInputElement>('[data-exam-minutes]');
+  const examTimerEl = document.querySelector<HTMLElement>('[data-exam-timer]');
+  const testSection = document.querySelector<HTMLElement>('[data-practica]');
+  // Original order/visibility of the questions, captured once so «Salir de
+  // modo examen» can restore it exactly regardless of what the simulacro did.
+  const originalOrder = testSection
+    ? Array.from(testSection.querySelectorAll<HTMLElement>('[data-tq]'))
+    : [];
+  let examActive = false;
+
+  // Enable a paired number input only while its checkbox is checked.
+  function wireToggle(checkbox: HTMLInputElement | null, input: HTMLInputElement | null): void {
+    if (!checkbox || !input) return;
+    checkbox.addEventListener('change', () => {
+      input.disabled = !checkbox.checked;
+    });
+  }
+  wireToggle(examSubsetToggle, examSubsetN);
+  wireToggle(examTimedCheckbox, examMinutesInput);
+
+  let examTimerId: number | null = null;
+
+  function stopTimer(): void {
+    if (examTimerId !== null) {
+      clearInterval(examTimerId);
+      examTimerId = null;
+    }
+    if (examTimerEl) examTimerEl.textContent = '';
+  }
+
+  function startTimer(durationMs: number): void {
+    const endAt = Date.now() + durationMs;
+    function tick(): void {
+      const remaining = endAt - Date.now();
+      if (remaining <= 0) {
+        stopTimer();
+        document.querySelector<HTMLButtonElement>('[data-grade-trigger]')?.click();
+        return;
+      }
+      const totalSeconds = Math.ceil(remaining / 1000);
+      const mm = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const ss = String(totalSeconds % 60).padStart(2, '0');
+      if (examTimerEl) examTimerEl.textContent = `${mm}:${ss}`;
+    }
+    tick();
+    examTimerId = window.setInterval(tick, 250);
+  }
+
+  // Stop the countdown as soon as the test is corrected, whether by the timer
+  // itself or by the user clicking «Corregir» before time runs out.
+  document.addEventListener('tq:graded', stopTimer);
+
+  function startExam(): void {
+    const container = originalOrder[0]?.parentElement;
+    if (!container) return;
+    // Exam mode and «solo mis fallos» share the same `hidden` flag: starting
+    // a simulacro takes over, so drop the fallos filter first.
+    if (failedToggle?.checked) {
+      failedToggle.checked = false;
+      applyFailedFilter();
+    }
+    const rng = createRng(Date.now());
+    const subsetSize = examSubsetToggle?.checked
+      ? Math.max(
+          1,
+          Math.min(Number(examSubsetN?.value ?? originalOrder.length), originalOrder.length),
+        )
+      : null;
+    const order = buildExamOrder(
+      originalOrder,
+      { shuffle: examShuffleCheckbox?.checked ?? false, subsetSize },
+      rng,
+    );
+    const visible = new Set(order);
+    for (const q of originalOrder) q.hidden = !visible.has(q);
+    for (const q of order) container.appendChild(q);
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+    if (examStartBtn) examStartBtn.hidden = true;
+    if (examExitBtn) examExitBtn.hidden = false;
+    examActive = true;
+    if (examTimedCheckbox?.checked) {
+      const minutes = Number(examMinutesInput?.value ?? 20);
+      startTimer(minutes * 60000);
+    }
+  }
+
+  function exitExam(): void {
+    stopTimer();
+    const container = originalOrder[0]?.parentElement;
+    if (container) {
+      for (const q of originalOrder) {
+        q.hidden = false;
+        container.appendChild(q);
+      }
+    }
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+    if (examStartBtn) examStartBtn.hidden = false;
+    if (examExitBtn) examExitBtn.hidden = true;
+    examActive = false;
+  }
+
+  examStartBtn?.addEventListener('click', startExam);
+  examExitBtn?.addEventListener('click', exitExam);
+
+  // Remember the panel's settings (not the in-progress simulacro) per asignatura.
+  function saveExamConfig(): void {
+    if (!asignatura) return;
+    const config: ExamConfig = {
+      shuffle: examShuffleCheckbox?.checked ?? false,
+      subsetSize: examSubsetToggle?.checked ? Number(examSubsetN?.value ?? 0) : null,
+      timed: examTimedCheckbox?.checked ?? false,
+      minutes: Number(examMinutesInput?.value ?? 20),
+    };
+    safeSet(examConfigKeyFor(asignatura), serializeExamConfig(config));
+  }
+
+  function restoreExamConfig(): void {
+    if (!asignatura) return;
+    const config = parseExamConfig(safeGet(examConfigKeyFor(asignatura)));
+    if (!config) return;
+    if (examShuffleCheckbox) examShuffleCheckbox.checked = config.shuffle;
+    if (examSubsetToggle) examSubsetToggle.checked = config.subsetSize !== null;
+    if (examSubsetN) {
+      if (config.subsetSize !== null) examSubsetN.value = String(config.subsetSize);
+      examSubsetN.disabled = config.subsetSize === null;
+    }
+    if (examTimedCheckbox) examTimedCheckbox.checked = config.timed;
+    if (examMinutesInput) {
+      examMinutesInput.value = String(config.minutes);
+      examMinutesInput.disabled = !config.timed;
+    }
+  }
+
+  for (const el of [
+    examShuffleCheckbox,
+    examSubsetToggle,
+    examSubsetN,
+    examTimedCheckbox,
+    examMinutesInput,
+  ]) {
+    // `input` covers number fields as the user types (no blur needed); `change`
+    // covers the checkboxes. Attaching both to every control is harmless.
+    el?.addEventListener('input', saveExamConfig);
+    el?.addEventListener('change', saveExamConfig);
+  }
+  restoreExamConfig();
 </script>
 
 <style>
@@ -343,5 +552,51 @@ const devsRendered = await Promise.all(
     accent-color: var(--site-accent);
     width: 1rem;
     height: 1rem;
+  }
+  .exam {
+    margin-bottom: 1.4rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--site-line);
+    border-radius: 12px;
+    background: var(--site-surface-2);
+  }
+  .exam-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+  .exam-opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .exam-opt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--site-muted);
+  }
+  .exam-opt input[type='checkbox'] {
+    accent-color: var(--site-accent);
+    width: 1rem;
+    height: 1rem;
+  }
+  .exam-opt input[type='number'] {
+    width: 4.2rem;
+    font: inherit;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--site-line);
+    border-radius: 6px;
+  }
+  .exam-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.85rem;
+  }
+  .exam-timer {
+    font-weight: 700;
   }
 </style>
