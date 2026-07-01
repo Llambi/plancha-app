@@ -241,7 +241,12 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
-  failedToggle?.addEventListener('change', applyFailedFilter);
+  // Exam mode and «solo mis fallos» both drive `hidden` on the same
+  // `[data-tq]` elements — mutually exclusive so they never fight over it.
+  failedToggle?.addEventListener('change', () => {
+    if (failedToggle.checked && examActive) exitExam();
+    applyFailedFilter();
+  });
 
   // Reset stats only (independent of the answers progress reset of #8).
   document.querySelector('[data-stats-reset]')?.addEventListener('click', () => {
@@ -255,60 +260,78 @@ const devsRendered = await Promise.all(
   renderStats();
 
   // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
-  const examPanel = document.querySelector<HTMLElement>('[data-exam-panel]');
   const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');
   const examExitBtn = document.querySelector<HTMLButtonElement>('[data-exam-exit]');
+  const examShuffleCheckbox = document.querySelector<HTMLInputElement>('[data-exam-shuffle]');
+  const examSubsetToggle = document.querySelector<HTMLInputElement>('[data-exam-subset-toggle]');
+  const examSubsetN = document.querySelector<HTMLInputElement>('[data-exam-subset-n]');
   const testSection = document.querySelector<HTMLElement>('[data-practica]');
+  // Original order/visibility of the questions, captured once so «Salir de
+  // modo examen» can restore it exactly regardless of what the simulacro did.
+  const originalOrder = testSection
+    ? Array.from(testSection.querySelectorAll<HTMLElement>('[data-tq]'))
+    : [];
+  let examActive = false;
 
   // Enable a paired number input only while its checkbox is checked.
-  function wireToggle(checkboxSel: string, inputSel: string): void {
-    const checkbox = document.querySelector<HTMLInputElement>(checkboxSel);
-    const input = document.querySelector<HTMLInputElement>(inputSel);
+  function wireToggle(checkbox: HTMLInputElement | null, input: HTMLInputElement | null): void {
     if (!checkbox || !input) return;
     checkbox.addEventListener('change', () => {
       input.disabled = !checkbox.checked;
     });
   }
-  wireToggle('[data-exam-subset-toggle]', '[data-exam-subset-n]');
-  wireToggle('[data-exam-timed]', '[data-exam-minutes]');
+  wireToggle(examSubsetToggle, examSubsetN);
+  wireToggle(
+    document.querySelector('[data-exam-timed]'),
+    document.querySelector('[data-exam-minutes]'),
+  );
 
-  if (examPanel && examStartBtn && examExitBtn && testSection) {
-    // Original order/visibility of the questions, captured once so «Salir de
-    // modo examen» can restore it exactly regardless of what the simulacro did.
-    const originalOrder = Array.from(testSection.querySelectorAll<HTMLElement>('[data-tq]'));
-    const shuffleCheckbox = examPanel.querySelector<HTMLInputElement>('[data-exam-shuffle]');
-
-    function startExam(): void {
-      const container = originalOrder[0]?.parentElement;
-      if (container) {
-        const rng = createRng(Date.now());
-        const order = buildExamOrder(
-          originalOrder,
-          { shuffle: shuffleCheckbox?.checked ?? false, subsetSize: null },
-          rng,
-        );
-        for (const q of order) container.appendChild(q);
-      }
-      examStartBtn!.hidden = true;
-      examExitBtn!.hidden = false;
+  function startExam(): void {
+    const container = originalOrder[0]?.parentElement;
+    if (!container) return;
+    // Exam mode and «solo mis fallos» share the same `hidden` flag: starting
+    // a simulacro takes over, so drop the fallos filter first.
+    if (failedToggle?.checked) {
+      failedToggle.checked = false;
+      applyFailedFilter();
     }
-
-    function exitExam(): void {
-      const container = originalOrder[0]?.parentElement;
-      if (container) {
-        for (const q of originalOrder) {
-          q.hidden = false;
-          container.appendChild(q);
-        }
-      }
-      document.dispatchEvent(new CustomEvent('practica:filter-changed'));
-      examStartBtn!.hidden = false;
-      examExitBtn!.hidden = true;
-    }
-
-    examStartBtn.addEventListener('click', startExam);
-    examExitBtn.addEventListener('click', exitExam);
+    const rng = createRng(Date.now());
+    const subsetSize = examSubsetToggle?.checked
+      ? Math.max(
+          1,
+          Math.min(Number(examSubsetN?.value ?? originalOrder.length), originalOrder.length),
+        )
+      : null;
+    const order = buildExamOrder(
+      originalOrder,
+      { shuffle: examShuffleCheckbox?.checked ?? false, subsetSize },
+      rng,
+    );
+    const visible = new Set(order);
+    for (const q of originalOrder) q.hidden = !visible.has(q);
+    for (const q of order) container.appendChild(q);
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+    if (examStartBtn) examStartBtn.hidden = true;
+    if (examExitBtn) examExitBtn.hidden = false;
+    examActive = true;
   }
+
+  function exitExam(): void {
+    const container = originalOrder[0]?.parentElement;
+    if (container) {
+      for (const q of originalOrder) {
+        q.hidden = false;
+        container.appendChild(q);
+      }
+    }
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+    if (examStartBtn) examStartBtn.hidden = false;
+    if (examExitBtn) examExitBtn.hidden = true;
+    examActive = false;
+  }
+
+  examStartBtn?.addEventListener('click', startExam);
+  examExitBtn?.addEventListener('click', exitExam);
 </script>
 
 <style>

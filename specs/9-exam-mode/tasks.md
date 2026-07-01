@@ -57,7 +57,7 @@ number | null; timed: boolean; minutes: number`) + las tres funciones en
     reales en su contenedor (`insertBefore`/`appendChild`).
   - Commit: `feat(practica): wire shuffle into the exam-mode start flow (refs #9)`
 
-- [ ] **T6 — Integrar subconjunto de N**
+- [x] **T6 — Integrar subconjunto de N**
   - Test (rojo): fijar N=3 y empezar deja exactamente 3 `[data-tq]` visibles
     (resto `hidden`); el minimap (rail) no incluye las ocultas (reutiliza
     `practica:filter-changed`, ya consumido por `Minimap.astro`). Activar el

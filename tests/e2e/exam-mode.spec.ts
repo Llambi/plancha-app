@@ -51,3 +51,34 @@ test('barajar conserva el mismo conjunto de preguntas pero cambia el orden', asy
   // orden es prácticamente nula — sirve como señal de que sí se ha barajado.
   expect(after).not.toEqual(before);
 });
+
+test('un subconjunto de N deja exactamente N preguntas visibles y el minimap las excluye', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+  const totalDevs = await page.locator('[data-dq]').count();
+
+  await page.locator('[data-exam-subset-toggle]').check();
+  await page.locator('[data-exam-subset-n]').fill('3');
+  await page.locator('[data-exam-start]').click();
+
+  await expect(page.locator('[data-tq]:not([hidden])')).toHaveCount(3);
+  await expect(page.locator('.mm-tick')).toHaveCount(3 + totalDevs);
+});
+
+test('activar el modo examen desactiva el filtro «solo mis fallos» y viceversa', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  // Empezar el simulacro desmarca «solo mis fallos» si estaba activo.
+  await page.locator('[data-failed-toggle]').check();
+  await page.locator('[data-exam-start]').click();
+  await expect(page.locator('[data-failed-toggle]')).not.toBeChecked();
+
+  // Y, al revés: activar «solo mis fallos» mientras el simulacro está activo
+  // lo da por terminado (vuelven los botones a su estado inicial).
+  await page.locator('[data-failed-toggle]').check();
+  await expect(page.locator('[data-exam-start]')).toBeVisible();
+  await expect(page.locator('[data-exam-exit]')).toBeHidden();
+});
