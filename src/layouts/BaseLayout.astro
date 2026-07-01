@@ -5,7 +5,7 @@
  * toggle claro/oscuro con persistencia en localStorage('site-theme'),
  * tokens --site-*, skip-link de accesibilidad y script anti-parpadeo.
  */
-import { BASE, SITE_NAME, canonicalUrl } from '../data/site';
+import { BASE, SITE, SITE_NAME, canonicalUrl } from '../data/site';
 import SearchBox from '../components/SearchBox.astro';
 
 export interface Props {
@@ -29,7 +29,10 @@ const {
 
 const base = `${BASE}/`;
 const accentStyle = accent ? `--site-accent:${accent}` : undefined;
-const pageUrl = canonicalUrl(Astro.url.pathname);
+// `Astro.url.pathname` already includes BASE (Astro resolves it under the
+// configured base), so it's joined with SITE directly — routing it through
+// `canonicalUrl()`/`url()` would prepend BASE a second time.
+const pageUrl = `${SITE}${Astro.url.pathname}`;
 ---
 
 <!doctype html>

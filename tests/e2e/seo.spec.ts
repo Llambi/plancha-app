@@ -22,9 +22,10 @@ test('la home emite meta tags Open Graph y Twitter Card', async ({ page }) => {
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/);
   await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', /.+/);
   await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+  // Exact match: catches a double-BASE regression (e.g. ".../plancha-app/plancha-app").
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
     'content',
-    new RegExp(`^${SITE}${BASE}/`),
+    `${SITE}${BASE}`,
   );
 
   await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', /.+/);
