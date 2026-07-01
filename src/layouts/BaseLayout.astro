@@ -5,7 +5,7 @@
  * toggle claro/oscuro con persistencia en localStorage('site-theme'),
  * tokens --site-*, skip-link de accesibilidad y script anti-parpadeo.
  */
-import { BASE, SITE_NAME } from '../data/site';
+import { BASE, SITE_NAME, canonicalUrl } from '../data/site';
 import SearchBox from '../components/SearchBox.astro';
 
 export interface Props {
@@ -29,6 +29,7 @@ const {
 
 const base = `${BASE}/`;
 const accentStyle = accent ? `--site-accent:${accent}` : undefined;
+const pageUrl = canonicalUrl(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -38,7 +39,16 @@ const accentStyle = accent ? `--site-accent:${accent}` : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="data:," />
+    <link rel="icon" type="image/svg+xml" href={`${BASE}/favicon.svg`} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
     <slot name="head" />
     <script is:inline>
       /* Tema: inicializa antes de pintar para evitar parpadeo */

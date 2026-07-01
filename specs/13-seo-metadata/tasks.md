@@ -17,7 +17,7 @@
     reutilizando `url()`.
   - Commit: `feat(seo): add canonicalUrl helper (refs #13)`
 
-- [ ] **T2 — Favicon real + meta tags Open Graph/Twitter (sin imagen)**
+- [x] **T2 — Favicon real + meta tags Open Graph/Twitter (sin imagen)**
   - Test (rojo): `tests/e2e/seo.spec.ts` — la home tiene
     `meta[property="og:title"]`, `og:description`, `og:type="website"`,
     `og:url` (con `/plancha-app`), `meta[name="twitter:card"]`,
