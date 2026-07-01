@@ -202,6 +202,7 @@ const devsRendered = await Promise.all(
     document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
       q.hidden = on && !failed.has(q.id);
     });
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
   failedToggle?.addEventListener('change', applyFailedFilter);

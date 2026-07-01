@@ -73,6 +73,28 @@ test.describe('práctica: rail + pins', () => {
     await expect(page.locator('.mm-tick.bad')).toHaveCount(1);
   });
 
+  test('the «Solo mis fallos» filter hides filtered-out questions from the rail', async ({
+    page,
+  }) => {
+    await page.goto(`${BASE}/practica/si`);
+
+    const totalTests = await page.locator('[data-tq]').count();
+    const totalDevs = await page.locator('[data-dq]').count();
+
+    const firstQuestion = page.locator('.tq').nth(0);
+    const correct = JSON.parse((await firstQuestion.getAttribute('data-correct')) ?? '[]');
+    const wrongValue = [0, 1, 2, 3].find((v) => !correct.includes(v));
+    await firstQuestion.locator(`input[value="${wrongValue}"]`).check();
+    await page.locator('[data-grade-trigger]').click();
+
+    // Only the failed question (+ desarrollo, untouched by this filter) stays.
+    await page.locator('[data-failed-toggle]').check();
+    await expect(page.locator('.mm-tick')).toHaveCount(1 + totalDevs);
+
+    await page.locator('[data-failed-toggle]').uncheck();
+    await expect(page.locator('.mm-tick')).toHaveCount(totalTests + totalDevs);
+  });
+
   test('mobile: the "Mapa" button opens a drawer listing every card, with pins on top', async ({
     page,
   }) => {

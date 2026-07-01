@@ -520,13 +520,15 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     }
 
     function collectAnchors(): Anchor[] {
-      return Array.from(document.querySelectorAll<HTMLElement>('.mm-anchor')).map((el) => ({
-        el,
-        id: el.id,
-        type: el.dataset.mmType ?? '',
-        level: Number(el.dataset.mmLevel ?? 0),
-        label: el.dataset.mmLabel ?? '',
-      }));
+      return Array.from(document.querySelectorAll<HTMLElement>('.mm-anchor'))
+        .filter((el) => !el.hidden)
+        .map((el) => ({
+          el,
+          id: el.id,
+          type: el.dataset.mmType ?? '',
+          level: Number(el.dataset.mmLevel ?? 0),
+          label: el.dataset.mmLabel ?? '',
+        }));
     }
 
     function absoluteTop(el: HTMLElement): number {
@@ -785,6 +787,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       buildRail();
       buildDrawer();
     });
+    document.addEventListener('practica:filter-changed', () => rebuild());
 
     requestAnimationFrame(() => requestAnimationFrame(rebuild));
   }
