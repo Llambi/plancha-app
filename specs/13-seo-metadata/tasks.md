@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — `canonicalUrl()`: helper puro para la URL absoluta**
+- [x] **T1 — `canonicalUrl()`: helper puro para la URL absoluta**
   - Test (rojo): `tests/unit/site.test.ts` — `canonicalUrl('/practica/si')`
     devuelve `${SITE}${BASE}/practica/si`; `canonicalUrl()`/`canonicalUrl('/')`
     devuelve la raíz absoluta.
