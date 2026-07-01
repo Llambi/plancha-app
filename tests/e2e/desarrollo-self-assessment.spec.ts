@@ -38,3 +38,18 @@ test('la autoevaluación persiste tras recargar', async ({ page }) => {
     page.locator('[data-dq]').first().locator('[data-dq-self="medias"]'),
   ).toHaveAttribute('aria-pressed', 'true');
 });
+
+test('el resumen de conteos aparece y se actualiza al autoevaluar', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  const summary = page.locator('[data-dev-stats-summary]');
+  await expect(summary).toContainText('Aún no has autoevaluado');
+
+  const cards = page.locator('[data-dq]');
+  await cards.nth(0).locator('[data-dq-self="sabia"]').click();
+  await cards.nth(1).locator('[data-dq-self="no"]').click();
+
+  await expect(summary).toContainText('Sabías: 1');
+  await expect(summary).toContainText('A medias: 0');
+  await expect(summary).toContainText('No sabías: 1');
+});

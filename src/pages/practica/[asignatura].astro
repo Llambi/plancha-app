@@ -162,6 +162,11 @@ const devsRendered = await Promise.all(
           <span class="block-idx">{tests.length > 0 ? 'II' : 'I'}</span> Preguntas de desarrollo
         </h2>
         <p class="block-desc">Escribe tu respuesta y contrástala con la respuesta modelo.</p>
+
+        <div class="stats" data-dev-stats>
+          <p class="stats-summary" data-dev-stats-summary />
+        </div>
+
         {devsRendered.map((d, i) => (
           <DesarrolloQuestion
             id={d.data.id}
@@ -187,6 +192,11 @@ const devsRendered = await Promise.all(
 
 <script>
   import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
+  import {
+    keyFor as devKeyFor,
+    parse as parseDevProgress,
+    summarize as summarizeDevProgress,
+  } from '../../lib/desarrollo-progress';
   import {
     createRng,
     buildExamOrder,
@@ -290,6 +300,25 @@ const devsRendered = await Promise.all(
 
   document.addEventListener('practica:stats-updated', renderStats);
   renderStats();
+
+  // --- Self-assessment summary panel (desarrollo, per asignatura) -----------
+  const devAsignatura =
+    document.querySelector('[data-desarrollo]')?.getAttribute('data-desarrollo') ?? '';
+  const devSummaryEl = document.querySelector<HTMLElement>('[data-dev-stats-summary]');
+
+  function renderDevStats(): void {
+    if (!devAsignatura || !devSummaryEl) return;
+    const state = parseDevProgress(safeGet(devKeyFor(devAsignatura)));
+    const sum = state && summarizeDevProgress(state);
+    if (!sum || sum.answered === 0) {
+      devSummaryEl.textContent = 'Aún no has autoevaluado ninguna pregunta de desarrollo.';
+      return;
+    }
+    devSummaryEl.textContent = `Sabías: ${sum.sabia} · A medias: ${sum.medias} · No sabías: ${sum.no}`;
+  }
+
+  document.addEventListener('desarrollo:stats-updated', renderDevStats);
+  renderDevStats();
 
   // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
   const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');

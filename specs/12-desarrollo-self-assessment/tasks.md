@@ -31,7 +31,7 @@
     persistencia/restauración usando `desarrollo-progress.ts`.
   - Commit: `feat(practica): add self-assessment buttons to desarrollo questions (refs #12)`
 
-- [ ] **T3 — Resumen de conteos (sabía/a medias/no sabía)**
+- [x] **T3 — Resumen de conteos (sabía/a medias/no sabía)**
   - Test (rojo): tras autoevaluar dos preguntas distintas (una «Lo sabía»,
     otra «No lo sabía»), el resumen de la sección de desarrollo muestra
     "Sabías: 1 · A medias: 0 · No sabías: 1" (2 autoevaluadas).
