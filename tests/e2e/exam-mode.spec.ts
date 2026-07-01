@@ -64,6 +64,11 @@ test('un subconjunto de N deja exactamente N preguntas visibles y el minimap las
 
   await expect(page.locator('[data-tq]:not([hidden])')).toHaveCount(3);
   await expect(page.locator('.mm-tick')).toHaveCount(3 + totalDevs);
+
+  // La corrección puntúa solo sobre el subconjunto mostrado (3), no el banco
+  // completo (88) — issue #11.
+  await page.locator('[data-grade-trigger]').click();
+  await expect(page.locator('.score')).toHaveText('Aciertos: 0 / 3');
 });
 
 test('activar el modo examen desactiva el filtro «solo mis fallos» y viceversa', async ({

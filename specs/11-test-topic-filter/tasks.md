@@ -17,7 +17,7 @@
     `uniqueTemas(temas: (string | undefined)[]): string[]`.
   - Commit: `feat(practica): add uniqueTemas helper for the topic filter (refs #11)`
 
-- [ ] **T2 — `gradeAll()` opera solo sobre preguntas visibles**
+- [x] **T2 — `gradeAll()` opera solo sobre preguntas visibles**
   - Test (rojo): en `tests/e2e/exam-mode.spec.ts`, extiende el test del
     subconjunto de N (T6 de la #9) para afirmar que, tras pulsar «Corregir
     test», `.score` muestra el total = N (no el banco completo).
