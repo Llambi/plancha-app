@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — `desarrollo-progress.ts`: núcleo puro de persistencia**
+- [x] **T1 — `desarrollo-progress.ts`: núcleo puro de persistencia**
   - Test (rojo): `tests/unit/desarrollo-progress.test.ts` — `keyFor`
     namespacea por asignatura; `serialize`/`parse` hacen round-trip y son
     defensivos (`null` ante JSON inválido/no-objeto/forma incompleta);
