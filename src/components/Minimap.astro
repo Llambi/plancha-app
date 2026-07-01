@@ -735,18 +735,18 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     let lastFocused: HTMLElement | null = null;
 
     function drawerFocusables(): HTMLElement[] {
-      const drawer = root.querySelector<HTMLElement>('[data-mm-drawer]')!;
+      const drawer = root!.querySelector<HTMLElement>('[data-mm-drawer]')!;
       return Array.from(drawer.querySelectorAll<HTMLElement>('button, [tabindex]'));
     }
 
     function openDrawer(): void {
       lastFocused = document.activeElement as HTMLElement | null;
-      root.classList.add('mm-open');
-      root.querySelector<HTMLElement>('.mm-x')?.focus();
+      root!.classList.add('mm-open');
+      root!.querySelector<HTMLElement>('.mm-x')?.focus();
     }
 
     function closeDrawer(): void {
-      root.classList.remove('mm-open');
+      root!.classList.remove('mm-open');
       lastFocused?.focus();
       lastFocused = null;
     }

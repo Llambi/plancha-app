@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — No marcar como fallo una pregunta sin responder**
+- [x] **T1 — No marcar como fallo una pregunta sin responder**
   - Test (rojo): `tests/unit/minimap.test.ts` — `describe('gradeMark()')`:
     `gradeMark([0], [])` → `null`; `gradeMark([0], [0])` → `'ok'`;
     `gradeMark([0], [1])` → `'bad'`. También se **corrige** el test e2e
@@ -24,7 +24,7 @@
   - Refactor: ninguno adicional.
   - Commit: `fix(minimap): don't mark unanswered questions as failed (refs #20)`
 
-- [ ] **T2 — El minimap respeta el filtro «Solo mis fallos»**
+- [x] **T2 — El minimap respeta el filtro «Solo mis fallos»**
   - Test (rojo): nuevo test e2e en `tests/e2e/minimap.spec.ts` — corrige el
     test dejando algunas preguntas sin responder y otras falladas, activa
     «Solo mis fallos» y afirma que `.mm-tick`/`.mm-lrow` solo existen para las
@@ -40,7 +40,7 @@
   - Refactor: ninguno.
   - Commit: `fix(minimap): hide filtered-out questions from the rail/drawer (refs #20)`
 
-- [ ] **T3 — Ticks del rail y filas del drawer operables por teclado**
+- [x] **T3 — Ticks del rail y filas del drawer operables por teclado**
   - Test (rojo): nuevo test e2e — enfoca directamente un `.mm-tick` (y,
     aparte, una `.mm-lrow` con el drawer abierto en viewport móvil) y pulsa
     `Enter`; afirma que `window.scrollY` cambia igual que con un click.
@@ -57,7 +57,7 @@
     y el nuevo de keydown sobre la función compartida.
   - Commit: `feat(minimap): make rail ticks and drawer rows keyboard-operable (refs #20)`
 
-- [ ] **T4 — El drawer gestiona el foco (trampa + retorno + Escape)**
+- [x] **T4 — El drawer gestiona el foco (trampa + retorno + Escape)**
   - Test (rojo): nuevo test e2e — abre el drawer (viewport móvil) y afirma
     que `document.activeElement` queda dentro de `.mm-drawer`; enfoca el
     último elemento focusable del drawer y pulsa `Tab`, afirma que el foco
@@ -73,7 +73,7 @@
   - Refactor: ninguno adicional.
   - Commit: `feat(minimap): trap focus in the drawer and restore it on close (refs #20)`
 
-- [ ] **T5 — El botón de fijar expone su estado (`aria-pressed`)**
+- [x] **T5 — El botón de fijar expone su estado (`aria-pressed`)**
   - Test (rojo): nuevo test e2e — fija una tarjeta y afirma
     `aria-pressed="true"` en su `[data-mm-pin]`; la desfija y afirma
     `aria-pressed="false"`; recarga con un pin persistido y afirma que nace
@@ -89,7 +89,9 @@
 
 ## Verificación final (Gate B)
 
-- [ ] `npm run check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `npm run check` sin errores
+- [x] `npm test` en verde (61/61)
+- [x] `npm run build` + `npm run test:e2e` en verde (25/25, incluida toda la
+      suite existente — sin regresiones)
+- [x] Cada criterio de aceptación de `spec.md` comprobado (ver tabla en el
+      resumen de entrega)
