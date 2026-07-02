@@ -302,7 +302,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     card
       .querySelectorAll('[data-dq-self]')
       .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {} };
+    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {}, drafts: {} };
     state.answers[card.id] = assessment;
     safeSet(keyFor(asignatura), serialize(state));
     document.dispatchEvent(new CustomEvent('desarrollo:stats-updated'));

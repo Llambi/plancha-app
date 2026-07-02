@@ -4,12 +4,14 @@ import {
   serialize,
   parse,
   pruneAnswers,
+  pruneDrafts,
   summarize,
   type DesarrolloProgressState,
 } from '../../src/lib/desarrollo-progress';
 
 const sample: DesarrolloProgressState = {
   answers: { 'd-q1': 'sabia', 'd-q2': 'medias', 'd-q3': 'no' },
+  drafts: { 'd-q1': 'mi respuesta' },
 };
 
 describe('keyFor()', () => {
@@ -42,6 +44,11 @@ describe('serialize()/parse()', () => {
   it('returns null when the shape is incomplete', () => {
     expect(parse(JSON.stringify({}))).toBeNull(); // no answers
   });
+
+  it('defaults a missing drafts field to {} (backward-compat with pre-existing states)', () => {
+    const legacy = { answers: { 'd-q1': 'sabia' } };
+    expect(parse(JSON.stringify(legacy))).toEqual({ answers: { 'd-q1': 'sabia' }, drafts: {} });
+  });
 });
 
 describe('pruneAnswers()', () => {
@@ -59,12 +66,35 @@ describe('pruneAnswers()', () => {
   });
 });
 
+describe('pruneDrafts()', () => {
+  it('drops ids no longer present and keeps the valid ones', () => {
+    const drafts: DesarrolloProgressState['drafts'] = {
+      'd-q1': 'respuesta 1',
+      'd-q2': 'respuesta 2',
+      'd-q99': 'respuesta huerfana',
+    };
+    expect(pruneDrafts(drafts, ['d-q1', 'd-q2'])).toEqual({
+      'd-q1': 'respuesta 1',
+      'd-q2': 'respuesta 2',
+    });
+  });
+
+  it('returns an empty object when nothing is valid', () => {
+    expect(pruneDrafts({ 'd-q99': 'respuesta' }, ['d-q1'])).toEqual({});
+  });
+});
+
 describe('summarize()', () => {
   it('counts sabia/medias/no and the total assessed', () => {
     expect(summarize(sample)).toEqual({ sabia: 1, medias: 1, no: 1, answered: 3 });
   });
 
   it('returns all zeros for an empty state', () => {
-    expect(summarize({ answers: {} })).toEqual({ sabia: 0, medias: 0, no: 0, answered: 0 });
+    expect(summarize({ answers: {}, drafts: {} })).toEqual({
+      sabia: 0,
+      medias: 0,
+      no: 0,
+      answered: 0,
+    });
   });
 });
