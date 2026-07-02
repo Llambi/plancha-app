@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Persistir borradores en `desarrollo-progress.ts`**
+- [x] **T1 — Persistir borradores en `desarrollo-progress.ts`**
   - Test (rojo): `tests/unit/desarrollo-progress.test.ts` — nuevos casos:
     round-trip de `drafts` vía `serialize`/`parse`; `parse()` de un estado sin
     `drafts` devuelve `{ answers, drafts: {} }` (no `null`); poda de `drafts`
@@ -23,7 +23,7 @@
     función de poda de `drafts`, para no duplicar la lógica.
   - Commit: `feat(desarrollo): add drafts field to progress state (refs #28)`
 
-- [ ] **T2 — Guardar y restaurar el borrador en el textarea**
+- [x] **T2 — Guardar y restaurar el borrador en el textarea**
   - Test (rojo): `tests/e2e/desarrollo-draft-answer.spec.ts` — escribir texto
     en el primer `.dq-text` de `/practica/si`, recargar, comprobar que el
     texto persiste; borrar el texto y recargar, comprobar que sigue vacío;
