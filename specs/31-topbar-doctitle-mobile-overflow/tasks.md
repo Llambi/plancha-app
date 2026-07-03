@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Truncar `.site-doc-title` en vez de envolver**
+- [x] **T1 — Truncar `.site-doc-title` en vez de envolver**
   - Test (rojo): nuevo `tests/e2e/topbar-doctitle.spec.ts` —
     - a 375px, la altura de `.site-topbar` en `/practica/mongodb` (docTitle
       más largo) coincide con la altura en `/` (sin docTitle);
