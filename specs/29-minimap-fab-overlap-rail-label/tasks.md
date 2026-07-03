@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Helper puro `computeFabBottom()`**
+- [x] **T1 — Helper puro `computeFabBottom()`**
   - Test (rojo): `tests/unit/minimap.test.ts` — nuevos casos: sin colisión
     (obstáculo fuera del viewport arriba/abajo, o inexistente) devuelve el
     `bottom` por defecto; obstáculo que invade la zona del FAB devuelve un
@@ -20,7 +20,7 @@
   - Refactor: si aplica, ajustar nombres/comentario para claridad.
   - Commit: `feat(minimap): add computeFabBottom collision helper (refs #29)`
 
-- [ ] **T2 — Reposicionar el FAB dinámicamente en `Minimap.astro`**
+- [x] **T2 — Reposicionar el FAB dinámicamente en `Minimap.astro`**
   - Test (rojo): `tests/e2e/minimap.spec.ts` — nuevo test en `/practica/si` a
     375×812 sin hacer scroll: ningún `.filter-btn` se solapa con `.mm-fab`
     (bounding boxes vía `page.evaluate`).
@@ -35,7 +35,7 @@
     pasando sin modificarlos — confirma que el FAB sigue siempre visible y
     funcional.
 
-- [ ] **T3 — Quitar el literal «mapa» del rail**
+- [x] **T3 — Quitar el literal «mapa» del rail**
   - Test (rojo): `tests/e2e/minimap.spec.ts` — nuevo test en `>=1240px`:
     `getComputedStyle(rail, '::before').content` es `'none'` (o vacío), y el
     `<nav class="mm-rail">` conserva `aria-label="Minimapa de navegación"`.
