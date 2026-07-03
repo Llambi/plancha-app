@@ -223,6 +223,7 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     font-size: 14px;
     text-decoration: none;
     color: inherit;
+    flex-shrink: 0;
   }
   .site-topbar .site-brand .dot {
     width: 9px;
@@ -234,6 +235,14 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     font-size: 13px;
     font-weight: 600;
     opacity: 0.82;
+    /* Truncate instead of wrapping to two lines when the topbar is tight
+       (which grows its height and squeezes the other controls). `min-width:
+       0` is required: flex items default to `min-width: auto` (their content
+       size), which would otherwise stop this from shrinking at all. */
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .site-spacer {
     margin-right: auto;
@@ -250,6 +259,8 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     border-radius: 9px;
     border: 1px solid var(--site-topbar-line);
     transition: background 0.15s;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   .site-home:hover {
     background: rgba(255, 255, 255, 0.12);
@@ -268,6 +279,7 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     align-items: center;
     justify-content: center;
     transition: background 0.15s;
+    flex-shrink: 0;
   }
   .site-theme-toggle:hover {
     background: rgba(255, 255, 255, 0.12);
