@@ -24,7 +24,7 @@ text-overflow: ellipsis;`.
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores (0 errores; 3 hints preexistentes en MongoPractica)
+- [x] `npm test` en verde (105 unit)
+- [x] `npm run build` + `npm run test:e2e` en verde (9 páginas; 59 e2e)
+- [x] Cada criterio de aceptación de `spec.md` comprobado (los 3, vía los 3 tests e2e)
