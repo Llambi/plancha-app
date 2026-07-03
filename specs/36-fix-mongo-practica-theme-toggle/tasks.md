@@ -1,0 +1,35 @@
+# Tasks — Toggle de tema no funciona en /practica/mongodb (listener duplicado)
+
+- **Issue**: #36
+- **Plan**: ./plan.md
+
+> Cada tarea es **atómica** y produce **un commit** (Conventional Commits, con
+> `(refs #36)`). Orden TDD: primero el test que falla, luego la implementación
+> mínima, luego refactor. Marca `[x]` al completar.
+
+## Tareas
+
+- [ ] **T1 — Test e2e de regresión para el toggle en /practica/mongodb**
+  - Test (rojo): añade en `tests/e2e/smoke.spec.ts` un test que navega a
+    `/practica/mongodb`, lee `data-theme` antes de clicar
+    `.site-theme-toggle`, clica una vez y afirma que `data-theme` cambió.
+    Con el código actual (listener duplicado) el test falla porque el valor
+    no cambia.
+  - Implementación (verde): ninguna en esta tarea (solo se añade el test).
+  - Refactor: —
+  - Commit: `test(e2e): cubrir el toggle de tema en /practica/mongodb (refs #36)`
+
+- [ ] **T2 — Eliminar el listener de tema duplicado en MongoPractica.astro**
+  - Test (verifica verde): el test de T1 debe pasar tras este cambio.
+  - Implementación: elimina el IIFE duplicado (`/* Toggle de tema (común) */`)
+    de `src/components/MongoPractica.astro`, dejando que `BaseLayout.astro`
+    gobierne el toggle.
+  - Refactor: no aplica (cambio puramente sustractivo).
+  - Commit: `fix(mongo-practica): remove duplicate theme toggle listener (refs #36)`
+
+## Verificación final (Gate B)
+
+- [ ] `astro check` sin errores
+- [ ] `npm test` en verde
+- [ ] `npm run build` + `npm run test:e2e` en verde
+- [ ] Cada criterio de aceptación de `spec.md` comprobado
