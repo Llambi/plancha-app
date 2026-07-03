@@ -1087,20 +1087,6 @@
   };
 
   render();
-
-  /* ----- Toggle de tema (común) ----- */
-  (function () {
-    const b = document.querySelector('.site-theme-toggle');
-    if (!b) return;
-    b.addEventListener('click', function () {
-      const d = document.documentElement;
-      const n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      d.setAttribute('data-theme', n);
-      try {
-        localStorage.setItem('site-theme', n);
-      } catch (e) {}
-    });
-  })();
 </script>
 
 <style is:global>
