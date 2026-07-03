@@ -1,8 +1,8 @@
 /**
  * Minimap navigation — pure, testable helpers (pin storage de/serialization,
- * label derivation, pin-jump targeting). DOM wiring (rail/drawer build, scroll
- * spy, drag-to-scrub) lives in `Minimap.astro`; this module has no DOM
- * dependency so it can be unit-tested in isolation.
+ * label derivation, pin-jump targeting, FAB collision avoidance). DOM wiring
+ * (rail/drawer build, scroll spy, drag-to-scrub) lives in `Minimap.astro`;
+ * this module has no DOM dependency so it can be unit-tested in isolation.
  */
 
 const STORAGE_PREFIX = 'plancha:minimap-pins:';
@@ -70,6 +70,33 @@ export function subBranchId(temaId: string, index: number): string {
 /** Label shown in the rail/drawer for a sub-branch ("<num>.<n> · <name>"). */
 export function subBranchLabel(temaNum: string, index: number, name: string): string {
   return truncateLabel(`${temaNum}.${index + 1} · ${name}`, 52);
+}
+
+export interface FabCollisionInput {
+  fabDefaultBottom: number;
+  fabHeight: number;
+  gap: number;
+  viewportHeight: number;
+  /** Obstacle's `getBoundingClientRect()` top/bottom, or `null` if it doesn't exist on the page. */
+  obstacleTop: number | null;
+  obstacleBottom: number | null;
+}
+
+/**
+ * The `bottom` (px) the floating action button should use so it clears an
+ * obstacle (e.g. the tema filter chips) that might otherwise sit right under
+ * it. Returns `fabDefaultBottom` when there's no obstacle, when it's fully
+ * outside the viewport, or when it already leaves enough room; otherwise nudges
+ * the FAB up exactly enough to clear it with `gap` to spare.
+ */
+export function computeFabBottom(input: FabCollisionInput): number {
+  const { fabDefaultBottom, fabHeight, gap, viewportHeight, obstacleTop, obstacleBottom } = input;
+  if (obstacleTop === null || obstacleBottom === null) return fabDefaultBottom;
+  if (obstacleBottom <= 0 || obstacleTop >= viewportHeight) return fabDefaultBottom;
+  const clearance = viewportHeight - obstacleBottom;
+  const needed = fabHeight + gap;
+  if (clearance >= needed) return fabDefaultBottom;
+  return fabDefaultBottom + (needed - clearance);
 }
 
 /**

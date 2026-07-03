@@ -11,6 +11,7 @@ import {
   jumpPinTarget,
   isCorrectPick,
   gradeMark,
+  computeFabBottom,
 } from '../../src/lib/minimap';
 
 describe('pinsKeyFor()', () => {
@@ -136,5 +137,31 @@ describe('jumpPinTarget()', () => {
   it('falls back to the first/last pin when there is no current anchor', () => {
     expect(jumpPinTarget(order, pinned, null, 1)).toBe('q-2');
     expect(jumpPinTarget(order, pinned, null, -1)).toBe('q-4');
+  });
+});
+
+describe('computeFabBottom()', () => {
+  const base = { fabDefaultBottom: 16, fabHeight: 40, gap: 10, viewportHeight: 800 };
+
+  it('returns the default bottom when there is no obstacle', () => {
+    expect(computeFabBottom({ ...base, obstacleTop: null, obstacleBottom: null })).toBe(16);
+  });
+
+  it('returns the default bottom when the obstacle is fully above the viewport', () => {
+    expect(computeFabBottom({ ...base, obstacleTop: -50, obstacleBottom: -10 })).toBe(16);
+  });
+
+  it('returns the default bottom when the obstacle is fully below the viewport', () => {
+    expect(computeFabBottom({ ...base, obstacleTop: 810, obstacleBottom: 850 })).toBe(16);
+  });
+
+  it('returns the default bottom when the gap above the obstacle already fits the FAB', () => {
+    // clearance = 800 - 750 = 50, needed = fabHeight(40) + gap(10) = 50 → exact fit, no nudge.
+    expect(computeFabBottom({ ...base, obstacleTop: 700, obstacleBottom: 750 })).toBe(16);
+  });
+
+  it('nudges the bottom up exactly enough to clear an obstacle invading the FAB zone', () => {
+    // clearance = 800 - 770 = 30, needed = 50 → short by 20 → bottom = 16 + 20 = 36.
+    expect(computeFabBottom({ ...base, obstacleTop: 740, obstacleBottom: 770 })).toBe(36);
   });
 });
