@@ -1,12 +1,16 @@
 /**
- * Self-assessment for desarrollo questions — pure, testable core, no DOM.
+ * Self-assessment and draft answers for desarrollo questions — pure, testable
+ * core, no DOM.
  *
  * Models a 3-state self-assessment per question ("sabia" | "medias" | "no")
- * and its (de)serialization to `localStorage` under a key namespaced by
- * asignatura (`plancha:desarrollo:<asignatura>`). `parse` is defensive:
- * invalid data returns `null` instead of throwing. DOM wiring (reading/writing
- * storage, painting the buttons) lives in `DesarrolloQuestion.astro`'s
- * `<script>`; this is only the logic tested in isolation.
+ * plus the free-text draft the user is writing, and their (de)serialization
+ * to `localStorage` under a key namespaced by asignatura
+ * (`plancha:desarrollo:<asignatura>`). `parse` is defensive: invalid data
+ * returns `null` instead of throwing; a missing `drafts` field (states
+ * persisted before drafts existed) defaults to `{}`. DOM wiring
+ * (reading/writing storage, painting the buttons, filling the textarea) lives
+ * in `DesarrolloQuestion.astro`'s `<script>`; this is only the logic tested
+ * in isolation.
  */
 
 const STORAGE_PREFIX = 'plancha:desarrollo:';
@@ -17,6 +21,8 @@ export type SelfAssessment = 'sabia' | 'medias' | 'no';
 export interface DesarrolloProgressState {
   /** article id ("d-<id>") -> self-assessment. */
   answers: Record<string, SelfAssessment>;
+  /** article id ("d-<id>") -> draft text typed by the user. */
+  drafts: Record<string, string>;
 }
 
 /** Counts derived from a state, for the summary panel. */
@@ -48,7 +54,21 @@ export function parse(raw: string | null): DesarrolloProgressState | null {
   if (typeof value !== 'object' || value === null) return null;
   const v = value as Record<string, unknown>;
   if (typeof v.answers !== 'object' || v.answers === null) return null;
-  return { answers: v.answers as Record<string, SelfAssessment> };
+  const drafts = typeof v.drafts === 'object' && v.drafts !== null ? v.drafts : {};
+  return {
+    answers: v.answers as Record<string, SelfAssessment>,
+    drafts: drafts as Record<string, string>,
+  };
+}
+
+/** Drops entries whose id no longer exists in the current content. */
+function pruneById<T>(record: Record<string, T>, validIds: string[]): Record<string, T> {
+  const valid = new Set(validIds);
+  const out: Record<string, T> = {};
+  for (const [id, value] of Object.entries(record)) {
+    if (valid.has(id)) out[id] = value;
+  }
+  return out;
 }
 
 /** Drops self-assessments whose id no longer exists in the current content. */
@@ -56,12 +76,15 @@ export function pruneAnswers(
   answers: Record<string, SelfAssessment>,
   validIds: string[],
 ): Record<string, SelfAssessment> {
-  const valid = new Set(validIds);
-  const out: Record<string, SelfAssessment> = {};
-  for (const [id, assessment] of Object.entries(answers)) {
-    if (valid.has(id)) out[id] = assessment;
-  }
-  return out;
+  return pruneById(answers, validIds);
+}
+
+/** Drops draft answers whose id no longer exists in the current content. */
+export function pruneDrafts(
+  drafts: Record<string, string>,
+  validIds: string[],
+): Record<string, string> {
+  return pruneById(drafts, validIds);
 }
 
 export function summarize(state: DesarrolloProgressState): DesarrolloSummary {

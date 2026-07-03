@@ -243,7 +243,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
 </style>
 
 <script>
-  import { keyFor, serialize, parse, pruneAnswers } from '../lib/desarrollo-progress';
+  import { keyFor, serialize, parse, pruneAnswers, pruneDrafts } from '../lib/desarrollo-progress';
 
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest('.dq-reveal');
@@ -302,11 +302,60 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     card
       .querySelectorAll('[data-dq-self]')
       .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {} };
+    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {}, drafts: {} };
     state.answers[card.id] = assessment;
     safeSet(keyFor(asignatura), serialize(state));
     document.dispatchEvent(new CustomEvent('desarrollo:stats-updated'));
   });
 
   restoreSelfAssessment();
+
+  // --- Draft answers (localStorage, per asignatura) ---------------------------
+  const DRAFT_DEBOUNCE_MS = 400;
+  const draftTimers = new Map<string, number>();
+
+  function saveDraft(cardId: string, text: string): void {
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {}, drafts: {} };
+    state.drafts[cardId] = text;
+    safeSet(keyFor(asignatura), serialize(state));
+  }
+
+  function restoreDrafts(): void {
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura)));
+    if (!state) return;
+    const drafts = pruneDrafts(state.drafts, questionIds());
+    for (const [id, text] of Object.entries(drafts)) {
+      const card = document.getElementById(id);
+      const textarea = card?.querySelector<HTMLTextAreaElement>('.dq-text');
+      if (textarea) textarea.value = text;
+    }
+  }
+
+  document.addEventListener('input', (e) => {
+    const textarea = (e.target as HTMLElement).closest<HTMLTextAreaElement>('.dq-text');
+    const card = textarea?.closest<HTMLElement>('[data-dq]');
+    if (!textarea || !card) return;
+    const existing = draftTimers.get(card.id);
+    if (existing) window.clearTimeout(existing);
+    draftTimers.set(
+      card.id,
+      window.setTimeout(() => saveDraft(card.id, textarea.value), DRAFT_DEBOUNCE_MS),
+    );
+  });
+
+  // Flush immediately on blur (fires as `change` when the value has been
+  // edited) so a draft isn't lost to a reload/navigation before the debounce
+  // timer would have fired.
+  document.addEventListener('change', (e) => {
+    const textarea = (e.target as HTMLElement).closest<HTMLTextAreaElement>('.dq-text');
+    const card = textarea?.closest<HTMLElement>('[data-dq]');
+    if (!textarea || !card) return;
+    const existing = draftTimers.get(card.id);
+    if (existing) window.clearTimeout(existing);
+    saveDraft(card.id, textarea.value);
+  });
+
+  restoreDrafts();
 </script>
