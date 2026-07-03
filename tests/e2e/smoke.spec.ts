@@ -18,3 +18,11 @@ test('el toggle de tema persiste en localStorage', async ({ page }) => {
   const theme = await page.evaluate(() => localStorage.getItem('site-theme'));
   expect(theme).toBeTruthy();
 });
+
+test('el toggle de tema cambia data-theme en /practica/mongodb', async ({ page }) => {
+  await page.goto(`${BASE}/practica/mongodb`);
+  const before = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  await page.locator('.site-theme-toggle').first().click();
+  const after = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  expect(after).not.toBe(before);
+});
