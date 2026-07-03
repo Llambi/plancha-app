@@ -186,6 +186,35 @@ test.describe('práctica: rail + pins', () => {
     await page.locator('.mm-lrow').nth(1).click();
     await expect(page.locator('[data-mm]')).not.toHaveClass(/mm-open/);
   });
+
+  test('the FAB never covers a tema filter chip, even when chips wrap to several rows', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(`${BASE}/practica/si`);
+
+    const overlapping = await page.evaluate(() => {
+      const fab = document.querySelector('.mm-fab')!.getBoundingClientRect();
+      const chips = Array.from(document.querySelectorAll<HTMLElement>('.filter-btn'));
+      const intersects = (a: DOMRect, b: DOMRect) =>
+        !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+      return chips
+        .filter((c) => intersects(fab, c.getBoundingClientRect()))
+        .map((c) => c.textContent);
+    });
+
+    expect(overlapping).toEqual([]);
+  });
+
+  test('the FAB still opens the drawer after being repositioned to clear the filter chips', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(`${BASE}/practica/si`);
+
+    await page.locator('.mm-fab').click();
+    await expect(page.locator('.mm-drawer')).toBeVisible();
+  });
 });
 
 test.describe('esquemas: hierarchical rail', () => {

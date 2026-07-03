@@ -454,6 +454,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     subBranchLabel,
     jumpPinTarget,
     gradeMark,
+    computeFabBottom,
   } from '../lib/minimap';
 
   interface Anchor {
@@ -469,6 +470,10 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
   const PIN_SVG =
     '<svg class="pin-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v16.5a.6.6 0 0 1-.9.52L12 18l-5.1 3.02A.6.6 0 0 1 6 20.5V4a1 1 0 0 1 1-1z"></path></svg>';
   const TOPBAR_OFFSET = 70;
+  // Must match `.mm-fab`'s CSS `bottom: 16px` — the value restored when
+  // there's no collision with the tema filter chips.
+  const FAB_DEFAULT_BOTTOM = 16;
+  const FAB_GAP = 12;
 
   const root = document.querySelector<HTMLElement>('[data-mm]');
   if (root) {
@@ -476,6 +481,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     const railEl = root.querySelector<HTMLElement>('[data-mm-rail]')!;
     const vpEl = root.querySelector<HTMLElement>('[data-mm-vp]')!;
     const tipEl = root.querySelector<HTMLElement>('[data-mm-tip]')!;
+    const fabEl = root.querySelector<HTMLElement>('.mm-fab')!;
     const fabCountEl = root.querySelector<HTMLElement>('[data-mm-fab-count]')!;
     const pinnedWrap = root.querySelector<HTMLElement>('[data-mm-pinned]')!;
     const listWrap = root.querySelector<HTMLElement>('[data-mm-dlist]')!;
@@ -657,6 +663,26 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       fabCountEl.classList.toggle('zero', pins.size === 0);
     }
 
+    // Keeps the FAB from covering the tema filter chips (`[data-tema-filters]`,
+    // present on práctica pages with a test bank) when they wrap to enough rows
+    // to reach the bottom-right corner of the viewport. Nudges the FAB up just
+    // enough to clear them instead of hiding it, so it stays clickable at all
+    // times.
+    function updateFabPosition(): void {
+      const obstacle = document.querySelector<HTMLElement>('[data-tema-filters]');
+      const rect = obstacle?.getBoundingClientRect() ?? null;
+      const bottom = computeFabBottom({
+        fabDefaultBottom: FAB_DEFAULT_BOTTOM,
+        fabHeight: fabEl.offsetHeight,
+        gap: FAB_GAP,
+        viewportHeight: window.innerHeight,
+        obstacleTop: rect?.top ?? null,
+        obstacleBottom: rect?.bottom ?? null,
+      });
+      if (bottom === FAB_DEFAULT_BOTTOM) fabEl.style.removeProperty('bottom');
+      else fabEl.style.bottom = `${bottom}px`;
+    }
+
     function syncPinState(el: HTMLElement, pinned: boolean): void {
       el.classList.toggle('pinned', pinned);
       el.querySelectorAll<HTMLElement>('[data-mm-pin]').forEach((btn) =>
@@ -671,6 +697,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       buildRail();
       buildDrawer();
       updateFab();
+      updateFabPosition();
       updateViewport();
       updateActiveMarkers();
     }
@@ -867,6 +894,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
       () => {
         updateViewport();
         updateActiveMarkers();
+        updateFabPosition();
       },
       { passive: true },
     );
