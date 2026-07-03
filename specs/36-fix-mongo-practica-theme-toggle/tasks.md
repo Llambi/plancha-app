@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Test e2e de regresión para el toggle en /practica/mongodb**
+- [x] **T1 — Test e2e de regresión para el toggle en /practica/mongodb**
   - Test (rojo): añade en `tests/e2e/smoke.spec.ts` un test que navega a
     `/practica/mongodb`, lee `data-theme` antes de clicar
     `.site-theme-toggle`, clica una vez y afirma que `data-theme` cambió.
@@ -19,7 +19,7 @@
   - Refactor: —
   - Commit: `test(e2e): cubrir el toggle de tema en /practica/mongodb (refs #36)`
 
-- [ ] **T2 — Eliminar el listener de tema duplicado en MongoPractica.astro**
+- [x] **T2 — Eliminar el listener de tema duplicado en MongoPractica.astro**
   - Test (verifica verde): el test de T1 debe pasar tras este cambio.
   - Implementación: elimina el IIFE duplicado (`/* Toggle de tema (común) */`)
     de `src/components/MongoPractica.astro`, dejando que `BaseLayout.astro`
