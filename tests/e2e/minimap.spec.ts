@@ -234,4 +234,17 @@ test.describe('esquemas: hierarchical rail', () => {
     await expect(branches.first()).toHaveClass(/pinned/);
     await expect(branches.nth(1)).not.toHaveClass(/pinned/);
   });
+
+  test('the rail no longer shows the "mapa" literal, but stays identifiable via aria-label', async ({
+    page,
+  }) => {
+    await page.goto(`${BASE}/esquemas/si`);
+
+    await expect(page.locator('.mm-rail')).toBeVisible();
+    const beforeContent = await page
+      .locator('.mm-rail')
+      .evaluate((el) => getComputedStyle(el, '::before').content);
+    expect(beforeContent === 'none' || beforeContent === '""').toBe(true);
+    await expect(page.locator('.mm-rail')).toHaveAttribute('aria-label', 'Minimapa de navegación');
+  });
 });
