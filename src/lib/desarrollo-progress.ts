@@ -96,3 +96,12 @@ export function summarize(state: DesarrolloProgressState): DesarrolloSummary {
     answered: values.length,
   };
 }
+
+/**
+ * Compact one-line self-assessment for the collapsed panel; empty when nothing
+ * has been self-assessed yet.
+ */
+export function formatDevChip(summary: DesarrolloSummary | null): string {
+  if (!summary || summary.answered === 0) return '';
+  return `Sabías ${summary.sabia} · A medias ${summary.medias} · No ${summary.no}`;
+}

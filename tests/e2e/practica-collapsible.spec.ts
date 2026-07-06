@@ -55,3 +55,20 @@ test('question 1 sits higher with the panels collapsed than expanded', async ({ 
 
   expect(collapsedY).toBeLessThan(expandedY);
 });
+
+test('the collapsed summaries reflect the real state', async ({ page }) => {
+  await page.goto(SI);
+
+  // Stats chip: neutral first, then the overall accuracy after grading q1 right.
+  await expect(page.locator('[data-stats-chip]')).toHaveText('Sin datos aún');
+  await page.locator('[data-tq]').first().locator('input').first().check();
+  await page.locator('[data-grade-trigger]').click();
+  await expect(page.locator('[data-stats-chip]')).toHaveText('Acumulado: 100%');
+
+  // Exam chip: reflects the options as they are configured.
+  await page.locator('[data-exam-panel] > summary').click();
+  await page.locator('[data-exam-shuffle]').check();
+  await page.locator('[data-exam-timed]').check();
+  await expect(page.locator('[data-exam-chip]')).toContainText('barajado');
+  await expect(page.locator('[data-exam-chip]')).toContainText('min');
+});

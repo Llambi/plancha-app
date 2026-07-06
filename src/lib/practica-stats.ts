@@ -105,6 +105,15 @@ export function summarize(state: StatsState): StatsSummary {
   };
 }
 
+/**
+ * Compact one-line stats for the collapsed panel («Acumulado: N%»); empty when
+ * nothing has been answered yet.
+ */
+export function formatStatsChip(summary: StatsSummary | null): string {
+  if (!summary || summary.answered === 0) return '';
+  return `Acumulado: ${Math.round(summary.accuracyAll * 100)}%`;
+}
+
 /** Ids cuyo último intento fue fallo (conjunto del filtro «solo mis fallos»). */
 export function failedIds(state: StatsState): string[] {
   return Object.entries(state.questions)

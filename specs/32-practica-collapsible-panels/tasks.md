@@ -26,7 +26,7 @@
     «solo mis fallos», reiniciar) para que la suite siga verde.
   - Commit: `feat(practica): make the stats and exam panels collapsible, collapsed by default (refs #32)`
 
-- [ ] **T2 — Resumen compacto de una línea en cada `<summary>`**
+- [x] **T2 — Resumen compacto de una línea en cada `<summary>`**
   - Test (rojo):
     - Unit (Vitest) para los formatters puros nuevos:
       - `formatExamConfigSummary` en `src/lib/exam-mode.ts` (barajado / subconjunto
