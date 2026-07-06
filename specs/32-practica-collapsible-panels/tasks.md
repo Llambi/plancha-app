@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Paneles colapsables (`<details>`), colapsados por defecto**
+- [x] **T1 — Paneles colapsables (`<details>`), colapsados por defecto**
   - Test (rojo): nuevo `tests/e2e/practica-collapsible.spec.ts` —
     - los paneles de estadísticas, modo examen y autoevaluación son `<details>`
       **sin `open`** al cargar `/practica/<asig>`;

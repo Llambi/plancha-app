@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
+import { openPanels } from './helpers';
 
 // E2E for the minimap navigation rail + pins (issue: minimap de navegación),
 // against the built site served under the BASE subpath. `si` has both a
@@ -115,6 +116,7 @@ test.describe('práctica: rail + pins', () => {
     page,
   }) => {
     await page.goto(`${BASE}/practica/si`);
+    await openPanels(page);
 
     const totalTests = await page.locator('[data-tq]').count();
     const totalDevs = await page.locator('[data-dq]').count();

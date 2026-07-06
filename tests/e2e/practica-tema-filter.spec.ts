@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
+import { openPanels } from './helpers';
 
 // E2E for the topic filter (issue #11): `/practica/si` has 10 temas (T1..T10)
 // on all 88 test questions; `cl` has no test bank at all.
 
 test('el filtro por tema aparece con «Todos» + un botón por cada tema', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   const group = page.locator('[data-tema-filters]');
   await expect(group).toBeVisible();
@@ -16,6 +18,7 @@ test('el filtro por tema aparece con «Todos» + un botón por cada tema', async
 
 test('no aparece el filtro por tema si la asignatura no tiene test', async ({ page }) => {
   await page.goto(`${BASE}/practica/cl`);
+  await openPanels(page);
   await expect(page.locator('[data-tema-filters]')).toHaveCount(0);
 });
 
@@ -23,6 +26,7 @@ test('elegir un tema deja visibles solo esas preguntas y el minimap las excluye'
   page,
 }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
   const totalDevs = await page.locator('[data-dq]').count();
 
   await page.locator('[data-tema-filter="T1"]').click();
@@ -39,6 +43,7 @@ test('elegir un tema deja visibles solo esas preguntas y el minimap las excluye'
 
 test('corregir con un tema activo puntúa solo sobre las preguntas visibles', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   await page.locator('[data-tema-filter="T1"]').click();
   await page.locator('[data-grade-trigger]').click();
@@ -50,6 +55,7 @@ test('el filtro de tema es mutuamente excluyente con «solo mis fallos» y el mo
   page,
 }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   // Activar un tema desmarca «solo mis fallos» si estaba activo.
   await page.locator('[data-failed-toggle]').check();

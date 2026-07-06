@@ -70,52 +70,61 @@ const devsRendered = await Promise.all(
           y se oculta sola.
         </p>
 
-        <div class="stats" data-stats>
-          <p class="stats-summary" data-stats-summary />
-          <div class="stats-actions">
-            <label class="stats-toggle">
-              <input type="checkbox" data-failed-toggle /> Solo mis fallos
-            </label>
-            <button class="btn-reset" type="button" data-stats-reset>
-              Reiniciar estadísticas
-            </button>
+        <details class="panel stats" data-stats>
+          <summary class="panel-summary">
+            <span class="panel-title">Estadísticas</span>
+          </summary>
+          <div class="panel-body">
+            <p class="stats-summary" data-stats-summary />
+            <div class="stats-actions">
+              <label class="stats-toggle">
+                <input type="checkbox" data-failed-toggle /> Solo mis fallos
+              </label>
+              <button class="btn-reset" type="button" data-stats-reset>
+                Reiniciar estadísticas
+              </button>
+            </div>
           </div>
-        </div>
+        </details>
 
-        <div class="exam" data-exam-panel>
-          <p class="exam-title">Modo examen</p>
-          <div class="exam-opts">
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-shuffle /> Barajar preguntas
-            </label>
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
-              <input
-                type="number"
-                min="1"
-                max={tests.length}
-                value={tests.length}
-                data-exam-subset-n
-                disabled
-              />{' '}
-              preguntas
-            </label>
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
-              <input type="number" min="1" value="20" data-exam-minutes disabled />
-            </label>
+        <details class="panel exam" data-exam-panel>
+          <summary class="panel-summary">
+            <span class="panel-title">Modo examen</span>
+          </summary>
+          <div class="panel-body">
+            <div class="exam-opts">
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-shuffle /> Barajar preguntas
+              </label>
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
+                <input
+                  type="number"
+                  min="1"
+                  max={tests.length}
+                  value={tests.length}
+                  data-exam-subset-n
+                  disabled
+                />{' '}
+                preguntas
+              </label>
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
+                <input type="number" min="1" value="20" data-exam-minutes disabled />
+              </label>
+            </div>
+            <div class="exam-actions">
+              <button class="btn-grade" type="button" data-exam-start>
+                {' '}
+                Empezar simulacro{' '}
+              </button>
+              <button class="btn-reset" type="button" data-exam-exit hidden>
+                Salir de modo examen
+              </button>
+              <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
+            </div>
           </div>
-          <div class="exam-actions">
-            <button class="btn-grade" type="button" data-exam-start>
-              {' '}
-              Empezar simulacro{' '}
-            </button>
-            <button class="btn-reset" type="button" data-exam-exit hidden>
-              Salir de modo examen
-            </button>
-            <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
-          </div>
-        </div>
+        </details>
 
         {temas.length > 0 && (
           <div class="tema-filters" role="group" aria-label="Filtrar por tema" data-tema-filters>
@@ -163,9 +172,14 @@ const devsRendered = await Promise.all(
         </h2>
         <p class="block-desc">Escribe tu respuesta y contrástala con la respuesta modelo.</p>
 
-        <div class="stats" data-dev-stats>
-          <p class="stats-summary" data-dev-stats-summary />
-        </div>
+        <details class="panel stats" data-dev-stats>
+          <summary class="panel-summary">
+            <span class="panel-title">Autoevaluación</span>
+          </summary>
+          <div class="panel-body">
+            <p class="stats-summary" data-dev-stats-summary />
+          </div>
+        </details>
 
         {devsRendered.map((d, i) => (
           <DesarrolloQuestion
@@ -607,6 +621,36 @@ const devsRendered = await Promise.all(
   .score {
     font-weight: 700;
   }
+  .panel-summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--site-ink);
+  }
+  .panel-summary::-webkit-details-marker {
+    display: none;
+  }
+  .panel-summary::after {
+    content: '';
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-left: auto;
+    border-right: 2px solid var(--site-muted);
+    border-bottom: 2px solid var(--site-muted);
+    transform: rotate(45deg);
+    transition: transform 0.15s;
+  }
+  .panel[open] > .panel-summary::after {
+    transform: rotate(-135deg);
+  }
+  .panel-body {
+    margin-top: 0.7rem;
+  }
   .stats {
     margin-bottom: 1.4rem;
     padding: 0.85rem 1rem;
@@ -650,11 +694,6 @@ const devsRendered = await Promise.all(
     border: 1px solid var(--site-line);
     border-radius: 12px;
     background: var(--site-surface-2);
-  }
-  .exam-title {
-    font-weight: 800;
-    font-size: 0.9rem;
-    margin-bottom: 0.6rem;
   }
   .exam-opts {
     display: flex;
