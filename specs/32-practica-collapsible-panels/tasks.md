@@ -45,7 +45,7 @@
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde (incluye los formatters nuevos)
-- [ ] `npm run build` + `npm run test:e2e` en verde (incluye el nuevo spec y los ajustados)
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores (0 errores; 3 hints preexistentes en MongoPractica)
+- [x] `npm test` en verde (111 unit, +6 de los formatters)
+- [x] `npm run build` + `npm run test:e2e` en verde (9 páginas; 65 e2e)
+- [x] Cada criterio de aceptación de `spec.md` comprobado (e2e + verificación visual)
