@@ -69,6 +69,20 @@ export interface ExamConfig {
   minutes: number;
 }
 
+/**
+ * One-line summary of a saved exam config, for the collapsed panel. Lists only
+ * the active options (`barajado`, `N preguntas`, `M min`); empty when there is
+ * no saved config or nothing is enabled.
+ */
+export function formatExamConfigSummary(config: ExamConfig | null): string {
+  if (!config) return '';
+  const parts: string[] = [];
+  if (config.shuffle) parts.push('barajado');
+  if (config.subsetSize != null) parts.push(`${config.subsetSize} preguntas`);
+  if (config.timed) parts.push(`${config.minutes} min`);
+  return parts.join(' · ');
+}
+
 /** `localStorage` key for an asignatura's exam-mode config. */
 export function examConfigKeyFor(asignatura: string): string {
   return `${EXAM_CONFIG_PREFIX}${asignatura}`;

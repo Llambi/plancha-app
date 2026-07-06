@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
+import { openPanels } from './helpers';
 
 // E2E for exam mode (issue #9): shuffle, N-question subset and timed simulacro
 // over the existing test bank. `si` has a sizeable test bank (88 questions);
@@ -11,16 +12,19 @@ function questionIds(page: import('@playwright/test').Page) {
 
 test('el panel de modo examen aparece cuando hay preguntas de test', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
   await expect(page.locator('[data-exam-panel]')).toBeVisible();
 });
 
 test('no aparece el panel de modo examen si la asignatura no tiene test', async ({ page }) => {
   await page.goto(`${BASE}/practica/cl`);
+  await openPanels(page);
   await expect(page.locator('[data-exam-panel]')).toHaveCount(0);
 });
 
 test('empezar y salir del modo examen restaura el conjunto y orden original', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   const before = await questionIds(page);
 
@@ -38,6 +42,7 @@ test('empezar y salir del modo examen restaura el conjunto y orden original', as
 
 test('barajar conserva el mismo conjunto de preguntas pero cambia el orden', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   const before = await questionIds(page);
 
@@ -56,6 +61,7 @@ test('un subconjunto de N deja exactamente N preguntas visibles y el minimap las
   page,
 }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
   const totalDevs = await page.locator('[data-dq]').count();
 
   await page.locator('[data-exam-subset-toggle]').check();
@@ -75,6 +81,7 @@ test('activar el modo examen desactiva el filtro «solo mis fallos» y viceversa
   page,
 }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   // Empezar el simulacro desmarca «solo mis fallos» si estaba activo.
   await page.locator('[data-failed-toggle]').check();
@@ -92,6 +99,7 @@ test('el cronómetro muestra cuenta atrás y corrige automáticamente al agotars
   page,
 }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   await page.locator('[data-exam-timed]').check();
   await page.locator('[data-exam-minutes]').fill('0.02'); // ~1.2 s, solo para el test
@@ -103,6 +111,7 @@ test('el cronómetro muestra cuenta atrás y corrige automáticamente al agotars
 
 test('la configuración del panel persiste entre recargas de página', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   await page.locator('[data-exam-shuffle]').check();
   await page.locator('[data-exam-subset-toggle]').check();
@@ -111,6 +120,7 @@ test('la configuración del panel persiste entre recargas de página', async ({ 
   await page.locator('[data-exam-minutes]').fill('15');
 
   await page.reload();
+  await openPanels(page);
 
   await expect(page.locator('[data-exam-shuffle]')).toBeChecked();
   await expect(page.locator('[data-exam-subset-toggle]')).toBeChecked();

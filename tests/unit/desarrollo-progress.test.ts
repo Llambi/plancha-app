@@ -6,6 +6,7 @@ import {
   pruneAnswers,
   pruneDrafts,
   summarize,
+  formatDevChip,
   type DesarrolloProgressState,
 } from '../../src/lib/desarrollo-progress';
 
@@ -13,6 +14,17 @@ const sample: DesarrolloProgressState = {
   answers: { 'd-q1': 'sabia', 'd-q2': 'medias', 'd-q3': 'no' },
   drafts: { 'd-q1': 'mi respuesta' },
 };
+
+describe('formatDevChip()', () => {
+  it('is empty when nothing has been self-assessed', () => {
+    expect(formatDevChip(null)).toBe('');
+    expect(formatDevChip(summarize({ answers: {}, drafts: {} }))).toBe('');
+  });
+
+  it('shows the three self-assessment counts', () => {
+    expect(formatDevChip(summarize(sample))).toBe('Sabías 1 · A medias 1 · No 1');
+  });
+});
 
 describe('keyFor()', () => {
   it('namespaces the key by asignatura', () => {

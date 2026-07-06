@@ -70,52 +70,63 @@ const devsRendered = await Promise.all(
           y se oculta sola.
         </p>
 
-        <div class="stats" data-stats>
-          <p class="stats-summary" data-stats-summary />
-          <div class="stats-actions">
-            <label class="stats-toggle">
-              <input type="checkbox" data-failed-toggle /> Solo mis fallos
-            </label>
-            <button class="btn-reset" type="button" data-stats-reset>
-              Reiniciar estadísticas
-            </button>
+        <details class="panel stats" data-stats>
+          <summary class="panel-summary">
+            <span class="panel-title">Estadísticas</span>
+            <span class="panel-chip" data-stats-chip />
+          </summary>
+          <div class="panel-body">
+            <p class="stats-summary" data-stats-summary />
+            <div class="stats-actions">
+              <label class="stats-toggle">
+                <input type="checkbox" data-failed-toggle /> Solo mis fallos
+              </label>
+              <button class="btn-reset" type="button" data-stats-reset>
+                Reiniciar estadísticas
+              </button>
+            </div>
           </div>
-        </div>
+        </details>
 
-        <div class="exam" data-exam-panel>
-          <p class="exam-title">Modo examen</p>
-          <div class="exam-opts">
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-shuffle /> Barajar preguntas
-            </label>
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
-              <input
-                type="number"
-                min="1"
-                max={tests.length}
-                value={tests.length}
-                data-exam-subset-n
-                disabled
-              />{' '}
-              preguntas
-            </label>
-            <label class="exam-opt">
-              <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
-              <input type="number" min="1" value="20" data-exam-minutes disabled />
-            </label>
+        <details class="panel exam" data-exam-panel>
+          <summary class="panel-summary">
+            <span class="panel-title">Modo examen</span>
+            <span class="panel-chip" data-exam-chip />
+          </summary>
+          <div class="panel-body">
+            <div class="exam-opts">
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-shuffle /> Barajar preguntas
+              </label>
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-subset-toggle /> Subconjunto de
+                <input
+                  type="number"
+                  min="1"
+                  max={tests.length}
+                  value={tests.length}
+                  data-exam-subset-n
+                  disabled
+                />{' '}
+                preguntas
+              </label>
+              <label class="exam-opt">
+                <input type="checkbox" data-exam-timed /> Cronometrado, minutos:
+                <input type="number" min="1" value="20" data-exam-minutes disabled />
+              </label>
+            </div>
+            <div class="exam-actions">
+              <button class="btn-grade" type="button" data-exam-start>
+                {' '}
+                Empezar simulacro{' '}
+              </button>
+              <button class="btn-reset" type="button" data-exam-exit hidden>
+                Salir de modo examen
+              </button>
+              <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
+            </div>
           </div>
-          <div class="exam-actions">
-            <button class="btn-grade" type="button" data-exam-start>
-              {' '}
-              Empezar simulacro{' '}
-            </button>
-            <button class="btn-reset" type="button" data-exam-exit hidden>
-              Salir de modo examen
-            </button>
-            <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
-          </div>
-        </div>
+        </details>
 
         {temas.length > 0 && (
           <div class="tema-filters" role="group" aria-label="Filtrar por tema" data-tema-filters>
@@ -163,9 +174,15 @@ const devsRendered = await Promise.all(
         </h2>
         <p class="block-desc">Escribe tu respuesta y contrástala con la respuesta modelo.</p>
 
-        <div class="stats" data-dev-stats>
-          <p class="stats-summary" data-dev-stats-summary />
-        </div>
+        <details class="panel stats" data-dev-stats>
+          <summary class="panel-summary">
+            <span class="panel-title">Autoevaluación</span>
+            <span class="panel-chip" data-dev-chip />
+          </summary>
+          <div class="panel-body">
+            <p class="stats-summary" data-dev-stats-summary />
+          </div>
+        </details>
 
         {devsRendered.map((d, i) => (
           <DesarrolloQuestion
@@ -191,11 +208,18 @@ const devsRendered = await Promise.all(
 </BaseLayout>
 
 <script>
-  import { statsKeyFor, parseStats, summarize, failedIds } from '../../lib/practica-stats';
+  import {
+    statsKeyFor,
+    parseStats,
+    summarize,
+    failedIds,
+    formatStatsChip,
+  } from '../../lib/practica-stats';
   import {
     keyFor as devKeyFor,
     parse as parseDevProgress,
     summarize as summarizeDevProgress,
+    formatDevChip,
   } from '../../lib/desarrollo-progress';
   import {
     createRng,
@@ -203,6 +227,7 @@ const devsRendered = await Promise.all(
     examConfigKeyFor,
     serializeExamConfig,
     parseExamConfig,
+    formatExamConfigSummary,
     type ExamConfig,
   } from '../../lib/exam-mode';
 
@@ -475,6 +500,53 @@ const devsRendered = await Promise.all(
   }
   restoreExamConfig();
 
+  // --- Compact one-line summaries for the collapsed panels (issue #32) -------
+  // These only feed the <summary> chip; they don't touch renderStats /
+  // renderDevStats nor the exam-mode logic above.
+  const statsChip = document.querySelector<HTMLElement>('[data-stats-chip]');
+  function renderStatsChip(): void {
+    if (!statsChip || !asignatura) return;
+    const state = parseStats(safeGet(statsKeyFor(asignatura)));
+    statsChip.textContent = (state && formatStatsChip(summarize(state))) || 'Sin datos aún';
+  }
+  document.addEventListener('practica:stats-updated', renderStatsChip);
+  renderStatsChip();
+
+  const devChip = document.querySelector<HTMLElement>('[data-dev-chip]');
+  function renderDevChip(): void {
+    if (!devChip || !devAsignatura) return;
+    const state = parseDevProgress(safeGet(devKeyFor(devAsignatura)));
+    devChip.textContent =
+      (state && formatDevChip(summarizeDevProgress(state))) || 'Sin autoevaluar';
+  }
+  document.addEventListener('desarrollo:stats-updated', renderDevChip);
+  renderDevChip();
+
+  const examChip = document.querySelector<HTMLElement>('[data-exam-chip]');
+  function renderExamChip(): void {
+    if (!examChip) return;
+    const config: ExamConfig | null = examShuffleCheckbox
+      ? {
+          shuffle: examShuffleCheckbox.checked,
+          subsetSize: examSubsetToggle?.checked ? Number(examSubsetN?.value ?? 0) : null,
+          timed: examTimedCheckbox?.checked ?? false,
+          minutes: Number(examMinutesInput?.value ?? 20),
+        }
+      : null;
+    examChip.textContent = formatExamConfigSummary(config) || 'Sin configurar';
+  }
+  for (const el of [
+    examShuffleCheckbox,
+    examSubsetToggle,
+    examSubsetN,
+    examTimedCheckbox,
+    examMinutesInput,
+  ]) {
+    el?.addEventListener('input', renderExamChip);
+    el?.addEventListener('change', renderExamChip);
+  }
+  renderExamChip();
+
   // --- Topic filter (tema) ---------------------------------------------------
   const temaButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[data-tema-filter]'),
@@ -607,6 +679,49 @@ const devsRendered = await Promise.all(
   .score {
     font-weight: 700;
   }
+  .panel-summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--site-ink);
+  }
+  .panel-summary::-webkit-details-marker {
+    display: none;
+  }
+  .panel-summary::after {
+    content: '';
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-left: auto;
+    border-right: 2px solid var(--site-muted);
+    border-bottom: 2px solid var(--site-muted);
+    transform: rotate(45deg);
+    transition: transform 0.15s;
+  }
+  .panel[open] > .panel-summary::after {
+    transform: rotate(-135deg);
+  }
+  .panel-title {
+    flex: none;
+  }
+  .panel-chip {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--site-muted);
+  }
+  .panel-body {
+    margin-top: 0.7rem;
+  }
   .stats {
     margin-bottom: 1.4rem;
     padding: 0.85rem 1rem;
@@ -650,11 +765,6 @@ const devsRendered = await Promise.all(
     border: 1px solid var(--site-line);
     border-radius: 12px;
     background: var(--site-surface-2);
-  }
-  .exam-title {
-    font-weight: 800;
-    font-size: 0.9rem;
-    margin-bottom: 0.6rem;
   }
   .exam-opts {
     display: flex;

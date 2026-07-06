@@ -7,10 +7,23 @@ import {
   summarize,
   failedIds,
   pruneStats,
+  formatStatsChip,
   type StatsState,
 } from '../../src/lib/practica-stats';
 
 const empty: StatsState = { questions: {} };
+
+describe('formatStatsChip()', () => {
+  it('is empty when nothing has been answered', () => {
+    expect(formatStatsChip(null)).toBe('');
+    expect(formatStatsChip(summarize(empty))).toBe('');
+  });
+
+  it('shows the rounded overall accuracy', () => {
+    const state = recordGrading(recordGrading(empty, { q1: true, q2: false }), { q3: true });
+    expect(formatStatsChip(summarize(state))).toBe('Acumulado: 67%');
+  });
+});
 
 describe('statsKeyFor()', () => {
   it('namespaces the key by asignatura', () => {

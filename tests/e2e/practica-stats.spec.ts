@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
+import { openPanels } from './helpers';
 
 // E2E for practice stats and the «solo mis fallos» filter (issue #10), against the
 // built site under the BASE subpath. Uses /practica/si; q1 is single with correct
@@ -7,6 +8,7 @@ import { BASE } from '../../src/data/site';
 
 test('grading records stats and the panel shows both accuracies', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   const summary = page.locator('[data-stats-summary]');
   await expect(summary).toContainText('Aún no has corregido');
@@ -22,6 +24,7 @@ test('grading records stats and the panel shows both accuracies', async ({ page 
 
 test('«solo mis fallos» shows only the failed questions', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   // Fail q1 (correct is index 0) by picking index 1, then grade.
   await page.locator('[data-tq]').first().locator('input').nth(1).check();
@@ -44,6 +47,7 @@ test('«solo mis fallos» shows only the failed questions', async ({ page }) => 
 
 test('resetting stats clears the panel', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
 
   await page.locator('[data-tq]').first().locator('input').first().check();
   await page.locator('[data-grade-trigger]').click();

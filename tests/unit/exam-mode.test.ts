@@ -7,8 +7,30 @@ import {
   examConfigKeyFor,
   serializeExamConfig,
   parseExamConfig,
+  formatExamConfigSummary,
   type ExamConfig,
 } from '../../src/lib/exam-mode';
+
+describe('formatExamConfigSummary()', () => {
+  it('is empty for a null config or all options off', () => {
+    expect(formatExamConfigSummary(null)).toBe('');
+    expect(
+      formatExamConfigSummary({ shuffle: false, subsetSize: null, timed: false, minutes: 20 }),
+    ).toBe('');
+  });
+
+  it('lists only the active options, in order', () => {
+    expect(
+      formatExamConfigSummary({ shuffle: true, subsetSize: 5, timed: true, minutes: 15 }),
+    ).toBe('barajado · 5 preguntas · 15 min');
+    expect(
+      formatExamConfigSummary({ shuffle: false, subsetSize: null, timed: true, minutes: 20 }),
+    ).toBe('20 min');
+    expect(
+      formatExamConfigSummary({ shuffle: true, subsetSize: null, timed: false, minutes: 20 }),
+    ).toBe('barajado');
+  });
+});
 
 describe('createRng()', () => {
   it('produces the same sequence for the same seed', () => {
