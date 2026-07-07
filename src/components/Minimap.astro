@@ -41,7 +41,7 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     <svg class="mm-fab-ic" viewBox="0 0 24 24" aria-hidden="true"
       ><path d="M4 6h16M4 12h16M4 18h10"></path></svg
     >
-    Mapa <span class="mm-fab-count zero" data-mm-fab-count>0</span>
+    <span class="mm-fab-count zero" data-mm-fab-count>0</span>
   </button>
   <div class="mm-scrim" data-mm-drawer-toggle aria-hidden="true"></div>
   <aside class="mm-drawer" role="dialog" aria-modal="true" aria-label={drawerTitle} data-mm-drawer>
@@ -137,7 +137,12 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     transform: none;
   }
 
-  /* ===== FAB + drawer (narrower viewports) ===== */
+  /* ===== FAB + drawer (narrower viewports) =====
+     A compact icon-only circle (not a labeled pill): on a page densely packed
+     with question/desarrollo cards (only ~1rem apart), there's rarely a truly
+     free vertical gap to reposition a larger button into without just moving
+     the overlap onto a *different* card (see issue #40) — so instead of
+     dodging, the FAB is shrunk to the smallest reasonable footprint. */
   .mm-fab {
     display: none;
     position: fixed;
@@ -145,30 +150,40 @@ const drawerTitle = kind === 'practica' ? 'Mapa del documento' : 'Mapa del temar
     bottom: 16px;
     z-index: 50;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     border: none;
-    border-radius: 999px;
+    border-radius: 50%;
     background: var(--site-accent);
     color: #fff;
-    font: 700 13px var(--site-sans);
-    padding: 11px 16px;
     box-shadow: 0 6px 18px rgba(16, 33, 43, 0.3);
     cursor: pointer;
   }
   .mm-fab-ic {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     fill: none;
     stroke: #fff;
     stroke-width: 1.8;
     stroke-linecap: round;
   }
   .mm-fab-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
     font-size: 10px;
     font-weight: 800;
-    background: rgba(255, 255, 255, 0.25);
+    background: var(--site-topbar-bg);
+    color: var(--site-topbar-ink);
     border-radius: 999px;
-    padding: 1px 7px;
+    padding: 0 4px;
+    box-shadow: 0 0 0 2px var(--site-surface);
   }
   .mm-fab-count.zero {
     display: none;
