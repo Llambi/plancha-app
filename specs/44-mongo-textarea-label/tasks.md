@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Test E2E que exige un nombre accesible estable por colección (rojo)**
+- [x] **T1 — Test E2E que exige un nombre accesible estable por colección (rojo)**
   - Test (rojo): en `tests/e2e/mongo-practica.spec.ts`, comprobar que las 2
     textareas del Ejercicio 1 tienen nombres accesibles distintos
     ("...db.peliculas"/"...db.clientes") y que no cambian tras escribir en
@@ -17,7 +17,7 @@
     placeholder completo, igual en ambas hasta que se escribe algo).
   - Commit: `test(mongo-practica): require a stable accessible name per collection textarea (refs #44)`
 
-- [ ] **T2 — Label visualmente oculto por textarea**
+- [x] **T2 — Label visualmente oculto por textarea**
   - Implementación (verde): `<label for="ta-...">` + clase `.sr-only`
     (visually-hidden) en `MongoPractica.astro`.
   - Commit: `fix(mongo-practica): give each collection textarea a proper accessible label (refs #44)`
