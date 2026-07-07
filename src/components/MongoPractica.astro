@@ -889,6 +889,7 @@
         el.classList.remove('sel');
         if (oi === qq.correct) el.classList.add('correct');
         else if (oi === sel) el.classList.add('wrong');
+        el.querySelector('input').disabled = true;
       });
       const fb = document.getElementById(`fb-${current}-${qi}`);
       const ok = sel === qq.correct;
