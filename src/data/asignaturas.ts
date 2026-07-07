@@ -11,7 +11,7 @@ export const ASIGNATURAS: Record<string, AsignaturaMeta> = {
     code: 'dar',
     nombre: 'Desarrollo de Aplicaciones en Red',
     sigla: 'DAR',
-    accent: '#6C63FF',
+    accent: '#5F55FF', // darkened from #6C63FF for 4.5:1 contrast with white (issue #43)
   },
   soa: { code: 'soa', nombre: 'Sistemas Operativos Avanzados', sigla: 'SOA', accent: '#C41230' },
   si: { code: 'si', nombre: 'Sistemas Inteligentes', sigla: 'SI', accent: '#2D5BD7' },
