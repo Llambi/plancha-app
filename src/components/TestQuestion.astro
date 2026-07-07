@@ -294,7 +294,9 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
 
   // Temporary per-question reveal (the «Ver respuesta» button). Highlights the
   // correct option(s) and shows the explanation; auto-hides after 5 s. A new click
-  // restarts the countdown (timers don't stack).
+  // restarts the countdown (timers don't stack). Hovering or focusing the
+  // explanation/button pauses the countdown (issue #42, WCAG 2.2.1) — it
+  // resumes a fresh 5 s once the pointer/focus leaves.
   const REVEAL_MS = 5000;
   const revealTimers = new WeakMap<HTMLElement, number>();
 
@@ -306,15 +308,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
     q.querySelector('[data-reveal-trigger]')?.setAttribute('aria-pressed', 'false');
   }
 
-  function revealAnswer(q: HTMLElement): void {
-    if (q.classList.contains('graded')) return; // already shown permanently
-    const correct: number[] = JSON.parse(q.dataset.correct || '[]');
-    q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
-      if (correct.includes(Number(input.value)))
-        input.closest('.tq-opt')?.classList.add('revealed');
-    });
-    q.querySelector('.tq-exp')?.removeAttribute('hidden');
-    q.querySelector('[data-reveal-trigger]')?.setAttribute('aria-pressed', 'true');
+  function scheduleHide(q: HTMLElement): void {
     const prev = revealTimers.get(q);
     if (prev) clearTimeout(prev);
     revealTimers.set(
@@ -325,6 +319,68 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
       }, REVEAL_MS),
     );
   }
+
+  function cancelHide(q: HTMLElement): void {
+    const prev = revealTimers.get(q);
+    if (prev) {
+      clearTimeout(prev);
+      revealTimers.delete(q);
+    }
+  }
+
+  function revealAnswer(q: HTMLElement): void {
+    if (q.classList.contains('graded')) return; // already shown permanently
+    const correct: number[] = JSON.parse(q.dataset.correct || '[]');
+    q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+      if (correct.includes(Number(input.value)))
+        input.closest('.tq-opt')?.classList.add('revealed');
+    });
+    q.querySelector('.tq-exp')?.removeAttribute('hidden');
+    const trigger = q.querySelector('[data-reveal-trigger]');
+    trigger?.setAttribute('aria-pressed', 'true');
+    scheduleHide(q);
+    // The button may already have *keyboard* focus from the very keypress
+    // that revealed the answer (e.g. Enter/Space) — that focusin event
+    // already fired before the explanation existed to pause anything, so
+    // check directly here too. `:focus-visible` (not just `activeElement`)
+    // is what distinguishes this from a plain mouse click, which also
+    // leaves the button focused in Chromium but shouldn't pause the
+    // default auto-hide (see the plain-click test for issue #5).
+    if (trigger?.matches(':focus-visible')) cancelHide(q);
+  }
+
+  const REVEAL_ZONE_SELECTOR = '.tq-exp, [data-reveal-trigger]';
+
+  // Finds the reveal-interaction zone (the explanation or its trigger button)
+  // an event's target belongs to, and the question card it lives in.
+  function revealZone(target: EventTarget | null): { q: HTMLElement; zone: HTMLElement } | null {
+    const el = target as HTMLElement | null;
+    const zone = el?.closest<HTMLElement>(REVEAL_ZONE_SELECTOR) ?? null;
+    const q = zone?.closest<HTMLElement>('[data-tq]') ?? null;
+    const exp = q?.querySelector<HTMLElement>('.tq-exp') ?? null;
+    if (!zone || !q || !exp || exp.hidden || q.classList.contains('graded')) return null;
+    return { q, zone };
+  }
+
+  function onPause(e: Event): void {
+    const found = revealZone(e.target);
+    if (found) cancelHide(found.q);
+  }
+
+  function onResume(e: Event): void {
+    const found = revealZone(e.target);
+    if (!found) return;
+    // For pointer events, ignore moves that stay within the same zone
+    // (e.g. from the explanation text to a child element inside it).
+    const related = (e as MouseEvent).relatedTarget as Node | null;
+    if (related && found.zone.contains(related)) return;
+    scheduleHide(found.q);
+  }
+
+  document.addEventListener('mouseover', onPause);
+  document.addEventListener('mouseout', onResume);
+  document.addEventListener('focusin', onPause);
+  document.addEventListener('focusout', onResume);
 
   // --- Progress persistence (localStorage, per asignatura) ------------------
   // The asignatura code is exposed by the practica page on the test section.
