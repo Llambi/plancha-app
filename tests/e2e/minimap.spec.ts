@@ -217,6 +217,30 @@ test.describe('práctica: rail + pins', () => {
     await page.locator('.mm-fab').click();
     await expect(page.locator('.mm-drawer')).toBeVisible();
   });
+
+  test('the FAB is a compact icon button rather than a large labeled pill (issue #40)', async ({
+    page,
+  }) => {
+    // On a page densely packed with cards (only ~1rem apart), repositioning a
+    // *larger* FAB to dodge whatever card rests under it can just move the
+    // overlap onto a different card instead of clearing it — there's rarely a
+    // truly free gap to slot it into. Shrinking it to a small icon button
+    // reduces the overlap footprint instead of chasing an unreachable "never
+    // overlaps anything" guarantee.
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(`${BASE}/practica/si`);
+
+    const box = await page.locator('.mm-fab').boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeLessThanOrEqual(48);
+    expect(box!.height).toBeLessThanOrEqual(48);
+
+    // No visible "Mapa" label text — the accessible name still comes from
+    // aria-label, but nothing beyond the icon (and, once something is
+    // pinned, the small count badge) is rendered.
+    const visibleText = (await page.locator('.mm-fab').innerText()).trim();
+    expect(visibleText).toBe('');
+  });
 });
 
 test.describe('esquemas: hierarchical rail', () => {
