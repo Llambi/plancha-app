@@ -41,3 +41,24 @@ test.describe('MongoDB validator: query quiz', () => {
     await expect(option).toBeChecked();
   });
 });
+
+// E2E for the JSON validator textareas (issue #44): they only had a
+// `placeholder`, which isn't an accessible substitute for a label and
+// disappears once the user types.
+
+test.describe('MongoDB validator: collection JSON textareas', () => {
+  test('each collection textarea has a distinct, stable accessible name', async ({ page }) => {
+    await page.goto(`${BASE}/practica/mongodb`);
+
+    // Exercise 1 (default) has two collections: peliculas and clientes.
+    const textareas = page.locator('.coll textarea');
+    await expect(textareas).toHaveCount(2);
+    await expect(textareas.nth(0)).toHaveAccessibleName(/db\.peliculas/);
+    await expect(textareas.nth(1)).toHaveAccessibleName(/db\.clientes/);
+
+    // Typing into it (which clears/changes the placeholder-visible state)
+    // must not change the accessible name.
+    await textareas.nth(0).fill('[{"a":1}]');
+    await expect(textareas.nth(0)).toHaveAccessibleName(/db\.peliculas/);
+  });
+});
