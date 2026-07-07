@@ -831,8 +831,9 @@
       <div class="opts" id="opts-${current}-${qi}">`;
       qq.opts.forEach((o, oi) => {
         const letter = String.fromCharCode(97 + oi);
-        html += `<div class="opt" id="opt-${current}-${qi}-${oi}" onclick="pick(${qi},${oi})">
-        <div class="letter">${letter}</div><pre>${highlight(o.c)}</pre></div>`;
+        html += `<label class="opt" id="opt-${current}-${qi}-${oi}">
+        <input type="radio" class="opt-radio" name="q-${current}-${qi}" onchange="pick(${qi},${oi})" />
+        <div class="letter">${letter}</div><pre>${highlight(o.c)}</pre></label>`;
       });
       html += `</div><div class="feedback" id="fb-${current}-${qi}"></div></div>`;
     });
@@ -859,7 +860,9 @@
     ex.test[qi].opts.forEach((_, k) => {
       document.getElementById(`opt-${current}-${qi}-${k}`).classList.remove('sel');
     });
-    document.getElementById(`opt-${current}-${qi}-${oi}`).classList.add('sel');
+    const el = document.getElementById(`opt-${current}-${qi}-${oi}`);
+    el.classList.add('sel');
+    el.querySelector('input').checked = true;
   }
 
   window.pick = function (qi, oi) {
@@ -1576,6 +1579,7 @@
     display: grid;
     grid-template-columns: 34px 1fr;
     align-items: stretch;
+    position: relative;
     border: 1.5px solid var(--console-line);
     border-radius: 11px;
     overflow: hidden;
@@ -1585,6 +1589,25 @@
   }
   .mongo-practica .opt:hover {
     border-color: var(--spring);
+  }
+  /* Real (keyboard-operable) radio, kept visually hidden so the letter +
+     border/box-shadow states below remain the only visible indicators —
+     `display:none`/`visibility:hidden` would break focus, so this uses the
+     standard visually-hidden clip pattern instead. */
+  .mongo-practica .opt-radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .mongo-practica .opt:has(.opt-radio:focus-visible) {
+    outline: 2px solid var(--spring);
+    outline-offset: 2px;
   }
   .mongo-practica .opt .letter {
     display: grid;
