@@ -64,3 +64,16 @@ salvo extraer la creación del timeout a `scheduleHide()`.
 - **Alcance del "área de interacción"**: solo `.tq-exp` y el botón de
   revelar, tal como pide la spec — no se extiende a toda la tarjeta de
   pregunta ni a las opciones marcadas como `revealed`.
+- **Hallazgo durante `/implement`**: al activar "Ver respuesta" con teclado
+  (foco ya en el botón antes de que exista `.tq-exp` visible), el
+  `focusin` que normalmente pausaría el temporizador nunca llega a
+  dispararse tras el revelado (el foco no cambia de sitio). Hubo que añadir
+  una comprobación directa en `revealAnswer()` justo tras programar el
+  ocultado. La primera versión comprobaba `document.activeElement ===
+trigger`, pero eso **también** es cierto tras un simple clic de ratón en
+  Chromium (que enfoca el botón), rompiendo el test ya existente de la
+  issue #5 (que espera que un clic normal sí se autooculte a los 5s). Se
+  corrigió usando `trigger.matches(':focus-visible')` en su lugar, que sí
+  distingue foco de teclado (deliberado) de foco incidental por clic de
+  ratón — sin este matiz, mouse-hover y keyboard-focus habrían quedado
+  indistinguibles en el momento del revelado.

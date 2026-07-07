@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Tests E2E que exigen pausar el ocultado (rojo)**
+- [x] **T1 — Tests E2E que exigen pausar el ocultado (rojo)**
   - Test (rojo): añadir a `tests/e2e/practica.spec.ts` dos tests — ratón
     sobre `.tq-exp` mantiene visible pasados 5s (y se oculta 5s después de
     salir); foco de teclado en el botón mantiene visible pasados 5s. Deben
@@ -17,7 +17,7 @@
     hover/foco).
   - Commit: `test(practica): require hover/focus to pause the reveal auto-hide timer (refs #42)`
 
-- [ ] **T2 — Pausar/reprogramar el temporizador según hover/foco**
+- [x] **T2 — Pausar/reprogramar el temporizador según hover/foco**
   - Implementación (verde): en `TestQuestion.astro`, extraer
     `scheduleHide(q)`/`cancelHide(q)` de la lógica actual y añadir los 4
     listeners delegados (`mouseover`/`mouseout`/`focusin`/`focusout`) sobre
