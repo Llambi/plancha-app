@@ -30,37 +30,52 @@ anchos de portátil (~800–1200px).
 > final. Se corrige aquí el problema y los criterios para reflejar la causa
 > real antes de diseñar la solución.
 
+> **Segunda corrección, durante `/implement`**: el plan inicial proponía
+> generalizar `updateFabPosition()` para "esquivar" (reposicionar) el FAB por
+> encima de cualquier tarjeta que lo solapara, igual que ya hace con los
+> filtros de tema. Implementado y probado en vivo, se descubrió un problema de
+> fondo: en una lista de tarjetas apiladas con muy poco margen entre sí
+> (`1rem`), no siempre existe un hueco vertical libre donde reposicionar el
+> FAB — a veces el reposicionamiento solo **desplaza el solape a la tarjeta de
+> justo antes** (comprobado en `/practica/si`, `scrollY=5277`: el FAB acababa
+> solapando `q-q9`, una tarjeta de ~578px que ni siquiera tocaba la zona
+> original del FAB). Se descarta ese enfoque. Tras consultarlo con el usuario,
+> se opta por **reducir el FAB a un icono compacto** (sin la etiqueta «Mapa»
+> visible) en vez de perseguir una garantía de «cero solape» inalcanzable de
+> forma general. Los criterios de aceptación de abajo reflejan este acuerdo.
+
 ## Resultado esperado
 
-En cualquier viewport por debajo de 1240px, y en **cualquier posición de
-scroll** (no solo al final), el contenido de preguntas (test y desarrollo)
-nunca queda bajo el FAB «Mapa»: el usuario puede seleccionar cualquier
-opción visible sin que el botón la tape.
+En cualquier viewport por debajo de 1240px, el FAB se reduce a un botón
+icono compacto (sin texto visible, con su función accesible vía
+`aria-label`), reduciendo significativamente el área de posible solape con
+el contenido. No se persigue una garantía de cero solape en todos los casos
+(no es alcanzable de forma general en una lista de tarjetas apiladas sin
+huecos), pero el solape restante queda acotado a una esquina pequeña de la
+tarjeta, dejando el resto de la etiqueta de la opción (radio/checkbox +
+letra + mayor parte del texto) clicable.
 
 ## Criterios de aceptación
 
-1. **Dado** un viewport de 375px de ancho en `/practica/si`, **cuando** se
-   hace scroll a varias posiciones intermedias (no solo al final),
-   **entonces** ninguna tarjeta de pregunta (test o desarrollo) queda
-   cubierta por el FAB «Mapa» en ninguna de ellas.
-2. **Dado** un viewport de ~1100px (portátil, por debajo del breakpoint de
-   1240px que activa el rail de escritorio), **cuando** se repite el mismo
-   recorrido de scroll, **entonces** tampoco hay solape entre el FAB y
-   ninguna tarjeta de pregunta.
-3. **Dado** el fix de #29 (el FAB esquivando los chips de «Filtrar por
+1. **Dado** un viewport por debajo de 1240px en `/practica/si`, **cuando**
+   se muestra el FAB, **entonces** es un botón compacto (≈44×44px) sin texto
+   visible «Mapa», con `aria-label` describiendo su función.
+2. **Dado** el fix de #29 (el FAB esquivando los chips de «Filtrar por
    tema»), **cuando** se aplica este cambio, **entonces** ese
    comportamiento se mantiene sin regresión.
-4. **Dado** un viewport ≥1240px (rail de escritorio, sin FAB), **cuando**
+3. **Dado** un viewport ≥1240px (rail de escritorio, sin FAB), **cuando**
    se hace scroll, **entonces** no hay cambio de comportamiento (el rail
    no se ve afectado por este fix).
 
 ## Alcance
 
-- Incluye: ajustar el layout/posicionamiento para que el FAB nunca se
-  superponga a contenido interactivo de preguntas (`[data-tq]`, `[data-dq]`)
-  en las páginas que usan `Minimap` (`práctica`, `esquemas`).
+- Incluye: reducir el FAB a un botón icono compacto en las páginas que usan
+  `Minimap` (`práctica`, `esquemas`), para reducir (no eliminar por
+  completo, ver nota arriba) el área de posible solape con el contenido.
 - **No-objetivos**:
-  - No se rediseña el FAB ni su icono/etiqueta.
+  - No se garantiza cero solape en el 100% de los casos (tarjetas
+    excepcionalmente largas pueden seguir generando un solape puntual en su
+    esquina).
   - No se toca el comportamiento del rail de escritorio (≥1240px).
   - No se resuelve aquí ningún otro hallazgo de accesibilidad del Minimap
     (ya cubiertos por issues previas como #20).

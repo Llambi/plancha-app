@@ -7,90 +7,73 @@
 > Esta es la capa CÓMO. Deriva de `spec.md` y se respeta su alcance. No introduce
 > requisitos nuevos; si aparecen, vuelve a la spec.
 
-## Enfoque
+## Enfoque (final, tras descartar el enfoque inicial)
 
-`Minimap.astro` ya resuelve exactamente este mismo problema para un obstáculo
-conocido y estático (los chips `[data-tema-filters]`, issue #29):
-`updateFabPosition()` mide el rectángulo del obstáculo y llama a
-`computeFabBottom()` (función pura ya testeada en `src/lib/minimap.ts`) para
-calcular cuánto hay que subir el FAB para no taparlo. El bug de este issue es
-el mismo problema, pero con un "obstáculo" dinámico: cualquier tarjeta
-(`.mm-anchor`) que en un momento dado caiga bajo el rectángulo del FAB.
+**Enfoque descartado durante `/implement`**: generalizar `updateFabPosition()`
+(que ya esquiva el obstáculo de los filtros de tema, issue #29, reutilizando
+`computeFabBottom()`) para también esquivar cualquier tarjeta (`.mm-anchor`)
+que solapara la franja del FAB. Implementado y probado en vivo, se descubrió
+que en una lista de tarjetas apiladas con solo `1rem` de margen entre ellas,
+no siempre hay un hueco vertical libre: reposicionar el FAB para librar una
+tarjeta puede hacer que invada la tarjeta **anterior** en su lugar (repro:
+`/practica/si`, `scrollY=5277` → el FAB pasaba a solapar `q-q9`, una tarjeta
+de ~578px, tras "esquivar" otra). Consultado con el usuario, se descarta este
+enfoque en favor de uno más simple y honesto sobre sus límites.
 
-La solución generaliza el patrón existente en vez de crear uno nuevo: en cada
-`updateFabPosition()` (ya se ejecuta en cada `scroll`), además de comprobar el
-obstáculo de los filtros de tema, se recorre el array `anchors` (ya recolectado
-en memoria por `rebuild()`) buscando cualquiera cuyo rectángulo solape
-verticalmente con la franja del FAB, y se usa la misma `computeFabBottom()`
-para calcular el empuje necesario. El resultado final es el máximo entre el
-empuje por filtros y el empuje por contenido — así ambos casos (que podrían
-coincidir, aunque sea raro) se respetan sin que uno pise al otro.
+**Enfoque final**: reducir el FAB (`.mm-fab` en `Minimap.astro`) a un botón
+icono compacto (~44×44px, sin la etiqueta de texto «Mapa» visible) en vez de
+la píldora actual (~87×37px con icono + texto + contador). Menor superficie
+→ menor probabilidad de solape real con el contenido, sin pretender una
+garantía de cero solape (ver spec.md). El contador de fijados pasa de estar
+en línea junto al texto a ser una insignia pequeña superpuesta en la esquina
+del círculo (patrón habitual de "badge" sobre un icono).
 
-No se toca `computeFabBottom()` ni su firma: es una función pura de un único
-obstáculo, y llamarla una vez por candidato y quedarse con el máximo evita
-tener que generalizar su API (que ya tiene tests unitarios cubriendo casos
-límite) para un beneficio marginal.
+No se toca `updateFabPosition()` ni `computeFabBottom()`: el mecanismo que
+esquiva los filtros de tema (#29) sigue exactamente igual que antes, solo
+cambia el tamaño/forma visual del elemento que posiciona.
 
 ## Ficheros y áreas afectadas
 
-- `src/components/Minimap.astro` — generalizar `updateFabPosition()` (única
-  función que cambia). No se tocan `buildRail()`, `buildDrawer()`,
-  `collectAnchors()` ni el resto del componente.
+- `src/components/Minimap.astro` — CSS de `.mm-fab`/`.mm-fab-ic`/`.mm-fab-count`
+  (círculo compacto en vez de píldora) y marcado (se retira el nodo de texto
+  «Mapa»). No se toca el script (`updateFabPosition`, `computeFabBottom`,
+  `anchors`, etc.).
 - Colecciones de contenido afectadas: ninguna.
 - Cambios de schema Zod (`src/content/config.ts`): no.
 
 ## Reutilización
 
-- `computeFabBottom()` (`src/lib/minimap.ts:92-100`) — se reutiliza tal cual,
-  sin cambios de firma ni de comportamiento.
-- `anchors` (array ya poblado por `collectAnchors()`/`rebuild()` en
-  `Minimap.astro`) — ya contiene, en orden de documento, todas las tarjetas de
-  test/desarrollo/esquema no ocultas; no hace falta recolectar nada nuevo.
-- `fabEl.offsetHeight`, `FAB_DEFAULT_BOTTOM`, `FAB_GAP` — constantes/medidas ya
-  existentes en el componente, usadas hoy solo para el caso de los filtros.
+- `computeFabBottom()` (`src/lib/minimap.ts`) — sin cambios, se sigue usando
+  tal cual solo para el obstáculo de los filtros de tema.
+- Tokens de diseño existentes: el contador reutiliza el par
+  `--site-topbar-bg`/`--site-topbar-ink` (ya usado para el tooltip del rail,
+  `.mm-tip`), que da buen contraste en ambos temas sin introducir un color
+  nuevo.
 
 ## Estrategia de test (TDD)
 
-- **Unit (Vitest)**: no aplica — `computeFabBottom()` no cambia de firma ni de
-  comportamiento, sus tests actuales (`tests/unit/minimap.test.ts`) siguen
-  siendo válidos tal cual y no requieren cambios.
-- **E2E (Playwright)**: nuevo test en `tests/e2e/minimap.spec.ts` (junto al ya
-  existente «the FAB never covers a tema filter chip…», del issue #29), que:
-  1. Fija el viewport a 375×812.
-  2. Va a `/practica/si` (tiene test + desarrollo, cubre ambos tipos de
-     tarjeta).
-  3. Calcula `maxScroll` y muestrea ~10 posiciones repartidas entre 0 y
-     `maxScroll` (incluyendo extremos e intermedias) en vez de recorrer todo
-     el documento en pasos fijos, para no acoplar el test a la longitud total
-     del contenido ni hacerlo lento.
-  4. En cada posición, comprueba que ningún `[data-tq]`/`[data-dq]` solapa el
-     rectángulo de `.mm-fab` (mismo helper `intersects` ya usado en el test
-     de #29, duplicado igual que allí — no se extrae a `helpers.ts` porque el
-     propio test de #29 tampoco lo hizo).
-  - Este test debe **fallar en rojo** contra el código actual (reproduce el
-    bug) antes de tocar `Minimap.astro`.
+- **Unit (Vitest)**: no aplica — no hay lógica nueva en `src/lib/minimap.ts`
+  (el intento de generalizar `computeFabBottom()` se revirtió por completo,
+  incluidos sus tests).
+- **E2E (Playwright)**: nuevo test en `tests/e2e/minimap.spec.ts` que
+  comprueba que `.mm-fab` mide como máximo 48×48px y que su texto visible
+  (`innerText`) está vacío (sin «Mapa»), en vez del test original de scroll
+  exhaustivo (que perseguía una garantía ya descartada). El test existente de
+  #29 («the FAB never covers a tema filter chip…») se mantiene sin cambios y
+  sigue pasando.
 - **Contenido**: no aplica (no toca `src/content/`).
 
 ## Riesgos / decisiones
 
-- **Coste en `scroll`**: se añade un recorrido de `anchors` (getBoundingClientRect
-  por elemento) en cada evento de scroll. Para la asignatura más grande del
-  sitio (DAR, 257 preguntas) es un recorrido de ese orden por evento; son
-  lecturas de layout baratas y sin escritura intercalada (no hay thrashing), y
-  el propio componente ya hace un recorrido equivalente en `buildRail()` en
-  cada `rebuild()`. No se introduce throttling/rAF nuevo porque el código
-  existente tampoco lo tenía para `updateFabPosition()`; si en el futuro se
-  detecta jank real, es un cambio aislado y posterior.
-- **Efecto colateral en `/esquemas/<asignatura>`**: como `anchors` también
-  incluye las secciones de tema y las sub-ramas del árbol en esquemas, el
-  mismo fix las protege igual que a las preguntas de práctica. No es un
-  objetivo explícito de la spec, pero es un beneficio gratuito del enfoque
-  genérico — no se añaden criterios ni tests específicos para esquemas para
-  no ampliar el alcance.
-- **No se combinan los dos empujes sumándolos**: se calcula el empuje por
-  filtros y el empuje por contenido por separado (cada uno con el mismo
-  `FAB_DEFAULT_BOTTOM` como base) y se toma el `Math.max()` de ambos, no se
-  encadenan. Encadenar (usar el resultado del primero como base del segundo)
-  sobre-empujaría el FAB cuando ambos obstáculos coinciden, aunque no sería
-  incorrecto (solo más conservador de lo necesario); se prefiere el máximo
-  por ser el cálculo exacto.
+- **No hay garantía de cero solape en el 100% de los casos.** Documentado en
+  spec.md y aceptado explícitamente por el usuario: una tarjeta
+  excepcionalmente larga aún podría generar un solape puntual en la esquina
+  donde está el FAB, pero (a) el área de solape es mucho menor que con la
+  píldora anterior, y (b) el resto de la etiqueta de la opción (radio +
+  letra + mayoría del texto) sigue siendo clicable, ya que cada opción es una
+  única `<label>` de ancho completo.
+- **Efecto en el rail de escritorio (≥1240px)**: sin cambios; el rail no usa
+  `.mm-fab` en absoluto.
+- **Contador de fijados**: pasa de texto en línea a insignia superpuesta; se
+  mantiene oculto cuando no hay nada fijado (clase `.zero`, sin cambios en esa
+  lógica).
