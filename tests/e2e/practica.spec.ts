@@ -27,6 +27,45 @@ test('revelar muestra la opción correcta + explicación y se oculta a los 5 s',
   await expect(explanation).toBeHidden();
 });
 
+test('mientras el ratón está sobre la explicación revelada, no se oculta pasados los 5s (issue #42)', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  const question = page.locator('[data-tq]').first();
+  const revealBtn = question.locator('[data-reveal-trigger]');
+  const explanation = question.locator('.tq-exp');
+
+  await revealBtn.click();
+  await expect(explanation).toBeVisible();
+
+  await explanation.hover();
+  await page.waitForTimeout(6000);
+  await expect(explanation).toBeVisible(); // still visible: mouse is over it
+
+  // Move the mouse away from both the explanation and the button: a fresh
+  // 5s countdown starts from this point.
+  await page.locator('h1').first().hover();
+  await expect(explanation).toBeHidden({ timeout: 7000 });
+});
+
+test('con el foco de teclado en el botón «Ver respuesta», no se oculta pasados los 5s (issue #42)', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  const question = page.locator('[data-tq]').first();
+  const revealBtn = question.locator('[data-reveal-trigger]');
+  const explanation = question.locator('.tq-exp');
+
+  await revealBtn.focus();
+  await page.keyboard.press('Enter'); // native keyboard activation keeps focus on the button
+  await expect(explanation).toBeVisible();
+
+  await page.waitForTimeout(6000);
+  await expect(explanation).toBeVisible(); // still visible: focus is on the button
+});
+
 test('tras corregir en bloque, el botón de revelar por pregunta desaparece', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
 
