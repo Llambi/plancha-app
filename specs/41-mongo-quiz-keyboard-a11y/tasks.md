@@ -9,21 +9,21 @@
 
 ## Tareas
 
-- [ ] **T1 — Test E2E que exige selección por teclado (rojo)**
+- [x] **T1 — Test E2E que exige selección por teclado (rojo)**
   - Test (rojo): nuevo `tests/e2e/mongo-practica.spec.ts`. Comprueba que las
     opciones son `input[type="radio"]` agrupados por `name` y que se pueden
     marcar solo con `Tab` + `Space`. Debe fallar contra el código actual
     (los `<div onclick>` no son focalizables).
   - Commit: `test(mongo-practica): require keyboard-selectable radio options for the query quiz (refs #41)`
 
-- [ ] **T2 — Radios reales para las opciones del test de consultas**
+- [x] **T2 — Radios reales para las opciones del test de consultas**
   - Implementación (verde): en `MongoPractica.astro`, opciones como
     `<label class="opt"><input type="radio" class="opt-radio" .../>…</label>`;
     `markSelected()` añade `input.checked=true`; CSS visually-hidden +
     `:focus-visible` reenviado al `.opt`.
   - Commit: `fix(mongo-practica): make the query quiz options keyboard-selectable radio inputs (refs #41)`
 
-- [ ] **T3 — Deshabilitar los inputs al corregir (test + implementación)**
+- [x] **T3 — Deshabilitar los inputs al corregir (test + implementación)**
   - Test (rojo): añadir al mismo spec E2E — tras "Corregir test", los inputs
     de una pregunta quedan `disabled`.
   - Implementación (verde): `applyCorrection()` añade `input.disabled = true`
