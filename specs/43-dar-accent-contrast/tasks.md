@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — `contrastRatio()` con tests unitarios (rojo → verde)**
+- [x] **T1 — `contrastRatio()` con tests unitarios (rojo → verde)**
   - Test (rojo): `tests/unit/color-contrast.test.ts` — casos de referencia
     (negro/blanco = 21, blanco/blanco = 1, `#6C63FF`/blanco ≈ 4.32). Falla
     porque `contrastRatio()` no existe todavía.
@@ -17,22 +17,22 @@
     luminancia relativa + contraste WCAG.
   - Commit: `feat(color-contrast): add a WCAG contrast-ratio helper (refs #43)`
 
-- [ ] **T2 — Test que exige ≥4.5:1 para el acento de DAR (rojo)**
+- [x] **T2 — Test que exige ≥4.5:1 para el acento de DAR (rojo)**
   - Test (rojo): en `tests/unit/asignaturas.test.ts`, añadir
     `expect(contrastRatio(ASIGNATURAS.dar.accent, '#ffffff')).toBeGreaterThanOrEqual(4.5)`.
     Falla contra el valor actual (`#6C63FF` ≈ 4.32).
   - Commit: `test(asignaturas): require the DAR accent to meet 4.5:1 contrast with white (refs #43)`
 
-- [ ] **T3 — Nuevo valor de acento para DAR (verde)**
+- [x] **T3 — Nuevo valor de acento para DAR (verde)**
   - Implementación (verde): `accent: '#5F55FF'` en `ASIGNATURAS.dar`
     (`src/data/asignaturas.ts`).
   - Commit: `fix(asignaturas): darken the DAR accent to meet 4.5:1 contrast with white (refs #43)`
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde (incluye los tests nuevos)
-- [ ] `npm run build` sin errores
-- [ ] Verificación visual en `/practica/dar` (badge, sigla, filtro activo) con
-      `preview_*`: mismo aspecto, solo un pelín más oscuro
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores
+- [x] `npm test` en verde (incluye los tests nuevos)
+- [x] `npm run build` sin errores
+- [x] Verificación visual en `/practica/dar` (badge, sigla, filtro activo) con
+      `preview_*`: mismo aspecto, solo un pelín más oscuro (confirmado rgb(95,85,255))
+- [x] Cada criterio de aceptación de `spec.md` comprobado
