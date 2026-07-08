@@ -36,7 +36,7 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="light" data-theme-pref="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -56,17 +56,21 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
 
     <slot name="head" />
     <script is:inline>
-      /* Tema: inicializa antes de pintar para evitar parpadeo */
+      /* Tema: inicializa antes de pintar para evitar parpadeo.
+         `site-theme` guarda la preferencia ('light'|'dark'|'auto', 'auto'
+         por defecto sin nada guardado); `data-theme` es el tema visual
+         resuelto y `data-theme-pref` la preferencia cruda (para el icono). */
       (function () {
         try {
-          let t = localStorage.getItem('site-theme');
-          if (!t) {
-            t =
-              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          const pref = localStorage.getItem('site-theme') || 'auto';
+          const resolved =
+            pref === 'auto'
+              ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
-                : 'light';
-          }
-          document.documentElement.setAttribute('data-theme', t);
+                : 'light'
+              : pref;
+          document.documentElement.setAttribute('data-theme', resolved);
+          document.documentElement.setAttribute('data-theme-pref', pref);
         } catch (e) {}
       })();
     </script>
@@ -91,11 +95,12 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
       <button
         class="site-theme-toggle"
         type="button"
-        aria-label="Cambiar tema claro/oscuro"
+        aria-label="Cambiar tema (claro/oscuro/automático)"
         title="Cambiar tema"
       >
         <span class="site-ic-sun" aria-hidden="true">☀</span>
         <span class="site-ic-moon" aria-hidden="true">☾</span>
+        <span class="site-ic-auto" aria-hidden="true">◐</span>
       </button>
     </div>
 
@@ -104,18 +109,43 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     </main>
 
     <script is:inline>
-      /* Toggle de tema (común) */
+      /* Toggle de tema (común): cicla claro → oscuro → automático → claro…
+         En modo automático, sigue prefers-color-scheme también en vivo. */
       (function () {
         const b = document.querySelector('.site-theme-toggle');
         if (!b) return;
+        const d = document.documentElement;
+        const ORDER = ['light', 'dark', 'auto'];
+
+        function resolve(pref) {
+          if (pref !== 'auto') return pref;
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+        }
+
+        function apply(pref) {
+          d.setAttribute('data-theme-pref', pref);
+          d.setAttribute('data-theme', resolve(pref));
+        }
+
         b.addEventListener('click', function () {
-          const d = document.documentElement;
-          const n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-          d.setAttribute('data-theme', n);
+          const current = d.getAttribute('data-theme-pref') || 'auto';
+          const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
+          apply(next);
           try {
-            localStorage.setItem('site-theme', n);
+            localStorage.setItem('site-theme', next);
           } catch (e) {}
         });
+
+        const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        if (mq && mq.addEventListener) {
+          mq.addEventListener('change', function (e) {
+            if (d.getAttribute('data-theme-pref') === 'auto') {
+              d.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+          });
+        }
       })();
     </script>
   </body>
@@ -288,11 +318,22 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
     outline: 2px solid #fff;
     outline-offset: 2px;
   }
-  :root[data-theme='light'] .site-ic-moon {
+  /* Icono del toggle: refleja la preferencia elegida (claro/oscuro/automático),
+     no el tema visual resuelto — así "automático" tiene su propio icono
+     aunque el sistema esté en claro u oscuro. */
+  .site-ic-sun,
+  .site-ic-moon,
+  .site-ic-auto {
     display: none;
   }
-  :root[data-theme='dark'] .site-ic-sun {
-    display: none;
+  :root[data-theme-pref='light'] .site-ic-sun {
+    display: inline;
+  }
+  :root[data-theme-pref='dark'] .site-ic-moon {
+    display: inline;
+  }
+  :root[data-theme-pref='auto'] .site-ic-auto {
+    display: inline;
   }
 
   /* ===== Contenedor principal ===== */
