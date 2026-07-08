@@ -19,10 +19,21 @@ test('el toggle de tema persiste en localStorage', async ({ page }) => {
   expect(theme).toBeTruthy();
 });
 
-test('el toggle de tema cambia data-theme en /practica/mongodb', async ({ page }) => {
+test('el toggle de tema avanza un paso exacto en /practica/mongodb (issue #49)', async ({
+  page,
+}) => {
+  // With the 3-state cycle (light/dark/auto, issue #49), the *resolved*
+  // data-theme doesn't necessarily change on every click (e.g. auto -> light
+  // when the system is already light) — the regression this guards against
+  // (issue #36, a duplicated listener) is better caught by asserting the
+  // *preference* advances by exactly one step, not zero or two.
   await page.goto(`${BASE}/practica/mongodb`);
-  const before = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  const before = await page.evaluate(() =>
+    document.documentElement.getAttribute('data-theme-pref'),
+  );
   await page.locator('.site-theme-toggle').first().click();
-  const after = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-  expect(after).not.toBe(before);
+  const after = await page.evaluate(() => document.documentElement.getAttribute('data-theme-pref'));
+  const ORDER = ['light', 'dark', 'auto'];
+  const expected = ORDER[(ORDER.indexOf(before ?? 'auto') + 1) % ORDER.length];
+  expect(after).toBe(expected);
 });
