@@ -156,24 +156,44 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.doc-card'));
   const empty = document.querySelector<HTMLElement>('.empty');
+  const validFilters = new Set(btns.map((b) => b.dataset.filter));
+
+  function applyFilter(f: string): void {
+    btns.forEach((x) => {
+      const on = x.dataset.filter === f;
+      x.classList.toggle('on', on);
+      x.setAttribute('aria-pressed', String(on));
+    });
+    let shown = 0;
+    cards.forEach((c) => {
+      const match = f === 'all' || c.dataset.tipo === f;
+      c.hidden = !match;
+      if (match) shown++;
+    });
+    if (empty) empty.hidden = shown > 0;
+  }
+
+  // Same pattern as `syncUrl()` in buscar.astro: keep the active filter
+  // shareable/bookmarkable via the URL, without a full reload.
+  function syncUrl(f: string): void {
+    const u = new URL(window.location.href);
+    if (f !== 'all') u.searchParams.set('tipo', f);
+    else u.searchParams.delete('tipo');
+    history.replaceState(null, '', u);
+  }
+
   btns.forEach((b) => {
     b.addEventListener('click', () => {
-      btns.forEach((x) => {
-        x.classList.remove('on');
-        x.setAttribute('aria-pressed', 'false');
-      });
-      b.classList.add('on');
-      b.setAttribute('aria-pressed', 'true');
-      const f = b.dataset.filter;
-      let shown = 0;
-      cards.forEach((c) => {
-        const match = f === 'all' || c.dataset.tipo === f;
-        c.hidden = !match;
-        if (match) shown++;
-      });
-      if (empty) empty.hidden = shown > 0;
+      const f = b.dataset.filter ?? 'all';
+      applyFilter(f);
+      syncUrl(f);
     });
   });
+
+  // Initial state from `?tipo=`, falling back to "all" for anything
+  // missing or unrecognized.
+  const initial = new URLSearchParams(window.location.search).get('tipo');
+  applyFilter(initial && validFilters.has(initial) ? initial : 'all');
 </script>
 
 <style>
