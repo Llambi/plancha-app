@@ -40,10 +40,11 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
   data-mm-type="test"
   data-mm-level="0"
   data-mm-label={mmLabel}
+  aria-labelledby={`q-${id}-label`}
 >
   <legend class="tq-head">
     {num != null && <span class="tq-num">{num}</span>}
-    <span class="tq-q">
+    <span class="tq-q" id={`q-${id}-label`}>
       <span>{question}</span>
       {type === 'multi' && <span class="tq-multi">selección múltiple</span>}
       {
