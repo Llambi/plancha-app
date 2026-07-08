@@ -9,14 +9,14 @@
 
 ## Tareas
 
-- [ ] **T1 — Tests E2E que exigen sincronía con la URL (rojo)**
+- [x] **T1 — Tests E2E que exigen sincronía con la URL (rojo)**
   - Test (rojo): en `tests/e2e/home-content-types.spec.ts`, dos tests —
     pulsar "Práctica" deja `?tipo=practica` en la URL; cargar
     `/?tipo=practica` aplica el filtro desde el principio. Fallan contra el
     código actual (sin query param en absoluto).
   - Commit: `test(home): require the type filter to sync with the URL query param (refs #47)`
 
-- [ ] **T2 — `applyFilter()`/`syncUrl()` + lectura inicial de `?tipo=`**
+- [x] **T2 — `applyFilter()`/`syncUrl()` + lectura inicial de `?tipo=`**
   - Implementación (verde): refactor del script de filtros en
     `index.astro` según el plan.
   - Commit: `feat(home): sync the type filter with a ?tipo= URL query param (refs #47)`
