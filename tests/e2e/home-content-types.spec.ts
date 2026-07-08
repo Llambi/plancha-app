@@ -47,3 +47,29 @@ test('a card\'s accessible name excludes the decorative "Abrir →" hint', async
   await expect(card).not.toHaveAccessibleName(/Abrir/);
   await expect(card).toHaveAccessibleName(/Guía de estudio/);
 });
+
+// Issue #47: the type filter had no URL representation, unlike the search
+// box (`?q=`), so it couldn't be shared/bookmarked and reset on reload.
+
+test('selecting a filter updates the URL with ?tipo= without reloading', async ({ page }) => {
+  await page.goto(`${BASE}/`);
+
+  await page.locator('.filter-btn', { hasText: 'Práctica' }).click();
+  await expect(page).toHaveURL(/[?&]tipo=practica\b/);
+
+  // Back to "Todos" removes the param entirely (no `?tipo=all`).
+  await page.locator('.filter-btn', { hasText: 'Todos' }).click();
+  await expect(page).not.toHaveURL(/tipo=/);
+});
+
+test('loading the home with ?tipo=practica applies that filter from the start', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/?tipo=practica`);
+
+  const filterBtn = page.locator('.filter-btn', { hasText: 'Práctica' });
+  await expect(filterBtn).toHaveAttribute('aria-pressed', 'true');
+
+  const totalPractica = await page.locator('.doc-card[data-tipo="practica"]').count();
+  await expect(page.locator('.doc-card:not([hidden])')).toHaveCount(totalPractica);
+});
