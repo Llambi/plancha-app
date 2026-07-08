@@ -37,3 +37,13 @@ test('the "Práctica" filter keeps showing the same cards as before', async ({ p
   await page.locator('.filter-btn', { hasText: 'Práctica' }).click();
   await expect(page.locator('.doc-card:not([hidden])')).toHaveCount(totalPractica);
 });
+
+// Issue #46: the whole card is already a link, so the trailing "Abrir →"
+// hint adds nothing and only makes the accessible name longer/noisier.
+test('a card\'s accessible name excludes the decorative "Abrir →" hint', async ({ page }) => {
+  await page.goto(`${BASE}/`);
+
+  const card = page.locator('.doc-card', { hasText: 'Guía de estudio' });
+  await expect(card).not.toHaveAccessibleName(/Abrir/);
+  await expect(card).toHaveAccessibleName(/Guía de estudio/);
+});
