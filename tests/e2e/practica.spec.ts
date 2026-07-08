@@ -66,6 +66,18 @@ test('con el foco de teclado en el botón «Ver respuesta», no se oculta pasado
   await expect(explanation).toBeVisible(); // still visible: focus is on the button
 });
 
+test('el nombre accesible de una pregunta no incluye el botón «Fijar pregunta» (issue #45)', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  // q1 is `type: single` with no `apariciones`, so `.tq-q` is just the
+  // enunciado — an exact match fails if the pin button (or the number) is
+  // still part of the fieldset's accessible name.
+  const firstQuestion = page.locator('[data-tq]').first();
+  await expect(firstQuestion).toHaveAccessibleName('¿Cuándo se dice que un agente es racional?');
+});
+
 test('tras corregir en bloque, el botón de revelar por pregunta desaparece', async ({ page }) => {
   await page.goto(`${BASE}/practica/si`);
 
