@@ -140,7 +140,9 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
               <i class="tdot" aria-hidden="true" />
               {c.tipo === 'practica' ? 'Práctica' : c.tipo === 'guia' ? 'Guía' : 'Esquemas'}
             </span>
-            <span class="doc-go">Abrir →</span>
+            <span class="doc-go" aria-hidden="true">
+              Abrir →
+            </span>
           </div>
         </a>
       ))
