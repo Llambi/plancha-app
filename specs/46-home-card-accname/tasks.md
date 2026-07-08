@@ -9,13 +9,13 @@
 
 ## Tareas
 
-- [ ] **T1 — Test E2E que exige un nombre accesible sin «Abrir →» (rojo)**
+- [x] **T1 — Test E2E que exige un nombre accesible sin «Abrir →» (rojo)**
   - Test (rojo): en `tests/e2e/home-content-types.spec.ts`, comprobar que
     el nombre accesible de la primera tarjeta no contiene "Abrir" y sí
     contiene el título real. Falla contra el código actual.
   - Commit: `test(home): require card accessible names to exclude the decorative "Abrir →" (refs #46)`
 
-- [ ] **T2 — `aria-hidden` en el span decorativo**
+- [x] **T2 — `aria-hidden` en el span decorativo**
   - Implementación (verde): `aria-hidden="true"` en `.doc-go`
     (`src/pages/index.astro`).
   - Commit: `fix(home): hide the decorative "Abrir →" from the card's accessible name (refs #46)`
