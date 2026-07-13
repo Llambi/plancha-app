@@ -19,6 +19,8 @@ interface Card {
   desc: string;
   tipo: 'practica' | 'teoria' | 'guia';
   accent: string;
+  /** asignatura code, only set for `tipo: 'practica'` cards (drives the progress badge). */
+  code?: string;
 }
 
 const cards: Card[] = [];
@@ -47,6 +49,7 @@ for (const code of practicaCodes) {
     desc: `${parts.join(' y ')}, con corrección y respuestas modelo.`,
     tipo: 'practica',
     accent: m.accent,
+    code,
   });
 }
 
@@ -93,6 +96,7 @@ for (const code of guiaCodes) {
     desc: 'Ejercicios de consultas tipo examen con validador en el navegador.',
     tipo: 'practica',
     accent: m.accent,
+    code: 'mongodb',
   });
 }
 
@@ -124,7 +128,13 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   <section class="grid" aria-label="Documentos disponibles">
     {
       cards.map((c) => (
-        <a class="doc-card" href={c.href} data-tipo={c.tipo} style={`--c:${c.accent}`}>
+        <a
+          class="doc-card"
+          href={c.href}
+          data-tipo={c.tipo}
+          data-asignatura={c.code}
+          style={`--c:${c.accent}`}
+        >
           <div class="doc-head">
             <span class="doc-badge" aria-hidden="true">
               {c.sigla}
@@ -140,6 +150,7 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
               <i class="tdot" aria-hidden="true" />
               {c.tipo === 'practica' ? 'Práctica' : c.tipo === 'guia' ? 'Guía' : 'Esquemas'}
             </span>
+            {c.tipo === 'practica' && <span class="doc-progress" hidden />}
             <span class="doc-go" aria-hidden="true">
               Abrir →
             </span>
@@ -153,10 +164,26 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
 </BaseLayout>
 
 <script>
+  import { parseStats, statsKeyFor, summarize, formatStatsChip } from '../lib/practica-stats';
+
   const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.doc-card'));
   const empty = document.querySelector<HTMLElement>('.empty');
   const validFilters = new Set(btns.map((b) => b.dataset.filter));
+
+  // Per-subject accumulated-progress badge (issue #50): reads the same
+  // `plancha:stats:<asignatura>` state the practica panel shows, so cards with
+  // no saved progress stay untouched (span left `hidden`).
+  cards.forEach((card) => {
+    const asignatura = card.dataset.asignatura;
+    const progress = card.querySelector<HTMLElement>('.doc-progress');
+    if (!asignatura || !progress) return;
+    const state = parseStats(localStorage.getItem(statsKeyFor(asignatura)));
+    const chip = state && formatStatsChip(summarize(state));
+    if (!chip) return;
+    progress.textContent = chip;
+    progress.hidden = false;
+  });
 
   function applyFilter(f: string): void {
     btns.forEach((x) => {
@@ -349,6 +376,14 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   .doc-type.teoria .tdot,
   .doc-type.guia .tdot {
     background: var(--site-muted);
+  }
+  .doc-progress {
+    font-size: 0.71rem;
+    font-weight: 600;
+    color: var(--site-muted);
+    background: color-mix(in srgb, var(--c, var(--site-accent)) 12%, transparent);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
   }
   .doc-go {
     font-size: 0.82rem;
