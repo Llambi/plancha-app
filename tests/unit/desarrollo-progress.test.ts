@@ -7,6 +7,7 @@ import {
   pruneDrafts,
   summarize,
   formatDevChip,
+  buildReviewOrder,
   type DesarrolloProgressState,
 } from '../../src/lib/desarrollo-progress';
 
@@ -93,6 +94,42 @@ describe('pruneDrafts()', () => {
 
   it('returns an empty object when nothing is valid', () => {
     expect(pruneDrafts({ 'd-q99': 'respuesta' }, ['d-q1'])).toEqual({});
+  });
+});
+
+describe('buildReviewOrder()', () => {
+  const idOf = (id: string) => id;
+
+  it('orders "no" before "medias", unassessed, then "sabia"', () => {
+    const items = ['d-q1', 'd-q2', 'd-q3', 'd-q4'];
+    const answers: DesarrolloProgressState['answers'] = {
+      'd-q1': 'sabia',
+      'd-q2': 'no',
+      'd-q3': 'medias',
+      // d-q4 never assessed
+    };
+    expect(buildReviewOrder(items, idOf, answers)).toEqual(['d-q2', 'd-q3', 'd-q4', 'd-q1']);
+  });
+
+  it('keeps the original relative order within the same priority group (stable)', () => {
+    const items = ['d-q1', 'd-q2', 'd-q3'];
+    const answers: DesarrolloProgressState['answers'] = {
+      'd-q1': 'no',
+      'd-q2': 'no',
+      'd-q3': 'no',
+    };
+    expect(buildReviewOrder(items, idOf, answers)).toEqual(['d-q1', 'd-q2', 'd-q3']);
+  });
+
+  it('leaves the input order unchanged when nothing has been assessed', () => {
+    const items = ['d-q1', 'd-q2', 'd-q3'];
+    expect(buildReviewOrder(items, idOf, {})).toEqual(items);
+  });
+
+  it('works with non-string items via a custom idOf', () => {
+    const items = [{ id: 'd-q1' }, { id: 'd-q2' }];
+    const answers: DesarrolloProgressState['answers'] = { 'd-q2': 'no' };
+    expect(buildReviewOrder(items, (i) => i.id, answers)).toEqual([{ id: 'd-q2' }, { id: 'd-q1' }]);
   });
 });
 
