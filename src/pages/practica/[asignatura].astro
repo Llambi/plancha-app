@@ -181,6 +181,11 @@ const devsRendered = await Promise.all(
           </summary>
           <div class="panel-body">
             <p class="stats-summary" data-dev-stats-summary />
+            <div class="stats-actions">
+              <label class="stats-toggle">
+                <input type="checkbox" data-dev-review-toggle /> Repasar primero lo que no sé
+              </label>
+            </div>
           </div>
         </details>
 
@@ -220,6 +225,7 @@ const devsRendered = await Promise.all(
     parse as parseDevProgress,
     summarize as summarizeDevProgress,
     formatDevChip,
+    buildReviewOrder,
   } from '../../lib/desarrollo-progress';
   import {
     createRng,
@@ -344,6 +350,29 @@ const devsRendered = await Promise.all(
 
   document.addEventListener('desarrollo:stats-updated', renderDevStats);
   renderDevStats();
+
+  // --- Review-order toggle (desarrollo, per asignatura, issue #53) ----------
+  // Priority: "no" > "medias" > never assessed > "sabia" (buildReviewOrder),
+  // computed from the same state renderDevStats() already reads — no new
+  // storage. Not persisted: every page load starts in sequential order.
+  const devReviewToggle = document.querySelector<HTMLInputElement>('[data-dev-review-toggle]');
+  const devSection = document.querySelector<HTMLElement>('[data-desarrollo]');
+  const originalDevOrder = devSection
+    ? Array.from(devSection.querySelectorAll<HTMLElement>('[data-dq]'))
+    : [];
+
+  devReviewToggle?.addEventListener('change', () => {
+    const container = originalDevOrder[0]?.parentElement;
+    if (!container) return;
+    if (devReviewToggle.checked) {
+      const state = devAsignatura ? parseDevProgress(safeGet(devKeyFor(devAsignatura))) : null;
+      const order = buildReviewOrder(originalDevOrder, (q) => q.id, state?.answers ?? {});
+      for (const q of order) container.appendChild(q);
+    } else {
+      for (const q of originalDevOrder) container.appendChild(q);
+    }
+    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
+  });
 
   // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
   const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');
