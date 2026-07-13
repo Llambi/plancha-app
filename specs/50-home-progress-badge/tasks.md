@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — E2E rojo: indicador de progreso en la home**
+- [x] **T1 — E2E rojo: indicador de progreso en la home**
   - Test (rojo): `tests/e2e/home-progress-badge.spec.ts` con tres casos —
     (1) asignatura sin stats guardadas → su `.doc-card` no muestra
     `.doc-progress` visible; (2) tras corregir una pregunta en `/practica/si`
@@ -21,7 +21,7 @@
   - Refactor: —
   - Commit: `test(home): add e2e coverage for the per-subject progress badge (refs #50)`
 
-- [ ] **T2 — Implementar el indicador de progreso acumulado**
+- [x] **T2 — Implementar el indicador de progreso acumulado**
   - Test (rojo): el de T1 (sigue en rojo hasta esta tarea).
   - Implementación (verde): en `src/pages/index.astro` — añadir `code` a
     `Card`, rellenarlo en las tarjetas `tipo: 'practica'` (bucle de
