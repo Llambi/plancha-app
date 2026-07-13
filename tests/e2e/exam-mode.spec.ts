@@ -131,3 +131,53 @@ test('la configuración del panel persiste entre recargas de página', async ({ 
   await expect(page.locator('[data-exam-start]')).toBeVisible();
   await expect(page.locator('[data-exam-exit]')).toBeHidden();
 });
+
+test('starting a simulacro puts its seed and config in the URL', async ({ page }) => {
+  await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
+
+  await page.locator('[data-exam-shuffle]').check();
+  await page.locator('[data-exam-subset-toggle]').check();
+  await page.locator('[data-exam-subset-n]').fill('5');
+  await page.locator('[data-exam-start]').click();
+
+  const url = new URL(page.url());
+  expect(url.searchParams.get('exam')).not.toBeNull();
+  expect(url.searchParams.get('shuffle')).toBe('1');
+  expect(url.searchParams.get('subset')).toBe('5');
+
+  await page.locator('[data-exam-exit]').click();
+  expect(new URL(page.url()).search).toBe('');
+});
+
+test('a shared simulacro URL reproduces the same order and config in a fresh browser context', async ({
+  page,
+  browser,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+  await openPanels(page);
+
+  await page.locator('[data-exam-shuffle]').check();
+  await page.locator('[data-exam-subset-toggle]').check();
+  await page.locator('[data-exam-subset-n]').fill('5');
+  await page.locator('[data-exam-start]').click();
+
+  const originalIds = await page
+    .locator('[data-tq]:not([hidden])')
+    .evaluateAll((els) => els.map((el) => el.id));
+  const sharedUrl = page.url();
+
+  const freshContext = await browser.newContext();
+  const freshPage = await freshContext.newPage();
+  await freshPage.goto(sharedUrl);
+
+  await expect(freshPage.locator('[data-exam-exit]')).toBeVisible();
+  await expect(freshPage.locator('[data-exam-shuffle]')).toBeChecked();
+  await expect(freshPage.locator('[data-exam-subset-toggle]')).toBeChecked();
+  const reproducedIds = await freshPage
+    .locator('[data-tq]:not([hidden])')
+    .evaluateAll((els) => els.map((el) => el.id));
+  expect(reproducedIds).toEqual(originalIds);
+
+  await freshContext.close();
+});
