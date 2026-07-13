@@ -305,32 +305,35 @@ const devsRendered = await Promise.all(
   // «Solo mis fallos»: show only questions whose last attempt was wrong.
   const failedToggle = document.querySelector<HTMLInputElement>('[data-failed-toggle]');
 
-  function applyFailedFilter(): void {
+  // Combines «solo mis fallos» and the tema filter (issue #55): a question is
+  // hidden if it fails *either* active criterion, so together they act as an
+  // intersection. Exam mode still drives `hidden` on its own and remains
+  // exclusive with both (see `startExam()`/`exitExam()`).
+  function applyFilters(): void {
     if (!asignatura) return;
-    const on = failedToggle?.checked ?? false;
+    const failedOn = failedToggle?.checked ?? false;
     const state = parseStats(safeGet(statsKeyFor(asignatura)));
     const failed = new Set(state ? failedIds(state) : []);
     document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
-      q.hidden = on && !failed.has(q.id);
+      const hiddenByFailed = failedOn && !failed.has(q.id);
+      const hiddenByTema = temaFilter !== 'all' && q.dataset.tema !== temaFilter;
+      q.hidden = hiddenByFailed || hiddenByTema;
     });
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
   }
 
-  // Exam mode, the topic filter, and «solo mis fallos» all drive `hidden` on
-  // the same `[data-tq]` elements — mutually exclusive so they never fight.
+  // Exam mode drives `hidden` on its own, so activating «solo mis fallos»
+  // exits it; the tema filter now combines with it instead of resetting it.
   failedToggle?.addEventListener('change', () => {
-    if (failedToggle.checked) {
-      if (examActive) exitExam();
-      resetTemaButtons();
-    }
-    applyFailedFilter();
+    if (failedToggle.checked && examActive) exitExam();
+    applyFilters();
   });
 
   // Reset stats only (independent of the answers progress reset of #8).
   document.querySelector('[data-stats-reset]')?.addEventListener('click', () => {
     if (asignatura) safeRemove(statsKeyFor(asignatura));
     if (failedToggle) failedToggle.checked = false;
-    applyFailedFilter();
+    applyFilters();
     renderStats();
   });
 
@@ -463,7 +466,7 @@ const devsRendered = await Promise.all(
     // topic filter: starting a simulacro takes over, so drop both first.
     if (failedToggle?.checked) {
       failedToggle.checked = false;
-      applyFailedFilter();
+      applyFilters();
     }
     resetTemaButtons();
     const rng = createRng(seed);
@@ -637,15 +640,8 @@ const devsRendered = await Promise.all(
   );
   let temaFilter = 'all';
 
-  function applyTemaFilter(): void {
-    document.querySelectorAll<HTMLElement>('[data-tq]').forEach((q) => {
-      q.hidden = temaFilter !== 'all' && q.dataset.tema !== temaFilter;
-    });
-    document.dispatchEvent(new CustomEvent('practica:filter-changed'));
-  }
-
   // Resets the button states to «Todos» without reapplying visibility — used
-  // when «solo mis fallos» or the exam mode take over the `hidden` flag.
+  // when the exam mode takes over the `hidden` flag.
   function resetTemaButtons(): void {
     temaFilter = 'all';
     temaButtons.forEach((b) => {
@@ -663,14 +659,10 @@ const devsRendered = await Promise.all(
         b.classList.toggle('on', on);
         b.setAttribute('aria-pressed', String(on));
       });
-      // The topic filter shares `hidden` with «solo mis fallos» and the exam
-      // mode: selecting a tema takes over, so drop both first.
-      if (failedToggle?.checked) {
-        failedToggle.checked = false;
-        applyFailedFilter();
-      }
+      // Exam mode still drives `hidden` on its own, so selecting a tema
+      // exits it; «solo mis fallos» now combines with it instead.
       if (examActive) exitExam();
-      applyTemaFilter();
+      applyFilters();
     });
   });
 
