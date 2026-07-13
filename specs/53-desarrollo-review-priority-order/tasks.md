@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo puro: orden de repaso priorizado**
+- [x] **T1 — Núcleo puro: orden de repaso priorizado**
   - Test (rojo): en `tests/unit/desarrollo-progress.test.ts`, casos para
     `buildReviewOrder()` — prioridad `no` > `medias` > sin autoevaluar >
     `sabia`; estabilidad dentro de un mismo grupo; `answers` vacío conserva el
@@ -19,7 +19,7 @@
   - Refactor: si aplica.
   - Commit: `feat(desarrollo): add priority review order for self-assessed questions (refs #53)`
 
-- [ ] **T2 — E2E rojo: toggle de repaso priorizado**
+- [x] **T2 — E2E rojo: toggle de repaso priorizado**
   - Test (rojo): en `tests/e2e/desarrollo-self-assessment.spec.ts` — marcar una
     pregunta tardía "No lo sabía" y otra temprana "Lo sabía", activar
     `data-dev-review-toggle` y comprobar que la marcada "No lo sabía" pasa a
@@ -29,7 +29,7 @@
   - Refactor: —
   - Commit: `test(desarrollo): add e2e coverage for the review-order toggle (refs #53)`
 
-- [ ] **T3 — Implementar el toggle en `/practica/<asignatura>`**
+- [x] **T3 — Implementar el toggle en `/practica/<asignatura>`**
   - Test (rojo): el de T2 (sigue en rojo hasta esta tarea).
   - Implementación (verde): checkbox `data-dev-review-toggle` en el panel
     `data-dev-stats` (mismo patrón `.stats-actions`/`.stats-toggle` que «solo
