@@ -162,10 +162,31 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   </section>
 
   <p class="empty" hidden role="status">No hay documentos de este tipo.</p>
+
+  <section class="backup" aria-labelledby="backup-h">
+    <h2 id="backup-h">Copia de seguridad</h2>
+    <p>
+      Tu progreso (respuestas, estadísticas, autoevaluación y fijados) se guarda solo en este
+      navegador. Expórtalo para conservarlo o llevarlo a otro dispositivo.
+    </p>
+    <div class="backup-actions">
+      <button type="button" data-export-progress>Exportar mi progreso</button>
+      <label class="backup-import">
+        Importar
+        <input type="file" accept="application/json" data-import-progress />
+      </label>
+    </div>
+    <p class="backup-status" role="status" aria-live="polite" data-backup-status></p>
+  </section>
 </BaseLayout>
 
 <script>
   import { parseStats, statsKeyFor, summarize, formatStatsChip } from '../lib/practica-stats';
+  import {
+    buildProgressExport,
+    serializeProgressExport,
+    parseProgressExport,
+  } from '../lib/export-progress';
 
   const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.doc-card'));
@@ -222,6 +243,82 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   // missing or unrecognized.
   const initial = new URLSearchParams(window.location.search).get('tipo');
   applyFilter(initial && validFilters.has(initial) ? initial : 'all');
+
+  // --- Progress backup: export/import (issue #56) ---------------------------
+  function safeGet(key: string): string | null {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function safeSet(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      // localStorage unavailable (private mode / disabled) — nothing to do.
+    }
+  }
+
+  const exportBtn = document.querySelector<HTMLButtonElement>('[data-export-progress]');
+  const importInput = document.querySelector<HTMLInputElement>('[data-import-progress]');
+  const backupStatus = document.querySelector<HTMLElement>('[data-backup-status]');
+
+  function readAllProgress(): Record<string, string> {
+    const entries: Record<string, string> = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = key && safeGet(key);
+        if (key && value != null) entries[key] = value;
+      }
+    } catch {
+      // localStorage unavailable — export whatever was gathered (nothing).
+    }
+    return entries;
+  }
+
+  exportBtn?.addEventListener('click', () => {
+    const payload = buildProgressExport(readAllProgress(), new Date().toISOString());
+    if (Object.keys(payload.data).length === 0) {
+      if (backupStatus) backupStatus.textContent = 'No hay progreso guardado que exportar.';
+      return;
+    }
+    const blob = new Blob([serializeProgressExport(payload)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `plancha-progreso-${payload.exportedAt.slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    if (backupStatus) backupStatus.textContent = 'Progreso exportado.';
+  });
+
+  importInput?.addEventListener('change', () => {
+    const file = importInput.files?.[0];
+    if (!file) return;
+    file
+      .text()
+      .then((text) => {
+        const parsed = parseProgressExport(text);
+        if (!parsed) {
+          if (backupStatus)
+            backupStatus.textContent = 'El archivo no es un export válido de PlanchaAPP.';
+          return;
+        }
+        for (const [key, value] of Object.entries(parsed.data)) safeSet(key, value);
+        if (backupStatus) {
+          backupStatus.textContent = `Progreso importado (${Object.keys(parsed.data).length} claves). Recarga la página para verlo.`;
+        }
+      })
+      .catch(() => {
+        if (backupStatus) backupStatus.textContent = 'No se pudo leer el archivo.';
+      })
+      .finally(() => {
+        importInput.value = '';
+      });
+  });
 </script>
 
 <style>
@@ -412,5 +509,54 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     margin-top: 1.5rem;
     color: var(--site-muted);
     font-size: 0.9rem;
+  }
+  .backup {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--site-line);
+  }
+  .backup h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .backup p {
+    margin-top: 0.4rem;
+    color: var(--site-muted);
+    font-size: 0.85rem;
+    max-width: 60ch;
+    line-height: 1.5;
+  }
+  .backup-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.8rem;
+  }
+  .backup-actions button,
+  .backup-import {
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--site-muted);
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+  }
+  .backup-actions button:hover,
+  .backup-import:hover {
+    color: var(--site-ink);
+    border-color: var(--site-accent);
+  }
+  .backup-import input {
+    display: none;
+  }
+  .backup-status {
+    margin-top: 0.6rem;
+    color: var(--site-muted);
+    font-size: 0.8rem;
+    min-height: 1.2em;
   }
 </style>
