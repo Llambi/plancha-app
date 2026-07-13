@@ -1,0 +1,199 @@
+---
+/**
+ * /repaso — repaso transversal de fallos (issue #51).
+ * Cruza, en cliente, los fallos guardados en `localStorage` (uno por
+ * asignatura, vía `failedIds()` de `practica-stats.ts`) con el índice de
+ * búsqueda (`search-index.json`) para listar, agrupadas por asignatura, las
+ * preguntas cuyo último intento fue fallo — con su deep-link original. No lee
+ * ni escribe ningún estado nuevo.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BASE, SITE_NAME, url } from '../data/site';
+
+const indexUrl = `${BASE}/search-index.json`;
+---
+
+<BaseLayout title={`Repaso · ${SITE_NAME}`} home={true}>
+  <div class="repaso-page" data-index={indexUrl}>
+    <header class="rp-head">
+      <h1>Repaso de fallos</h1>
+      <p>
+        Todas las preguntas cuyo último intento fue fallo, de cualquier asignatura, en un solo
+        sitio.
+      </p>
+    </header>
+
+    <div class="rp-groups" data-repaso-groups></div>
+    <p class="rp-empty" data-repaso-empty>
+      Aún no tienes ningún fallo registrado. Corrige preguntas en{' '}
+      <a href={url('/')}>la práctica de una asignatura</a> y volverán a aparecer aquí.
+    </p>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .repaso-page {
+    max-width: 760px;
+  }
+  .repaso-page .rp-head h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .repaso-page .rp-head p {
+    margin-top: 0.5rem;
+    color: var(--site-muted);
+    font-size: 0.92rem;
+    max-width: 54ch;
+    line-height: 1.5;
+  }
+  .repaso-page .rp-empty {
+    margin-top: 1.6rem;
+    color: var(--site-muted);
+    font-size: 0.92rem;
+  }
+  .repaso-page .rp-empty[hidden] {
+    display: none;
+  }
+  .repaso-page .rp-group {
+    margin-top: 1.6rem;
+  }
+  .repaso-page .rp-group-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.7rem;
+  }
+  .repaso-page .rp-group-badge {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.66rem;
+    background: var(--c, var(--site-accent));
+  }
+  .repaso-page .rp-group-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .repaso-page .rp-group-count {
+    font-size: 0.74rem;
+    color: var(--site-muted);
+    font-weight: 600;
+  }
+  .repaso-page .rp-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .repaso-page .rp-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.7rem 0.85rem;
+    background: var(--site-surface);
+    border: 1px solid var(--site-line);
+    border-radius: 11px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--site-shadow);
+    transition:
+      border-color 0.15s,
+      transform 0.15s;
+  }
+  .repaso-page .rp-item:hover {
+    border-color: var(--c, var(--site-accent));
+    transform: translateX(2px);
+  }
+  .repaso-page .rp-item-title {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .repaso-page .rp-item-go {
+    flex: none;
+    color: var(--site-muted);
+    font-size: 1.1rem;
+  }
+</style>
+
+<script>
+  import { statsKeyFor, parseStats, failedIds } from '../lib/practica-stats';
+  import { buildRepasoGroups, type RepasoGroup } from '../lib/repaso';
+  import type { SearchRecord } from '../lib/search';
+
+  const root = document.querySelector<HTMLElement>('.repaso-page');
+  if (root) {
+    const groupsEl = root.querySelector<HTMLElement>('[data-repaso-groups]')!;
+    const emptyEl = root.querySelector<HTMLElement>('[data-repaso-empty]')!;
+    const indexUrl = root.dataset.index!;
+
+    function esc(s: string): string {
+      return s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function render(groups: RepasoGroup[]): void {
+      emptyEl.hidden = groups.length > 0;
+      groupsEl.innerHTML = groups
+        .map((g) => {
+          const list = g.items
+            .map(
+              (r: SearchRecord) =>
+                `<li><a class="rp-item" href="${esc(r.url)}" style="--c:${esc(r.accent)}">` +
+                `<span class="rp-item-title">${esc(r.titulo)}</span>` +
+                `<span class="rp-item-go" aria-hidden="true">→</span></a></li>`,
+            )
+            .join('');
+          return (
+            `<section class="rp-group" data-repaso-group style="--c:${esc(g.accent)}">` +
+            `<div class="rp-group-head">` +
+            `<span class="rp-group-badge">${esc(g.sigla)}</span>` +
+            `<span class="rp-group-name">${esc(g.asignaturaNombre)}</span>` +
+            `<span class="rp-group-count">${g.items.length}</span></div>` +
+            `<ul class="rp-list">${list}</ul></section>`
+          );
+        })
+        .join('');
+    }
+
+    // Escanea `plancha:stats:<asignatura>` (mismo estado que ya usa cada
+    // asignatura, sin duplicarlo) y calcula sus fallos con `failedIds()`.
+    const prefix = statsKeyFor('');
+    const failedByAsignatura: Record<string, string[]> = {};
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith(prefix)) continue;
+      const asignatura = key.slice(prefix.length);
+      const state = parseStats(localStorage.getItem(key));
+      if (state) failedByAsignatura[asignatura] = failedIds(state);
+    }
+
+    const hasAnyFailure = Object.values(failedByAsignatura).some((ids) => ids.length > 0);
+    if (!hasAnyFailure) {
+      emptyEl.hidden = false;
+    } else {
+      fetch(indexUrl)
+        .then((r) => r.json())
+        .then((records: SearchRecord[]) => render(buildRepasoGroups(records, failedByAsignatura)))
+        .catch(() => {
+          emptyEl.hidden = false;
+          emptyEl.textContent = 'No se pudo cargar el repaso.';
+        });
+    }
+  }
+</script>
