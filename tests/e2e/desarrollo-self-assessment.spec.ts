@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { BASE } from '../../src/data/site';
+import { openPanels } from './helpers';
 
 // E2E for the desarrollo self-assessment (issue #12), against `/practica/si`
 // (has desarrollo questions).
@@ -52,4 +53,26 @@ test('el resumen de conteos aparece y se actualiza al autoevaluar', async ({ pag
   await expect(summary).toContainText('Sabías: 1');
   await expect(summary).toContainText('A medias: 0');
   await expect(summary).toContainText('No sabías: 1');
+});
+
+test('the review-order toggle moves an unknown question to the front, and restores order when turned off', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/practica/si`);
+
+  const cards = page.locator('[data-dq]');
+  const firstId = await cards.nth(0).getAttribute('id');
+  const laterId = await cards.nth(4).getAttribute('id');
+
+  await cards.nth(0).locator('[data-dq-self="sabia"]').click();
+  await cards.nth(4).locator('[data-dq-self="no"]').click();
+
+  await openPanels(page);
+  await page.locator('[data-dev-review-toggle]').check();
+
+  await expect(cards.first()).toHaveAttribute('id', laterId!);
+
+  await page.locator('[data-dev-review-toggle]').uncheck();
+
+  await expect(cards.first()).toHaveAttribute('id', firstId!);
 });
