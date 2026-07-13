@@ -123,6 +123,9 @@ const devsRendered = await Promise.all(
               <button class="btn-reset" type="button" data-exam-exit hidden>
                 Salir de modo examen
               </button>
+              <button class="btn-reset" type="button" data-exam-share hidden>
+                Copiar enlace del simulacro
+              </button>
               <span class="exam-timer" role="status" aria-live="polite" data-exam-timer />
             </div>
           </div>
@@ -234,6 +237,8 @@ const devsRendered = await Promise.all(
     serializeExamConfig,
     parseExamConfig,
     formatExamConfigSummary,
+    serializeSharedExam,
+    parseSharedExam,
     type ExamConfig,
   } from '../../lib/exam-mode';
 
@@ -377,12 +382,14 @@ const devsRendered = await Promise.all(
   // --- Exam mode (shuffle / N-question subset / timed simulacro) ------------
   const examStartBtn = document.querySelector<HTMLButtonElement>('[data-exam-start]');
   const examExitBtn = document.querySelector<HTMLButtonElement>('[data-exam-exit]');
+  const examShareBtn = document.querySelector<HTMLButtonElement>('[data-exam-share]');
   const examShuffleCheckbox = document.querySelector<HTMLInputElement>('[data-exam-shuffle]');
   const examSubsetToggle = document.querySelector<HTMLInputElement>('[data-exam-subset-toggle]');
   const examSubsetN = document.querySelector<HTMLInputElement>('[data-exam-subset-n]');
   const examTimedCheckbox = document.querySelector<HTMLInputElement>('[data-exam-timed]');
   const examMinutesInput = document.querySelector<HTMLInputElement>('[data-exam-minutes]');
   const examTimerEl = document.querySelector<HTMLElement>('[data-exam-timer]');
+  const examPanel = document.querySelector<HTMLDetailsElement>('[data-exam-panel]');
   const testSection = document.querySelector<HTMLElement>('[data-practica]');
   // Original order/visibility of the questions, captured once so «Salir de
   // modo examen» can restore it exactly regardless of what the simulacro did.
@@ -433,7 +440,23 @@ const devsRendered = await Promise.all(
   // itself or by the user clicking «Corregir» before time runs out.
   document.addEventListener('tq:graded', stopTimer);
 
-  function startExam(): void {
+  // Puts the seed + config that produced the current run in the URL (issue
+  // #54), via `replaceState` so it doesn't add history entries; the address
+  // bar becomes a shareable link that reproduces the exact same simulacro.
+  function updateShareUrl(seed: number): void {
+    const params = serializeSharedExam({
+      seed,
+      shuffle: examShuffleCheckbox?.checked ?? false,
+      subsetSize: examSubsetToggle?.checked ? Number(examSubsetN?.value ?? 0) : null,
+      timed: examTimedCheckbox?.checked ?? false,
+      minutes: Number(examMinutesInput?.value ?? 20),
+    });
+    const u = new URL(window.location.href);
+    u.search = params.toString();
+    history.replaceState(null, '', u);
+  }
+
+  function startExam(seed: number = Date.now()): void {
     const container = originalOrder[0]?.parentElement;
     if (!container) return;
     // Exam mode shares the same `hidden` flag with «solo mis fallos» and the
@@ -443,7 +466,7 @@ const devsRendered = await Promise.all(
       applyFailedFilter();
     }
     resetTemaButtons();
-    const rng = createRng(Date.now());
+    const rng = createRng(seed);
     const subsetSize = examSubsetToggle?.checked
       ? Math.max(
           1,
@@ -461,11 +484,13 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
     if (examStartBtn) examStartBtn.hidden = true;
     if (examExitBtn) examExitBtn.hidden = false;
+    if (examShareBtn) examShareBtn.hidden = false;
     examActive = true;
     if (examTimedCheckbox?.checked) {
       const minutes = Number(examMinutesInput?.value ?? 20);
       startTimer(minutes * 60000);
     }
+    updateShareUrl(seed);
   }
 
   function exitExam(): void {
@@ -480,11 +505,39 @@ const devsRendered = await Promise.all(
     document.dispatchEvent(new CustomEvent('practica:filter-changed'));
     if (examStartBtn) examStartBtn.hidden = false;
     if (examExitBtn) examExitBtn.hidden = true;
+    if (examShareBtn) examShareBtn.hidden = true;
     examActive = false;
+    const u = new URL(window.location.href);
+    u.search = '';
+    history.replaceState(null, '', u);
   }
 
-  examStartBtn?.addEventListener('click', startExam);
+  examStartBtn?.addEventListener('click', () => startExam());
   examExitBtn?.addEventListener('click', exitExam);
+  examShareBtn?.addEventListener('click', () => {
+    navigator.clipboard?.writeText(window.location.href);
+  });
+
+  // A shared simulacro link (`?exam=<seed>&...`) reproduces itself on load:
+  // apply its config to the panel controls and start it with that exact seed.
+  const sharedExam = parseSharedExam(new URLSearchParams(window.location.search));
+  if (sharedExam) {
+    if (examShuffleCheckbox) examShuffleCheckbox.checked = sharedExam.shuffle;
+    if (examSubsetToggle) examSubsetToggle.checked = sharedExam.subsetSize !== null;
+    if (examSubsetN) {
+      if (sharedExam.subsetSize !== null) examSubsetN.value = String(sharedExam.subsetSize);
+      examSubsetN.disabled = sharedExam.subsetSize === null;
+    }
+    if (examTimedCheckbox) examTimedCheckbox.checked = sharedExam.timed;
+    if (examMinutesInput) {
+      examMinutesInput.value = String(sharedExam.minutes);
+      examMinutesInput.disabled = !sharedExam.timed;
+    }
+    if (examPanel) examPanel.open = true;
+    // `startExam()` calls `resetTemaButtons()`, which reads `temaButtons`
+    // (declared further down): deferred to the end of the script so it runs
+    // after that's initialized, instead of during this early evaluation.
+  }
 
   // Remember the panel's settings (not the in-progress simulacro) per asignatura.
   function saveExamConfig(): void {
@@ -527,7 +580,9 @@ const devsRendered = await Promise.all(
     el?.addEventListener('input', saveExamConfig);
     el?.addEventListener('change', saveExamConfig);
   }
-  restoreExamConfig();
+  // A shared simulacro link takes over the panel controls (set above); don't
+  // let the asignatura's saved config overwrite it right after.
+  if (!sharedExam) restoreExamConfig();
 
   // --- Compact one-line summaries for the collapsed panels (issue #32) -------
   // These only feed the <summary> chip; they don't touch renderStats /
@@ -618,6 +673,8 @@ const devsRendered = await Promise.all(
       applyTemaFilter();
     });
   });
+
+  if (sharedExam) startExam(sharedExam.seed);
 </script>
 
 <style>
