@@ -1,11 +1,11 @@
 ---
 /**
- * /repaso — repaso transversal de fallos (issue #51).
- * Cruza, en cliente, los fallos guardados en `localStorage` (uno por
- * asignatura, vía `failedIds()` de `practica-stats.ts`) con el índice de
- * búsqueda (`search-index.json`) para listar, agrupadas por asignatura, las
- * preguntas cuyo último intento fue fallo — con su deep-link original. No lee
- * ni escribe ningún estado nuevo.
+ * /repaso — cross-subject failed-questions review (issue #51).
+ * Client-side, matches the failures saved in `localStorage` (one per
+ * asignatura, via `failedIds()` from `practica-stats.ts`) against the search
+ * index (`search-index.json`) to list, grouped by asignatura, the questions
+ * whose last attempt was wrong — with their original deep-link. Reads no new
+ * state and writes none.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { BASE, SITE_NAME, url } from '../data/site';
@@ -172,8 +172,8 @@ const indexUrl = `${BASE}/search-index.json`;
         .join('');
     }
 
-    // Escanea `plancha:stats:<asignatura>` (mismo estado que ya usa cada
-    // asignatura, sin duplicarlo) y calcula sus fallos con `failedIds()`.
+    // Scans `plancha:stats:<asignatura>` (the same state each subject already
+    // uses, not a duplicate) and computes its failures with `failedIds()`.
     const prefix = statsKeyFor('');
     const failedByAsignatura: Record<string, string[]> = {};
     for (const key of Object.keys(localStorage)) {

@@ -1,10 +1,11 @@
 /**
- * Núcleo puro y testeable del repaso transversal (issue #51): cruza los ids de
- * preguntas falladas en su último intento (por asignatura, ya calculados con
- * `failedIds()` de `practica-stats.ts`) con los registros del índice de
- * búsqueda (`search-index.json` / `search.ts`) para obtener texto y deep-link
- * sin reconstruir el contenido. El wiring con `localStorage` y el `fetch` del
- * índice vive en `src/pages/repaso.astro`.
+ * Cross-subject failed-questions review — pure, testable core, no DOM.
+ *
+ * Matches ids of questions failed on their last attempt (per asignatura,
+ * already computed with `failedIds()` from `practica-stats.ts`) against the
+ * search index records (`search-index.json` / `search.ts`) to get their text
+ * and deep-link without rebuilding the content. The `localStorage` scan and
+ * index `fetch` live in `src/pages/repaso.astro`.
  */
 import type { SearchRecord } from './search';
 
@@ -17,11 +18,11 @@ export interface RepasoGroup {
 }
 
 /**
- * Agrupa por asignatura las preguntas falladas que tienen un registro
- * correspondiente en el índice de búsqueda. `failedByAsignatura` mapea código
- * de asignatura -> ids con el formato de `failedIds()` (`"q-<id>"`, igual que
- * el anchor de la pregunta). Asignaturas sin fallos o cuyos fallos no casan con
- * ningún registro no aparecen en el resultado.
+ * Groups, per asignatura, the failed questions that have a matching record in
+ * the search index. `failedByAsignatura` maps asignatura code -> ids with the
+ * `failedIds()` format (`"q-<id>"`, same as the question's anchor). Subjects
+ * with no failures, or whose failures match no record, don't appear in the
+ * result.
  */
 export function buildRepasoGroups(
   records: SearchRecord[],
