@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo puro: construir/(de)serializar el export**
+- [x] **T1 — Núcleo puro: construir/(de)serializar el export**
   - Test (rojo): `tests/unit/export-progress.test.ts` — `buildProgressExport`
     filtra solo `plancha:*`; round-trip de
     `serializeProgressExport`/`parseProgressExport`; JSON inválido -> `null`;
@@ -20,7 +20,7 @@
   - Refactor: si aplica.
   - Commit: `feat(export): add pure (de)serialization for a progress backup file (refs #56)`
 
-- [ ] **T2 — E2E rojo: exportar e importar progreso desde la home**
+- [x] **T2 — E2E rojo: exportar e importar progreso desde la home**
   - Test (rojo): `tests/e2e/backup-progress.spec.ts` — sembrar
     `plancha:stats:si` (y otra clave `plancha:*`), exportar y comprobar el
     contenido del fichero descargado; vaciar `localStorage`, importar ese
@@ -31,7 +31,7 @@
   - Refactor: —
   - Commit: `test(export): add e2e coverage for exporting and importing progress (refs #56)`
 
-- [ ] **T3 — Implementar exportar/importar en la home**
+- [x] **T3 — Implementar exportar/importar en la home**
   - Test (rojo): el de T2 (sigue en rojo hasta esta tarea).
   - Implementación (verde): sección nueva en `src/pages/index.astro` con
     botón "Exportar mi progreso" (descarga vía `Blob` + `<a download>`) e
@@ -43,7 +43,7 @@
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores
+- [x] `npm test` en verde
+- [x] `npm run build` + `npm run test:e2e` en verde
+- [x] Cada criterio de aceptación de `spec.md` comprobado
