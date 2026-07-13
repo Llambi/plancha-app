@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo puro: cruce de fallos con el índice de búsqueda**
+- [x] **T1 — Núcleo puro: cruce de fallos con el índice de búsqueda**
   - Test (rojo): `tests/unit/repaso.test.ts` para `buildRepasoGroups()` —
     asignatura con fallos y registros coincidentes → grupo con esos items;
     fallos sin registro correspondiente → no aparece; `failedIds` vacío → no
@@ -20,7 +20,7 @@ failedByAsignatura)`.
   - Refactor: si aplica.
   - Commit: `feat(repaso): add pure matcher for failed questions across subjects (refs #51)`
 
-- [ ] **T2 — E2E rojo: página `/repaso`**
+- [x] **T2 — E2E rojo: página `/repaso`**
   - Test (rojo): `tests/e2e/repaso.spec.ts` — (a) sin stats guardadas, estado
     vacío; (b) tras fallar una pregunta en `/practica/si`, `/repaso` la lista
     bajo "Sistemas Inteligentes" con enlace a `/practica/si#q-<id>`; (c) la home
@@ -30,7 +30,7 @@ failedByAsignatura)`.
   - Refactor: —
   - Commit: `test(repaso): add e2e coverage for the cross-subject review page (refs #51)`
 
-- [ ] **T3 — Implementar la página `/repaso` y su enlace desde la home**
+- [x] **T3 — Implementar la página `/repaso` y su enlace desde la home**
   - Test (rojo): el de T2 (sigue en rojo hasta esta tarea).
   - Implementación (verde): `src/pages/repaso.astro` (shell + script que
     escanea `localStorage` con el prefijo de `statsKeyFor('')`, calcula
