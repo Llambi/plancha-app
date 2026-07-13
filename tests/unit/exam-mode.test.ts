@@ -8,7 +8,10 @@ import {
   serializeExamConfig,
   parseExamConfig,
   formatExamConfigSummary,
+  serializeSharedExam,
+  parseSharedExam,
   type ExamConfig,
+  type SharedExamState,
 } from '../../src/lib/exam-mode';
 
 describe('formatExamConfigSummary()', () => {
@@ -165,5 +168,48 @@ describe('serializeExamConfig()/parseExamConfig()', () => {
     expect(
       parseExamConfig(JSON.stringify({ shuffle: true, subsetSize: null, minutes: 20 })),
     ).toBeNull(); // no timed
+  });
+});
+
+describe('serializeSharedExam()/parseSharedExam()', () => {
+  const sampleShared: SharedExamState = {
+    seed: 123456789,
+    shuffle: true,
+    subsetSize: 5,
+    timed: true,
+    minutes: 15,
+  };
+
+  it('round-trips a shared exam state', () => {
+    expect(parseSharedExam(serializeSharedExam(sampleShared))).toEqual(sampleShared);
+  });
+
+  it('round-trips subsetSize: null and shuffle/timed: false', () => {
+    const state: SharedExamState = {
+      seed: 1,
+      shuffle: false,
+      subsetSize: null,
+      timed: false,
+      minutes: 20,
+    };
+    expect(parseSharedExam(serializeSharedExam(state))).toEqual(state);
+  });
+
+  it('returns null when there is no "exam" param', () => {
+    expect(parseSharedExam(new URLSearchParams('tipo=practica'))).toBeNull();
+  });
+
+  it('returns null when the seed is not a finite number', () => {
+    expect(parseSharedExam(new URLSearchParams('exam=not-a-number'))).toBeNull();
+  });
+
+  it('defaults shuffle/timed to false and subsetSize to null when absent', () => {
+    expect(parseSharedExam(new URLSearchParams('exam=42'))).toEqual({
+      seed: 42,
+      shuffle: false,
+      subsetSize: null,
+      timed: false,
+      minutes: 20,
+    });
   });
 });

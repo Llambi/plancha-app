@@ -114,3 +114,49 @@ export function parseExamConfig(raw: string | null): ExamConfig | null {
     minutes: v.minutes,
   };
 }
+
+/**
+ * A reproducible simulacro: the seed plus the config that produced its order
+ * (see `buildExamOrder`/`createRng`). Shared as URL search params so opening
+ * the same URL — in any browser — reproduces the exact same run (issue #54).
+ */
+export interface SharedExamState {
+  seed: number;
+  shuffle: boolean;
+  subsetSize: number | null;
+  timed: boolean;
+  minutes: number;
+}
+
+/** Encodes a shared exam state as URL search params. */
+export function serializeSharedExam(state: SharedExamState): URLSearchParams {
+  const params = new URLSearchParams();
+  params.set('exam', String(state.seed));
+  if (state.shuffle) params.set('shuffle', '1');
+  if (state.subsetSize != null) params.set('subset', String(state.subsetSize));
+  if (state.timed) {
+    params.set('timed', '1');
+    params.set('min', String(state.minutes));
+  }
+  return params;
+}
+
+/** Defensive parse: `null` when there's no `exam` param or its seed isn't a finite number. */
+export function parseSharedExam(params: URLSearchParams): SharedExamState | null {
+  const rawSeed = params.get('exam');
+  if (rawSeed === null) return null;
+  const seed = Number(rawSeed);
+  if (!Number.isFinite(seed)) return null;
+  const rawSubset = params.get('subset');
+  const subsetSize =
+    rawSubset !== null && Number.isFinite(Number(rawSubset)) ? Number(rawSubset) : null;
+  const timed = params.get('timed') === '1';
+  const rawMinutes = Number(params.get('min'));
+  return {
+    seed,
+    shuffle: params.get('shuffle') === '1',
+    subsetSize,
+    timed,
+    minutes: timed && Number.isFinite(rawMinutes) ? rawMinutes : 20,
+  };
+}
