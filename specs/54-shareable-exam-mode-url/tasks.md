@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Núcleo puro: serializar/parsear el simulacro compartido**
+- [x] **T1 — Núcleo puro: serializar/parsear el simulacro compartido**
   - Test (rojo): en `tests/unit/exam-mode.test.ts`, casos para
     `serializeSharedExam()`/`parseSharedExam()` — round-trip completo; sin
     `exam` -> `null`; semilla no numérica -> `null`; `shuffle`/`timed`
@@ -19,7 +19,7 @@
   - Refactor: si aplica.
   - Commit: `feat(exam): add pure (de)serialization for a shareable simulacro URL (refs #54)`
 
-- [ ] **T2 — E2E rojo: reproducir un simulacro desde su URL**
+- [x] **T2 — E2E rojo: reproducir un simulacro desde su URL**
   - Test (rojo): en `tests/e2e/exam-mode.spec.ts` — iniciar un simulacro con
     barajado + subconjunto de 5, capturar la URL resultante, abrirla en un
     contexto de navegador nuevo y comprobar que reproduce el mismo orden de
@@ -30,7 +30,7 @@
   - Refactor: —
   - Commit: `test(exam): add e2e coverage for reproducing a shared simulacro (refs #54)`
 
-- [ ] **T3 — Implementar la URL compartible en `/practica/<asignatura>`**
+- [x] **T3 — Implementar la URL compartible en `/practica/<asignatura>`**
   - Test (rojo): el de T2 (sigue en rojo hasta esta tarea).
   - Implementación (verde): `startExam(seed = Date.now())` escribe los
     parámetros en la URL (`history.replaceState`) tras arrancar;
