@@ -44,7 +44,7 @@ failedByAsignatura)`.
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores
+- [x] `npm test` en verde
+- [x] `npm run build` + `npm run test:e2e` en verde
+- [x] Cada criterio de aceptación de `spec.md` comprobado
