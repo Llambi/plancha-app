@@ -105,3 +105,29 @@ export function formatDevChip(summary: DesarrolloSummary | null): string {
   if (!summary || summary.answered === 0) return '';
   return `Sabías ${summary.sabia} · A medias ${summary.medias} · No ${summary.no}`;
 }
+
+const REVIEW_RANK: Record<SelfAssessment | 'unassessed', number> = {
+  no: 0,
+  medias: 1,
+  unassessed: 2,
+  sabia: 3,
+};
+
+/**
+ * Orders items to review what's least known first: "no" (didn't know it) <
+ * "medias" (partially) < never assessed < "sabia" (already knew it). Stable
+ * within each group — items with no other distinguishing data (e.g. no
+ * "last reviewed" timestamp is kept) keep their original relative order.
+ * Generic over `T` so it can sort DOM elements or plain ids alike; `idOf`
+ * extracts the key looked up in `answers`.
+ */
+export function buildReviewOrder<T>(
+  items: T[],
+  idOf: (item: T) => string,
+  answers: Record<string, SelfAssessment>,
+): T[] {
+  return [...items].sort(
+    (a, b) =>
+      REVIEW_RANK[answers[idOf(a)] ?? 'unassessed'] - REVIEW_RANK[answers[idOf(b)] ?? 'unassessed'],
+  );
+}
