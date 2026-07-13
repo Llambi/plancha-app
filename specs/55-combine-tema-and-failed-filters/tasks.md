@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — E2E rojo: combinar tema + «solo mis fallos»**
+- [x] **T1 — E2E rojo: combinar tema + «solo mis fallos»**
   - Test (rojo): en `tests/e2e/practica-tema-filter.spec.ts`, sustituye el
     test de exclusión mutua tema/fallos por: (a) fallar `q1` (tema T1) en
     `/practica/si`, activar el tema T1 (8 preguntas), activar "solo mis
@@ -21,7 +21,7 @@
   - Refactor: —
   - Commit: `test(practica): add e2e coverage for combining tema and failed filters (refs #55)`
 
-- [ ] **T2 — Combinar los filtros de tema y «solo mis fallos»**
+- [x] **T2 — Combinar los filtros de tema y «solo mis fallos»**
   - Test (rojo): el de T1 (sigue en rojo hasta esta tarea).
   - Implementación (verde): en `src/pages/practica/[asignatura].astro`,
     sustituir `applyFailedFilter()`/`applyTemaFilter()` por una única
@@ -34,7 +34,7 @@
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores
+- [x] `npm test` en verde
+- [x] `npm run build` + `npm run test:e2e` en verde
+- [x] Cada criterio de aceptación de `spec.md` comprobado
