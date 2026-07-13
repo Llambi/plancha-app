@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { meta } from '../data/asignaturas';
-import { BASE, SITE_NAME } from '../data/site';
+import { BASE, SITE_NAME, url } from '../data/site';
 
 const base = BASE;
 
@@ -112,6 +112,7 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     <span class="count">
       <b>{nSubjects}</b> asignaturas · <b>{cards.length}</b> documentos
     </span>
+    <a class="repaso-link" href={url('/repaso')}>Repaso de fallos →</a>
   </header>
 
   <div class="filters" role="group" aria-label="Filtrar por tipo">
@@ -248,6 +249,17 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
   .count b {
     color: var(--site-ink);
     font-weight: 700;
+  }
+  .repaso-link {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--site-accent);
+    text-decoration: none;
+  }
+  .repaso-link:hover {
+    text-decoration: underline;
   }
   .filters {
     display: flex;
