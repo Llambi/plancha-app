@@ -146,6 +146,7 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
             </span>
           </div>
           <p class="doc-desc">{c.desc}</p>
+          {c.tipo === 'practica' && <p class="doc-studied" hidden />}
           <div class="doc-foot">
             <span class={`doc-type ${c.tipo}`}>
               <i class="tdot" aria-hidden="true" />
@@ -187,6 +188,7 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     serializeProgressExport,
     parseProgressExport,
   } from '../lib/export-progress';
+  import { keyFor as lastStudiedKeyFor, formatLastStudied } from '../lib/last-studied';
 
   const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.doc-card'));
@@ -202,9 +204,22 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     if (!asignatura || !progress) return;
     const state = parseStats(localStorage.getItem(statsKeyFor(asignatura)));
     const chip = state && formatStatsChip(summarize(state));
-    if (!chip) return;
-    progress.textContent = chip;
-    progress.hidden = false;
+    if (chip) {
+      progress.textContent = chip;
+      progress.hidden = false;
+    }
+
+    // Last-studied indicator (issue #57): reads the timestamp stamped by
+    // `/practica/<asignatura>` on every real grading/self-assessment.
+    const studied = card.querySelector<HTMLElement>('.doc-studied');
+    const studiedText = formatLastStudied(
+      localStorage.getItem(lastStudiedKeyFor(asignatura)),
+      Date.now(),
+    );
+    if (studied && studiedText) {
+      studied.textContent = studiedText;
+      studied.hidden = false;
+    }
   });
 
   function applyFilter(f: string): void {
@@ -457,6 +472,13 @@ const nSubjects = new Set(cards.map((c) => c.subject)).size;
     color: var(--site-muted);
     line-height: 1.5;
     flex: 1;
+  }
+  .doc-studied {
+    font-size: 0.74rem;
+    color: var(--site-muted);
+  }
+  .doc-studied[hidden] {
+    display: none;
   }
   .doc-foot {
     display: flex;

@@ -241,6 +241,7 @@ const devsRendered = await Promise.all(
     parseSharedExam,
     type ExamConfig,
   } from '../../lib/exam-mode';
+  import { keyFor as lastStudiedKeyFor } from '../../lib/last-studied';
 
   document.addEventListener('tq:graded', (e) => {
     const { score, total } = (e as CustomEvent).detail;
@@ -358,6 +359,16 @@ const devsRendered = await Promise.all(
 
   document.addEventListener('desarrollo:stats-updated', renderDevStats);
   renderDevStats();
+
+  // --- Last-studied timestamp (per asignatura, issue #57) --------------------
+  // Stamps "now" on every real interaction (grading a test, self-assessing a
+  // desarrollo question) so the home can show a relative "Estudiado hace…".
+  document.addEventListener('tq:graded', () => {
+    if (asignatura) safeSet(lastStudiedKeyFor(asignatura), new Date().toISOString());
+  });
+  document.addEventListener('desarrollo:stats-updated', () => {
+    if (devAsignatura) safeSet(lastStudiedKeyFor(devAsignatura), new Date().toISOString());
+  });
 
   // --- Review-order toggle (desarrollo, per asignatura, issue #53) ----------
   // Priority: "no" > "medias" > never assessed > "sabia" (buildReviewOrder),
