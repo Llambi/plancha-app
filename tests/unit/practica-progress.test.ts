@@ -4,6 +4,7 @@ import {
   serialize,
   parse,
   pruneAnswers,
+  clearAnswer,
   type ProgressState,
 } from '../../src/lib/practica-progress';
 
@@ -55,5 +56,24 @@ describe('pruneAnswers()', () => {
 
   it('returns an empty object when nothing is valid', () => {
     expect(pruneAnswers({ 'q-99': [0] }, ['q-1'])).toEqual({});
+  });
+});
+
+describe('clearAnswer() (issue #59)', () => {
+  it('removes only the given question, leaving the others untouched', () => {
+    const cleared = clearAnswer(sample, 'q-1');
+    expect(cleared.answers).toEqual({ 'q-2': [1, 3] });
+  });
+
+  it('leaves graded/score/total untouched', () => {
+    const cleared = clearAnswer(sample, 'q-1');
+    expect(cleared.graded).toBe(sample.graded);
+    expect(cleared.score).toBe(sample.score);
+    expect(cleared.total).toBe(sample.total);
+  });
+
+  it('is a no-op when the question had no answer', () => {
+    const cleared = clearAnswer(sample, 'q-99');
+    expect(cleared.answers).toEqual(sample.answers);
   });
 });

@@ -87,6 +87,20 @@ export function pruneDrafts(
   return pruneById(drafts, validIds);
 }
 
+/**
+ * Removes both the self-assessment and the draft for a single question
+ * (issue #59 — the per-question erase button clears them together), leaving
+ * every other question untouched.
+ */
+export function clearAnswer(
+  state: DesarrolloProgressState,
+  questionId: string,
+): DesarrolloProgressState {
+  const { [questionId]: _a, ...answers } = state.answers;
+  const { [questionId]: _d, ...drafts } = state.drafts;
+  return { answers, drafts };
+}
+
 export function summarize(state: DesarrolloProgressState): DesarrolloSummary {
   const values = Object.values(state.answers);
   return {
