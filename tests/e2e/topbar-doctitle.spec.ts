@@ -47,7 +47,8 @@ test('desktop topbar height is unaffected', async ({ page }) => {
 });
 
 test('the topbar content sits inside a banner landmark (issue #77)', async ({ page }) => {
-  await page.goto(`${BASE}/`);
+  // `.site-home` ("← Inicio") only renders on subpages, not on `/` itself.
+  await page.goto(`${BASE}/practica/si`);
 
   const banner = page.getByRole('banner');
   await expect(banner).toBeVisible();
