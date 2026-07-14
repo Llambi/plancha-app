@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Rojo: cada tarjeta de colección debe exponer un `<h2>`**
+- [x] **T1 — Rojo: cada tarjeta de colección debe exponer un `<h2>`**
   - Test (rojo): `tests/e2e/mongo-practica.spec.ts` — comprueba que cada
     tarjeta `.coll` tiene un `getByRole('heading', { level: 2 })` con el
     nombre `db.<colección>`. Falla porque hoy es un `<h3>`.
@@ -18,7 +18,7 @@
     causa).
   - Commit: `test(mongo-practica): add e2e coverage for the collection card heading level (refs #79)`
 
-- [ ] **T2 — `<h3>` → `<h2>` en las tarjetas de colección**
+- [x] **T2 — `<h3>` → `<h2>` en las tarjetas de colección**
   - Implementación (verde): markup + los 3 selectores CSS asociados.
   - Verificación visual: comparación con el estado actual (mismo tamaño de
     fuente, ya fijado explícitamente por CSS).
@@ -26,7 +26,7 @@
 
 ## Verificación final (Gate B)
 
-- [ ] `astro check` sin errores
-- [ ] `npm test` en verde
-- [ ] `npm run build` + `npm run test:e2e` en verde
-- [ ] Cada criterio de aceptación de `spec.md` comprobado
+- [x] `astro check` sin errores
+- [x] `npm test` en verde
+- [x] `npm run build` + `npm run test:e2e` en verde
+- [x] Cada criterio de aceptación de `spec.md` comprobado
