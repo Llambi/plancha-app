@@ -29,13 +29,8 @@ const knownExceptions: Record<string, KnownException[]> = {
   '/practica/si': [],
   '/esquemas/si': [],
   '/buscar': [],
-  '/guia/soa': [
-    // issue #78: .soa-chip-badge / .key-box .box-label fall short of 4.5:1.
-    { ruleId: 'color-contrast', issue: 78 },
-  ],
+  '/guia/soa': [],
   '/practica/mongodb': [
-    // issue #78: .eyebrow / .pct badges fall short of 4.5:1.
-    { ruleId: 'color-contrast', issue: 78 },
     // issue #79: .coll.card h3 skips a heading level.
     { ruleId: 'heading-order', issue: 79 },
   ],
