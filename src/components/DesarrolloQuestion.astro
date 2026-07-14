@@ -42,6 +42,18 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
       {titulo && <h3 class="dq-titulo">{titulo}</h3>}
     </div>
     <PinButton label="Fijar pregunta" />
+    <button
+      class="dq-erase"
+      type="button"
+      data-erase-trigger
+      aria-label="Borrar mi respuesta"
+      title="Borrar mi respuesta"
+    >
+      <svg class="dq-erase-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="5" y="9" width="14" height="8" rx="1.5" transform="rotate(-15 12 13)"></rect>
+        <path d="M4 20h9"></path>
+      </svg>
+    </button>
   </header>
 
   <p class="dq-enun" set:html={enunciado} />
@@ -240,10 +252,51 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
     background: var(--site-accent);
     border-color: var(--site-accent);
   }
+
+  /* Per-question erase button (issue #59): clears the draft text and the
+     self-assessment together, after a confirmation click. */
+  .dq-erase {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--site-line);
+    border-radius: 7px;
+    background: var(--site-surface);
+    color: var(--site-muted);
+    cursor: pointer;
+    transition: 0.12s;
+  }
+  .dq-erase:hover {
+    color: var(--site-bad);
+    border-color: var(--site-bad);
+  }
+  .dq-erase-svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .dq-erase.confirm {
+    color: #fff;
+    background: var(--site-bad);
+    border-color: var(--site-bad);
+  }
 </style>
 
 <script>
-  import { keyFor, serialize, parse, pruneAnswers, pruneDrafts } from '../lib/desarrollo-progress';
+  import {
+    keyFor,
+    serialize,
+    parse,
+    pruneAnswers,
+    pruneDrafts,
+    clearAnswer,
+  } from '../lib/desarrollo-progress';
 
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest('.dq-reveal');
@@ -358,4 +411,59 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${titulo || stripTags(enunciado)}
   });
 
   restoreDrafts();
+
+  // --- Erase button (localStorage, per asignatura) ----------------------------
+  const ERASE_CONFIRM_MS = 4000;
+  const eraseConfirmTimers = new WeakMap<HTMLElement, number>();
+  const ERASE_LABEL = 'Borrar mi respuesta';
+  const ERASE_CONFIRM_LABEL = 'Pulsa de nuevo para confirmar el borrado';
+
+  function resetEraseButton(btn: HTMLElement): void {
+    btn.classList.remove('confirm');
+    btn.setAttribute('aria-label', ERASE_LABEL);
+    btn.setAttribute('title', ERASE_LABEL);
+  }
+
+  function armEraseConfirm(btn: HTMLElement): void {
+    btn.classList.add('confirm');
+    btn.setAttribute('aria-label', ERASE_CONFIRM_LABEL);
+    btn.setAttribute('title', ERASE_CONFIRM_LABEL);
+    const prev = eraseConfirmTimers.get(btn);
+    if (prev) clearTimeout(prev);
+    eraseConfirmTimers.set(
+      btn,
+      window.setTimeout(() => {
+        resetEraseButton(btn);
+        eraseConfirmTimers.delete(btn);
+      }, ERASE_CONFIRM_MS),
+    );
+  }
+
+  function clearQuestionAnswer(card: HTMLElement): void {
+    const textarea = card.querySelector<HTMLTextAreaElement>('.dq-text');
+    if (textarea) textarea.value = '';
+    const existingTimer = draftTimers.get(card.id);
+    if (existingTimer) window.clearTimeout(existingTimer);
+    card.querySelectorAll('[data-dq-self]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura))) ?? { answers: {}, drafts: {} };
+    safeSet(keyFor(asignatura), serialize(clearAnswer(state, card.id)));
+    document.dispatchEvent(new CustomEvent('desarrollo:stats-updated'));
+  }
+
+  document.addEventListener('click', (e) => {
+    const eraseBtn = (e.target as HTMLElement).closest<HTMLElement>('[data-erase-trigger]');
+    if (!eraseBtn) return;
+    const card = eraseBtn.closest<HTMLElement>('[data-dq]');
+    if (!card) return;
+    if (!eraseBtn.classList.contains('confirm')) {
+      armEraseConfirm(eraseBtn);
+      return;
+    }
+    const timer = eraseConfirmTimers.get(eraseBtn);
+    if (timer) clearTimeout(timer);
+    eraseConfirmTimers.delete(eraseBtn);
+    resetEraseButton(eraseBtn);
+    clearQuestionAnswer(card);
+  });
 </script>
