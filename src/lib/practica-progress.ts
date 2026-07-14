@@ -65,3 +65,13 @@ export function pruneAnswers(
   }
   return out;
 }
+
+/**
+ * Removes a single question's answer, leaving every other question and
+ * `graded`/`score`/`total` untouched (issue #59 — the per-question erase
+ * button is only available before grading, so there's nothing to recompute).
+ */
+export function clearAnswer(state: ProgressState, questionId: string): ProgressState {
+  const { [questionId]: _removed, ...answers } = state.answers;
+  return { ...state, answers };
+}
