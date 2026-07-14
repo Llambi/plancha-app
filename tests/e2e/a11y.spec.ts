@@ -24,22 +24,16 @@ interface KnownException {
   issue: number;
 }
 
-// issue #77: topbar content (.site-brand/.site-doc-title/.site-home) isn't
-// wrapped in a landmark — same root cause on every page.
-const topbarLandmark: KnownException = { ruleId: 'region', issue: 77 };
-
 const knownExceptions: Record<string, KnownException[]> = {
-  '/': [topbarLandmark],
-  '/practica/si': [topbarLandmark],
-  '/esquemas/si': [topbarLandmark],
-  '/buscar': [topbarLandmark],
+  '/': [],
+  '/practica/si': [],
+  '/esquemas/si': [],
+  '/buscar': [],
   '/guia/soa': [
-    topbarLandmark,
     // issue #78: .soa-chip-badge / .key-box .box-label fall short of 4.5:1.
     { ruleId: 'color-contrast', issue: 78 },
   ],
   '/practica/mongodb': [
-    topbarLandmark,
     // issue #78: .eyebrow / .pct badges fall short of 4.5:1.
     { ruleId: 'color-contrast', issue: 78 },
     // issue #79: .coll.card h3 skips a heading level.
