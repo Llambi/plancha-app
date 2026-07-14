@@ -8,6 +8,7 @@ import {
   summarize,
   formatDevChip,
   buildReviewOrder,
+  clearAnswer,
   type DesarrolloProgressState,
 } from '../../src/lib/desarrollo-progress';
 
@@ -130,6 +131,25 @@ describe('buildReviewOrder()', () => {
     const items = [{ id: 'd-q1' }, { id: 'd-q2' }];
     const answers: DesarrolloProgressState['answers'] = { 'd-q2': 'no' };
     expect(buildReviewOrder(items, (i) => i.id, answers)).toEqual([{ id: 'd-q2' }, { id: 'd-q1' }]);
+  });
+});
+
+describe('clearAnswer() (issue #59)', () => {
+  it('removes both the self-assessment and the draft for the given question', () => {
+    const cleared = clearAnswer(sample, 'd-q1');
+    expect(cleared.answers).toEqual({ 'd-q2': 'medias', 'd-q3': 'no' });
+    expect(cleared.drafts).toEqual({});
+  });
+
+  it('leaves other questions untouched', () => {
+    const cleared = clearAnswer(sample, 'd-q2');
+    expect(cleared.answers).toEqual({ 'd-q1': 'sabia', 'd-q3': 'no' });
+    expect(cleared.drafts).toEqual({ 'd-q1': 'mi respuesta' });
+  });
+
+  it('is a no-op when the question had neither an answer nor a draft', () => {
+    const cleared = clearAnswer(sample, 'd-q99');
+    expect(cleared).toEqual(sample);
   });
 });
 
