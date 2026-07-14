@@ -154,6 +154,11 @@ const quizIdx = chapters.length; // índice de la página del quiz
     --mcg-blue-light: #e8eef7;
     --mcg-gold: #c8860a;
     --mcg-gold-bg: #fef6e4;
+    /* text-on-gold-bg only (issue #78): --mcg-gold itself falls short of
+       4.5:1 on --mcg-gold-bg in light mode; kept separate from --mcg-gold
+       since that one is also used for borders (no contrast requirement) and
+       for .template-label over a fixed dark background (already passes). */
+    --mcg-gold-text: #8a5c07;
     --mcg-green: #1b6637;
     --mcg-green-bg: #e8f5ee;
     --mcg-gray: #4a4a4a;
@@ -173,6 +178,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
     --mcg-border: #33404f;
     --mcg-blue-light: #16243c;
     --mcg-gold-bg: #2a2310;
+    --mcg-gold-text: #c8860a;
     --mcg-red-light: #2c1418;
     --mcg-green-bg: #13271b;
     --text-body: #dfe3e8;
@@ -221,7 +227,10 @@ const quizIdx = chapters.length; // índice de la página del quiz
   .soa-chip-badge {
     font-size: 0.66rem;
     font-weight: 700;
-    opacity: 0.8;
+    /* issue #78: 0.8 (and even 0.9) dropped this below 4.5:1 for the
+       inactive-chip case (muted color on white); 0.97 keeps both that and
+       the active (white-on-red) case comfortably above the threshold. */
+    opacity: 0.97;
   }
 
   /* === Páginas de capítulo === */
@@ -372,7 +381,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
     color: var(--mcg-blue-mid);
   }
   .soa-guide .key-box .box-label {
-    color: var(--mcg-gold);
+    color: var(--mcg-gold-text);
   }
   .soa-guide .exam-box .box-label {
     color: var(--mcg-red);
@@ -566,7 +575,7 @@ const quizIdx = chapters.length; // índice de la página del quiz
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--mcg-gold);
+    color: var(--mcg-gold-text);
     margin-bottom: 5px;
   }
   .soa-guide .ejercicio p {
