@@ -9,7 +9,7 @@
 
 ## Tareas
 
-- [ ] **T1 — Test de accesibilidad sin excepciones (rojo)**
+- [x] **T1 — Test de accesibilidad sin excepciones (rojo)**
   - Test (rojo): `tests/e2e/a11y.spec.ts`, un test por página de las 6 del
     alcance, cada uno afirma `results.violations` vacío sin ninguna
     excepción todavía. Falla con los 3 hallazgos reales del escaneo previo
@@ -17,13 +17,13 @@
     mongodb).
   - Commit: `test(a11y): add axe-core checks for every page type (refs #58)`
 
-- [ ] **Crear las 3 issues de seguimiento** (no es un commit; acción entre
+- [x] **Crear las 3 issues de seguimiento** (no es un commit; acción entre
       T1 y T2 para poder referenciar sus números)
   - Landmark de la topbar sin contener (sitewide, `BaseLayout.astro`).
   - Contraste de color insuficiente (guía SOA + validador de MongoDB).
   - Orden de encabezados incorrecto en el validador de MongoDB.
 
-- [ ] **T2 — Documentar las excepciones conocidas (verde)**
+- [x] **T2 — Documentar las excepciones conocidas (verde)**
   - Implementación (verde): `filterKnownViolations()` + lista de
     excepciones por regla/página en `tests/e2e/a11y.spec.ts`, cada una con
     un comentario que referencia la issue de seguimiento correspondiente.
