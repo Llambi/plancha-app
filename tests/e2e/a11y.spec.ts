@@ -30,10 +30,7 @@ const knownExceptions: Record<string, KnownException[]> = {
   '/esquemas/si': [],
   '/buscar': [],
   '/guia/soa': [],
-  '/practica/mongodb': [
-    // issue #79: .coll.card h3 skips a heading level.
-    { ruleId: 'heading-order', issue: 79 },
-  ],
+  '/practica/mongodb': [],
 };
 
 function filterKnownViolations(
