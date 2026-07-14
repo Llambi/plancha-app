@@ -61,15 +61,17 @@ oscuro) lo justo para superar 4.5:1 en modo claro, verificado con
 
 ## Estrategia de test (TDD)
 
-- **Unit (Vitest)**: nuevo fichero `tests/unit/color-contrast-fixes.test.ts`
-  con `contrastRatio()` sobre las 4 parejas finales (valores hex duplicados
-  de las hojas de estilo, mismo patrón que `asignaturas.test.ts` en la issue
-  #43), cada una `>= 4.5`. Sirve de test rojo inicial (falla con los valores
-  viejos) y de regresión rápida sin levantar un navegador.
+- **Unit (Vitest)**: no se añade. A diferencia de la issue #43 (donde
+  `contrastRatio()` comprobaba `ASIGNATURAS.dar.accent`, un valor real
+  importado desde `src/data/asignaturas.ts`), aquí los colores viven inline
+  en el `<style>` de cada `.astro` — un test unitario tendría que duplicar
+  los valores hex a mano, sin ninguna fuente única, así que nunca fallaría
+  de verdad contra el código actual ni detectaría un drift futuro entre CSS
+  y test. Se descarta por no aportar una señal honesta.
 - **E2E (Playwright)**: se retira la excepción `color-contrast` de
   `a11y.spec.ts` para las dos páginas — sigue en rojo hasta aplicar el fix,
-  y en verde después, que es la verificación de fondo real (axe-core sobre
-  el DOM renderizado, no solo los valores hex aislados).
+  y en verde después. Esta es la verificación real: axe-core mide el color
+  efectivamente renderizado (incluida la opacidad), no un valor hex aislado.
 - **Contenido**: no aplica.
 
 ## Riesgos / decisiones
