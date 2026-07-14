@@ -56,6 +56,18 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
       }
     </span>
     <PinButton label="Fijar pregunta" />
+    <button
+      class="tq-erase"
+      type="button"
+      data-erase-trigger
+      aria-label="Borrar mi respuesta"
+      title="Borrar mi respuesta"
+    >
+      <svg class="tq-erase-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="5" y="9" width="14" height="8" rx="1.5" transform="rotate(-15 12 13)"></rect>
+        <path d="M4 20h9"></path>
+      </svg>
+    </button>
   </legend>
 
   <div class="tq-opts">
@@ -249,6 +261,45 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
     line-height: 1.5;
     color: var(--site-ink);
   }
+
+  /* Per-question erase button (issue #59): only available before this
+     question is graded — same criterion as the reveal button above. */
+  .tq-erase {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--site-line);
+    border-radius: 7px;
+    background: var(--site-surface);
+    color: var(--site-muted);
+    cursor: pointer;
+    transition: 0.12s;
+  }
+  .tq-erase:hover {
+    color: var(--site-bad);
+    border-color: var(--site-bad);
+  }
+  .tq-erase-svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  /* Confirmation step: a first click arms it (issue #59) instead of erasing
+     immediately, since it can discard a picked answer. */
+  .tq-erase.confirm {
+    color: #fff;
+    background: var(--site-bad);
+    border-color: var(--site-bad);
+  }
+  .tq.graded .tq-erase {
+    display: none;
+  }
   .tq-tema {
     margin-top: 0.7rem;
     font-size: 0.72rem;
@@ -259,7 +310,7 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
 </style>
 
 <script>
-  import { keyFor, serialize, parse, pruneAnswers } from '../lib/practica-progress';
+  import { keyFor, serialize, parse, pruneAnswers, clearAnswer } from '../lib/practica-progress';
   import { statsKeyFor, serializeStats, parseStats, recordGrading } from '../lib/practica-stats';
   import { isCorrectPick } from '../lib/minimap';
 
@@ -468,12 +519,71 @@ const mmLabel = truncateLabel(`${num ?? ''} · ${stripTags(question)}`.trim());
     }
   }
 
+  // --- Per-question erase button (issue #59) --------------------------------
+  // Requires a confirmation click (arms for ERASE_CONFIRM_MS, then reverts on
+  // its own) since it can discard a picked answer — unlike the rest of the
+  // site's controls, which act immediately.
+  const ERASE_CONFIRM_MS = 4000;
+  const eraseConfirmTimers = new WeakMap<HTMLElement, number>();
+  const ERASE_LABEL = 'Borrar mi respuesta';
+  const ERASE_CONFIRM_LABEL = 'Pulsa de nuevo para confirmar el borrado';
+
+  function resetEraseButton(btn: HTMLElement): void {
+    btn.classList.remove('confirm');
+    btn.setAttribute('aria-label', ERASE_LABEL);
+    btn.setAttribute('title', ERASE_LABEL);
+  }
+
+  function armEraseConfirm(btn: HTMLElement): void {
+    btn.classList.add('confirm');
+    btn.setAttribute('aria-label', ERASE_CONFIRM_LABEL);
+    btn.setAttribute('title', ERASE_CONFIRM_LABEL);
+    const prev = eraseConfirmTimers.get(btn);
+    if (prev) clearTimeout(prev);
+    eraseConfirmTimers.set(
+      btn,
+      window.setTimeout(() => {
+        resetEraseButton(btn);
+        eraseConfirmTimers.delete(btn);
+      }, ERASE_CONFIRM_MS),
+    );
+  }
+
+  function clearQuestionAnswer(q: HTMLElement): void {
+    q.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+      input.checked = false;
+    });
+    if (!asignatura) return;
+    const state = parse(safeGet(keyFor(asignatura))) ?? {
+      answers: {},
+      graded: false,
+      score: 0,
+      total: 0,
+    };
+    safeSet(keyFor(asignatura), serialize(clearAnswer(state, q.id)));
+  }
+
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const revealBtn = target.closest('[data-reveal-trigger]');
     if (revealBtn) {
       const q = revealBtn.closest<HTMLElement>('[data-tq]');
       if (q) revealAnswer(q);
+      return;
+    }
+    const eraseBtn = target.closest<HTMLElement>('[data-erase-trigger]');
+    if (eraseBtn) {
+      const q = eraseBtn.closest<HTMLElement>('[data-tq]');
+      if (!q || q.classList.contains('graded')) return;
+      if (!eraseBtn.classList.contains('confirm')) {
+        armEraseConfirm(eraseBtn);
+        return;
+      }
+      const timer = eraseConfirmTimers.get(eraseBtn);
+      if (timer) clearTimeout(timer);
+      eraseConfirmTimers.delete(eraseBtn);
+      resetEraseButton(eraseBtn);
+      clearQuestionAnswer(q);
       return;
     }
     if (target.closest('[data-reset-trigger]')) {
