@@ -45,3 +45,14 @@ test('desktop topbar height is unaffected', async ({ page }) => {
 
   expect(docTitleHeight).toBe(baselineHeight);
 });
+
+test('the topbar content sits inside a banner landmark (issue #77)', async ({ page }) => {
+  // `.site-home` ("← Inicio") only renders on subpages, not on `/` itself.
+  await page.goto(`${BASE}/practica/si`);
+
+  const banner = page.getByRole('banner');
+  await expect(banner).toBeVisible();
+  await expect(banner.locator('.site-brand')).toBeVisible();
+  await expect(banner.locator('.site-home')).toBeVisible();
+  await expect(banner.locator('.site-theme-toggle')).toBeVisible();
+});

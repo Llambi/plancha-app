@@ -78,7 +78,7 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
   <body style={accentStyle}>
     <a class="skip" href="#main">Saltar al contenido</a>
 
-    <div class="site-topbar">
+    <header class="site-topbar">
       <a class="site-brand" href={base}>
         <span class="dot"></span>{SITE_NAME}
       </a>
@@ -102,7 +102,7 @@ const pageUrl = `${SITE}${Astro.url.pathname}`;
         <span class="site-ic-moon" aria-hidden="true">☾</span>
         <span class="site-ic-auto" aria-hidden="true">◐</span>
       </button>
-    </div>
+    </header>
 
     <main id="main">
       <slot />
