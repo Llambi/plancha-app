@@ -802,7 +802,7 @@
     ex.colls.forEach((coll, ci) => {
       html += `
       <div class="card coll">
-        <h3>db.${coll.name} <span class="count">${coll.exact} documentos</span></h3>
+        <h2>db.${coll.name} <span class="count">${coll.exact} documentos</span></h2>
         <div class="coll-body">
           <ul class="fields">${coll.fields.map(([f, t]) => `<li>${f} <em>: ${typeName[t]}</em></li>`).join('')}</ul>
           <ul class="rules">${coll.rules.map((r) => `<li>${r.t}</li>`).join('')}</ul>
@@ -1135,7 +1135,7 @@
   :root[data-theme='dark'] .mongo-practica .block-tag .n {
     background: #0b1216;
   }
-  :root[data-theme='dark'] .mongo-practica .coll h3 .count {
+  :root[data-theme='dark'] .mongo-practica .coll h2 .count {
     background: #0f1417;
   }
   :root[data-theme='dark'] .mongo-practica .chk.ok,
@@ -1362,7 +1362,7 @@
     padding: 0;
     overflow: hidden;
   }
-  .mongo-practica .coll h3 {
+  .mongo-practica .coll h2 {
     margin: 0;
     font-family: 'JetBrains Mono';
     font-size: 14px;
@@ -1375,7 +1375,7 @@
     align-items: center;
     gap: 9px;
   }
-  .mongo-practica .coll h3 .count {
+  .mongo-practica .coll h2 .count {
     margin-left: auto;
     font: 600 11px/1 'Inter';
     color: var(--ink-soft);

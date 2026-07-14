@@ -62,3 +62,17 @@ test.describe('MongoDB validator: collection JSON textareas', () => {
     await expect(textareas.nth(0)).toHaveAccessibleName(/db\.peliculas/);
   });
 });
+
+// E2E for the collection card heading level (issue #79): the page only had
+// an <h1> (exercise title) and an <h3> per collection card, skipping a level.
+
+test.describe('MongoDB validator: collection card heading order', () => {
+  test('each collection card exposes an h2 with the collection name', async ({ page }) => {
+    await page.goto(`${BASE}/practica/mongodb`);
+
+    const headings = page.locator('.coll').getByRole('heading', { level: 2 });
+    await expect(headings).toHaveCount(2);
+    await expect(headings.nth(0)).toContainText('db.peliculas');
+    await expect(headings.nth(1)).toContainText('db.clientes');
+  });
+});
